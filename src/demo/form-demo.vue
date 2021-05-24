@@ -3,6 +3,7 @@
   <!--位置管理-->
   <div>
     <x-tabula
+      ref="table"
       :dataSource="dataSource"
       rowKey="positionId"
       :searchList="searchList"
@@ -36,7 +37,7 @@ export default {
         { props: ['communityId'], placeholder: '小区', options: [], inputType: 'select', handle: ($event) => this.communityChange(7, $event) },
         { props: ['keywords'], placeholder: '名称', options: [], inputType: 'input' },
         { props: ['positionType'], placeholder: '分类', options: [], inputType: 'cascader' },
-        { props: ['isStrictly'], placeholder: '是否受限', options: this.$store.state.booleanList, inputType: 'select' },
+        { props: ['isStrictly'], placeholder: '是否受限', options: [], inputType: 'select' },
         { props: ['createDate'], placeholder: ['创建时间', '创建时间'], options: [], inputType: 'datePick' },
         { props: ['areas'], placeholder: '省市', options: [], inputType: 'cascader', changeOnSelect: true },
         { props: ['propertyId'], placeholder: '物业公司', options: [], inputType: 'select' },
@@ -59,8 +60,8 @@ export default {
         { text: '删除', icon: 'close', disabled: true, permi: ['community:position:remove'] }
       ],
       rowOptList: [
-        { text: '修改', handle: (row) => this.$children[0].toEdit(row, ['can_delete']), permi: ['community:position:edit'] },
-        { text: '删除', handle: (row) => this.$children[0].showDeleteConfirm(row), permi: ['community:position:remove'] }
+        { text: '修改', handle: (row) => this.$refs.table.toEdit(row, ['can_delete']), permi: ['community:position:edit'] },
+        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['community:position:remove'] }
       ],
       columns: [
         { title: 'ID', dataIndex: 'positionId', align: 'left', width: '' },

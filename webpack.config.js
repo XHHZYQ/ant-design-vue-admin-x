@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: process.env.NODE_ENV === 'development' ? './src/main.js' : './src/package/index.js', // 调试和开发的入口要区分开
@@ -83,6 +84,8 @@ module.exports = {
     extensions: ['*', '.js', '.vue', '.json']
   },
   devServer: {
+    host: '192.168.1.92',
+    port: 8090,
     historyApiFallback: true,
     noInfo: true,
     overlay: true
@@ -102,11 +105,18 @@ if (process.env.NODE_ENV === 'production') {
         NODE_ENV: '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
+    // new webpack.optimize.UglifyJsPlugin({
+    //   sourceMap: true,
+    //   compress: {
+    //     warnings: false
+    //   }
+    // }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        compress: { warnings: false }
+      },
       sourceMap: true,
-      compress: {
-        warnings: false
-      }
+      parallel: true
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true

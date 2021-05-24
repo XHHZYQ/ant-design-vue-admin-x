@@ -1,6 +1,14 @@
-export addEdit from './addEdit';
-export upload from './upload';
-export inputSearch from './selectSearch';
-export fetchSelect from './fetchSelect';
-export auth from './auth';
+import addEdit from './addEdit';
+import upload from './upload';
+import inputSearch from './selectSearch';
+import fetchSelect from './fetchSelect';
+import auth from './auth';
+
+export {
+  addEdit,
+  upload,
+  inputSearch,
+  fetchSelect,
+  auth
+};
 

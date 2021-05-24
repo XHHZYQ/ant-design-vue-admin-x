@@ -75,12 +75,7 @@
       </a-row>
     </a-form>
 
-    <!-- <div class="table-opt" v-if="tableOptList.length">
-      <a-button v-for="(item, index) of tableOptList" :key="index" @click.native="dispatchBtns(item)"
-        :disabled="item.disabled || item.authDisabled" type="primary" :icon="item.icon">{{item.text}}
-      </a-button>
-    </div> -->
-
+<!--    v-hasPermi="item.permi" // todo-->
     <div class="table-opt" v-if="tableOptList.length">
       <a-button
         v-for="(item, index) of tableOptList"
@@ -90,7 +85,6 @@
         type="primary"
         :icon="item.icon"
         :disabled="item.disabled"
-        v-hasPermi="item.permi"
       >{{item.text}}
       </a-button>
     </div>
@@ -161,8 +155,6 @@ export default {
     popupScroll (e) {
       const { target } = e;
       if (Math.ceil(target.scrollTop + target.offsetHeight) >= target.scrollHeight) {
-        console.log(Math.ceil(target.scrollTop + target.offsetHeight));
-        console.log(this.popupPageNum, this.popupPageSize);
       }
     },
     assignSearchValue () {
@@ -245,3 +237,40 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+/*S- 更多搜索*/
+#search {
+  margin-bottom: 16px;
+  .search-form  {
+    transition: all 0.2s;
+    .ant-form-item {
+      display: flex;
+      .ant-form-item-control-wrapper {
+        flex: 1;
+      }
+    }
+    .ant-calendar-picker {
+      width: 100%;
+    }
+    .search-btns {
+      .reset {
+        margin-left: 8px;
+      }
+      a {
+        margin-left: 8px;
+        font-size: 14px;
+      }
+    }
+    .is-expand {
+      text-align: right;
+    }
+  }
+  .table-opt {
+    .ant-btn-primary {
+      margin-right: 8px;
+    }
+  }
+}
+/*E- 更多搜索*/
+</style>

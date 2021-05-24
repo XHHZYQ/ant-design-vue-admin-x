@@ -51,10 +51,9 @@
         </template>
 
         <!--其他操作-->
-        <div v-for="(item, index) of slots" :key="index" :slot="item" slot-scope="text, record">
-          <slot :name="`opt_${item}`" :row="record"></slot>
-        </div>
-
+<!--        <div v-for="(item, index) of slots" :key="index" :slot="item" slot-scope="text, record">-->
+<!--          <slot :name="`opt_${item}`" :row="record"></slot>-->
+<!--        </div>-->
       </a-table>
     </a-spin>
   </div>
@@ -167,8 +166,8 @@ export default {
     if (this.dataSource.length) {
       this.tableData = this.dataSource;
     }
-    // Object.assign(this.searchParams, this.queryParam);
-    this.$route.name !== 'smartDoor' && this.listApi.url && this.getTableList(); // 单独处理门禁设备
+    // this.$route.name !== 'smartDoor' && this.listApi.url && this.getTableList(); // 单独处理门禁设备
+    this.listApi.url && this.getTableList() // todo
   },
   activated () {
     if (this.$store.state.isOptData) {
@@ -226,6 +225,7 @@ export default {
         this.paginationParam.pageSize = this.searchParams.pageSize;
       }
 
+      console.log('执行到这了 44: ', );
       this.$get({
         url: this.listApi.url,
         params: this.searchParams,
@@ -435,3 +435,23 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+/*S- 表格*/
+.ant-table {
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 16px 10px;
+  }
+  .anticon {
+    margin-right: 5px;
+  }
+  .ant-table-row {
+    .ant-btn-link {
+      padding: 0;
+      height: 19px;
+    }
+  }
+}
+/*E- 表格*/
+</style>

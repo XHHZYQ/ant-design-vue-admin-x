@@ -1,5 +1,6 @@
 <template>
-  <span v-hasPermi="item.permi">
+<!--  <span v-hasPermi="item.permi">-->
+  <span>
     <a-button
       @click="item.handle(row)"
       type="link"
