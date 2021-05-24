@@ -2,11 +2,13 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: process.env.NODE_ENV === 'development' ? './src/main.js' : './src/package/index.js', // 调试和开发的入口要区分开
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build.js'
+    filename: 'index.js',
+    library: 'ant-design-vue-admin-x',
+    libraryTarget: 'umd'
   },
   module: {
     rules: [
@@ -66,6 +68,10 @@ module.exports = {
         options: {
           name: '[name].[ext]?[hash]'
         }
+      },
+      {
+        test: /\.(woff|ttf|eot|svg)/,
+        loader: 'file-loader?name=font/[name].[ext]'
       }
     ]
   },
@@ -88,7 +94,7 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
+  module.exports.devtool = 'none'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
