@@ -1,0 +1,575 @@
+
+<template>
+  <!--新增编辑组件-->
+  <div>
+    <slot></slot>
+    <!--<a-form :form="form" @submit.prevent="handleSubmit">-->
+    <a-form :form="form">
+      <template v-for="(item, index) of formList">
+        <!--纯文本-->
+        <template v-if="item.inputType==='text'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+              <span class="ant-form-text">{{textData[item.props[0]]}}</span>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='input'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            :extra="item.extra"
+            :help="item.help"
+            has-feedback
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-input @blur="(e) => {item.blur && item.blur(e)}" @click="(e) => item.click && item.click(e)" @change="(e) => {item.handle && item.handle(e)}" v-decorator="item.props" :type="item.type" :disabled="item.disabled" :placeholder="item.placeholder"/>
+          </a-form-item>
+        </template>
+
+        <div v-if="item.inputType==='textarea'" :key="index">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item v-if="!item.slot && item.isShow"
+            class="textarea-icon"
+            :label="item.label"
+             has-feedback
+             :extra="item.extra"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            >
+            <a-textarea v-decorator="item.props" :rows="4" :placeholder="item.placeholder" :disabled="item.disabled"/>
+          </a-form-item>
+        </div>
+
+        <div v-if="item.inputType=== 'select'" :key="index">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            has-feedback
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            >
+            <a-select
+              @change="(e) => {item.handle && item.handle(e)}"
+              v-decorator="item.props"
+              :mode="item.mode || 'default'"
+              allowClear
+              showSearch
+              :labelInValue="item.labelInValue"
+              :disabled="item.disabled"
+              :filterOption="filterOption"
+              :placeholder="item.placeholder">
+              <a-select-option
+                v-for="(el, order) of item.options"
+                :key="order"
+                :value="el.value">
+                {{el.label}}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+        </div>
+
+        <div v-if="item.inputType=== 'treeSelect'" :key="index">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            has-feedback
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            >
+            <a-tree-select
+              @change="(e) => {item.handle && item.handle(e)}"
+              style="width: 100%"
+              showSearch
+              allowClear
+              :treeCheckable="item.treeCheckable"
+              :tree-data="item.options"
+              treeNodeFilterProp="title"
+              v-decorator="item.props"
+              :placeholder='item.placeholder'
+              :disabled="item.disabled"
+              :dropdownStyle="{ maxHeight: '400px', overflow: 'auto' }"
+            >
+              <!-- <a-tree-select-node v-for="eve of item.options" :title='eve.label' :value='`${eve.value}`' :key='eve.value'>
+                <a-tree-select-node v-if="eve.children.length" v-for="el of eve.children" :title='el.label' :value='`${el.value}`' :key='el.value'>
+                  <a-tree-select-node v-if="el.children.length" v-for="part of el.children" :title='part.label' :value='`${part.value}`' :key='part.value'>
+                    <a-tree-select-node v-if="part.children.length" v-for="ele of part.children" :title='ele.label' :value='`${ele.value}`' :key='ele.value'>
+                      <a-tree-select-node v-if="ele.children.length" v-for="cnode of ele.children" :title='cnode.label' :value='`${cnode.value}`' :key='cnode.value'>
+                      </a-tree-select-node>
+                    </a-tree-select-node>
+                  </a-tree-select-node>
+                </a-tree-select-node>
+              </a-tree-select-node> -->
+
+            </a-tree-select>
+          </a-form-item>
+        </div>
+
+        <!-- <tree-list v-if="item.inputType=== 'treeList'" :paramsObj="item" :key="index"></tree-list> -->
+        <template v-if="item.inputType=== 'cascader'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            has-feedback
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-cascader
+              @change="(e, v) => {item.handle && item.handle(e, v)}"
+              @click="(e, v) => {item.click && item.click(e, v)}"
+              v-decorator="item.props"
+              :options="item.options"
+              expandTrigger="hover"
+              :placeholder="item.placeholder"
+              :showSearch="{filter}"
+              :disabled="item.disabled"
+              :fieldNames="item.fieldNames || {label: 'label', value: 'value', children: 'children'}"
+              :changeOnSelect="item.changeOnSelect"
+              notFoundContent="无匹配结果"/>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='inputNumber'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-input-number v-decorator="item.props" :min="item.min" :max="item.max"/>
+            <span v-if="item.unit" class="ant-form-text">{{item.unit}}</span>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='switch'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-switch v-decorator="item.props" checkedChildren="开" unCheckedChildren="关" :checked="isChecked" @change="switchClick($event, item.handle)"/>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='checkboxGroup'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            class="checkbox-group"
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-checkbox-group @change="e => {item.handle && item.handle(e)}" v-decorator="item.props" :disabled="item.disabled" :style="{width: '100%'}">
+              <a-row>
+                <a-col v-for="(el, order) of item.options" :key="order" :span="8">
+                  <a-checkbox :value="el.value">{{el.label}}</a-checkbox>
+                </a-col>
+              </a-row>
+            </a-checkbox-group>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='checkbox'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-checkbox v-decorator="item.props">{{item.checkboxLabel}}</a-checkbox>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='upload'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            :extra="item.extra"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-upload
+              :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item.props[0])"
+              :customRequest="(e) => {customRequest(e, item.name, item.url)}"
+              v-decorator="item.props"
+              :fileList="item.fileList"
+              :remove="(e) => removeFile(item.name, e)"
+              v-bind="item.uploadParam"
+              > <!--text 、picture、picture-card-->
+              <a-button icon="upload" :loading="upLoading.loading">{{item.btnTxt || '点击上传'}}</a-button>
+            </a-upload>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='rangePick'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-range-picker v-decorator="item.props" format="YYYY-MM-DD"/>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='rangeTimePick'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-range-picker v-decorator="item.props" showTime format="YYYY-MM-DD HH:mm:ss"/>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='datePick'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-date-picker v-decorator="item.props" format="YYYY-MM-DD" :disabled="item.disabled"/>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='dateTimePick'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-date-picker v-decorator="item.props" showTime format="YYYY-MM-DD HH:mm:ss"/>
+          </a-form-item>
+        </template>
+
+        <div v-if="item.inputType==='transfer'" :key="index">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            >
+            <a-transfer
+              :listStyle="{ width: '43%', height: '250px' }"
+              v-decorator="item.props"
+              :dataSource="item.options"
+              :targetKeys="targetKeys"
+              :selectedKeys="selectedKeys"
+              :disabled="item.disabled"
+              :filterOption="transferFilter"
+              @change="transferChange"
+              @selectChange="transferSelectChange"
+              :titles="item.titles || ['Source', 'Target']"
+              :render="item => item.title"
+              showSearch
+            />
+          </a-form-item>
+        </div>
+
+        <!--tree 搜索组件-->
+        <template v-if="item.inputType=== 'treeSearch'">
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-else
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-input @change="(e) => treeSearchChange(e, item.options)" placeholder="搜索" allowClear v-model="treeSearchContent" v-if="item.isSearch"/>
+            <!--:checkedKeys="treeChecked"-->
+            <div class="tree-box">
+              <a-tree
+                :disabled="item.disabled"
+                @check="(e) => treeCheck(e, item.props[0])"
+                @expand="treeExpand"
+                v-decorator="item.props"
+                :expanded-keys="expandedKeys"
+                :auto-expand-parent="autoExpandParent"
+                :tree-data="item.options"
+                v-model="defaultTree"
+                checkable
+              >
+              <template slot="title" slot-scope="{ title }">
+                <span v-if="title.indexOf(searchValue) > -1">
+                  {{ title.substr(0, title.indexOf(searchValue)) }}
+                  <span style="color: #f50">{{ searchValue }}</span>
+                  {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
+                </span>
+                <span v-else>{{ title }}</span>
+              </template>
+              </a-tree>
+            </div>
+          </a-form-item>
+        </template>
+
+        <template v-if="item.inputType==='radioGroup'">
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <a-form-item
+            v-if="!item.slot && item.isShow"
+            :label="item.label"
+            v-bind="itemLayout || $store.state.base_itemLayout"
+            :key="index">
+            <a-radio-group
+              @change="e => {item.handle && item.handle(e)}"
+              v-decorator="item.props"
+              :disabled="item.disabled"
+            >
+              <a-radio v-for="(el, i) of item.options" :key="i" :value="el.value">{{el.label}}</a-radio>
+            </a-radio-group>
+          </a-form-item>
+        </template>
+      </template>
+
+      <a-form-item :wrapper-col="{ span: 8, offset: offset}">
+        <a-button  type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
+      </a-form-item>
+    </a-form>
+  </div>
+</template>
+
+<script>
+import { addEdit, inputSearch, upload, auth } from '@/utils/mixins';
+import empty from '@/utils/empty';
+export default {
+  mixins: [ addEdit, inputSearch, upload, auth.addEditAuth ],
+  name: 'addEdit',
+  props: {
+    initEvent: {
+      type: Function
+    },
+    reqLoading: {
+      type: Object,
+      default: () => ({})
+    },
+    reqData: '', // 只有编辑app菜单使用到
+    formData: '',
+    itemLayout: {
+      type: Object
+    },
+    formList: {
+      type: Array,
+      default: () => []
+    },
+    formKey: {
+      type: Object,
+      default: () => { return {}; }
+    },
+    addParam: {
+      type: Object,
+      default: () => { return {}; }
+    },
+    editParam: {
+      type: Object,
+      default: () => { return {}; }
+    },
+    detailParam: {
+      type: Object,
+      default: () => { return {}; }
+    }
+  },
+  data () {
+    return {
+      treeSearchContent: '',
+      expandedKeys: [],
+      defaultTree: [],
+      autoExpandParent: true,
+      isChecked: false,
+      routeArr: ['addCommunityApp', 'addStewardApp'],
+      detailValues: {},
+      routeQuery: '',
+      btnLoading: { loading: false }
+    };
+  },
+  computed: {
+    offset () {
+      if (this.itemLayout) {
+        return this.itemLayout.labelCol.span;
+      }
+      return this.$store.state.base_itemLayout.labelCol.span;
+    }
+  },
+  created () {
+    if (this.$route.query.id) {
+      this.routeQuery = this.$route.query.id;
+      this.getDetail();
+    }
+  },
+  mounted () {
+  },
+  methods: {
+    handleChange (info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    /** tree check 事件 */
+    treeCheck (keys, props) {
+      console.log('tree 勾选了: ', keys);
+      this.form.setFieldsValue({[props]: keys});
+      // let values = this.form.getFieldsValue();
+      // console.log('values: ', values);
+    },
+    /** tree expand 事件 */
+    treeExpand (expandedKeys) {
+      this.expandedKeys = expandedKeys;
+      this.autoExpandParent = false;
+    },
+    /** tree change */
+    treeSearchChange (e, options) {
+      const value = e.target.value;
+      const expandedKeys = this.flattenData.map(item => {
+        if (item.title.indexOf(value) > -1) {
+          return this.getParentKey(item.title, options);
+        }
+        return null;
+      }).filter((item, i, self) => item && self.indexOf(item) === i);
+
+      Object.assign(this, {
+        expandedKeys,
+        searchValue: value,
+        autoExpandParent: true
+      });
+      if (!e.target.value) {
+        this.expandedKeys = ['all'];
+      }
+      console.log('搜索结果: ', this.expandedKeys);
+    },
+    getParentKey (title, tree) {
+      let parentKey;
+      for (let i = 0; i < tree.length; i++) {
+        const node = tree[i];
+        if (node.children) {
+          if (node.children.some(item => item.title === title)) {
+            parentKey = node.key;
+          } else if (this.getParentKey(title, node.children)) {
+            parentKey = this.getParentKey(title, node.children);
+          }
+        }
+      }
+      return parentKey;
+    },
+    /** 展平 a-tree 列表数据 */
+    treeflattenData (data) {
+      for (let i = 0; i < data.length; i++) {
+        const node = data[i];
+        this.flattenData.push({ key: node.key, title: node.title });
+        if (node.children) {
+          this.treeflattenData(node.children);
+        }
+      }
+    },
+    /* 获取详情 */
+    getDetail (url) {
+      this.$get({
+        url: url || `${this.detailParam.url}${this.routeQuery}`,
+        params: {}
+      }).then(({data}) => {
+        this.handleFileList(data);
+        let formValues = {};
+        for (let item in data) {
+          if (this.formKey.hasOwnProperty(item)) {
+            formValues[item] = data[item];
+          }
+        }
+        this.handleApp(formValues); // 平台才有
+
+        if (this.detailParam.resHandle) { // 父组件有处理数据
+          let resHandleVal = this.detailParam.resHandle(data, this); // esHandle中的this可能需去掉
+          if (resHandleVal) {
+            formValues = {...formValues, ...resHandleVal};
+          } else {
+            return;
+          }
+        }
+        this.textData = formValues = {...formValues, ...this.handleDate(data)};
+        formValues = this.filterParam(formValues);
+        this.form.setFieldsValue(formValues);
+      });
+    },
+    /* 表单提交 */
+    handleSubmit  () {
+      this.form.validateFields((err, values) => {
+        if (err) { return; }
+        values = {...values};
+        if (this.addParam.reqHandle) {
+          let resVals = this.addParam.reqHandle(values);
+          if (!resVals) {
+            return;
+          } else {
+            values = resVals;
+          }
+        }
+        if (this.routeArr.some(el => el === this.$route.name) && this.$route.query.id) { // 单独处理编辑app应用
+          this.handleConfirm(values);
+          return;
+        }
+
+        // for (let item in values) {
+        //   if (Array.isArray(values[item])) {
+        //     values[item] = values[item].join(',');
+        //   }
+        // }
+        Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
+        if (this.routeQuery) { // 编辑
+          this.$put({
+            url: `${this.editParam.url}${this.routeQuery}`,
+            params: values,
+            btnLoading: (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading
+          }).then((res) => {
+            this.$store.commit('setOptData', true);
+            if (this.editParam.resHandle) {
+              this.editParam.resHandle(res);
+            } else {
+              this.handleThen('编辑');
+            }
+          });
+        } else { // 新增
+          this.$post({
+            url: this.addParam.url,
+            params: values,
+            btnLoading: (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading
+          }).then((res) => {
+            empty.$emit('setAliveComponent');
+            if (this.addParam.resHandle) {
+              this.addParam.resHandle(res);
+            } else {
+              this.handleThen('新增');
+            }
+          });
+        }
+      });
+    },
+    handleThen (msg) {
+      this.$message.success(`${msg}成功！`).then(() => {
+        this.$router.go(-1);
+      });
+    },
+    /* 单独处理编辑app应用 */
+    handleApp (formValues) {
+      if (this.routeArr.some(el => el === this.$route.name)) {
+        this.detailValues = {
+          android: formValues.android,
+          ios: formValues.ios,
+          scope_type: formValues.scope_type,
+          scope: formValues.scope
+        };
+      }
+    },
+    switchClick (e, handle) {
+      this.isChecked = e;
+      handle && handle(e);
+    }
+  }
+};
+</script>

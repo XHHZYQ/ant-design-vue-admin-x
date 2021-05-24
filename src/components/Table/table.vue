@@ -1,0 +1,437 @@
+
+<template>
+  <!--table组件-->
+  <div>
+    <x-search
+      @searchHandle="searchHandle"
+      @resetHandle="resetHandle"
+      @btnsHandler="btnsHandler"
+      :tableOptList="tableOptList"
+      :searchList="searchList"
+    >
+    </x-search>
+
+    <slot></slot>
+    <slot name="bread"></slot>
+    <a-spin :spinning="spinObj.spinning" size="large" :delay="20">
+      <template slot="indicator">
+        <img src="../../assets/images/loading.gif" :style="{width: '60px', height: '60px'}" alt="">
+      </template>
+      <a-table
+        v-if="columns.length"
+        @change="tableChange"
+        :rowKey="record => record[rowKey]"
+        :columns="columns"
+        :dataSource="tableData"
+        :pagination="paginationParam"
+        :rowSelection="rowSelection ? { selectedRowKeys: selectedRowKeys, onChange: rowSelectChange } : null"
+        :locale="localeText"
+      >
+        <!--默认slot-->
+        <slot></slot>
+        <!--默认操作-->
+        <template slot="action" slot-scope="text, record, index"> <!--生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引-->
+          <span v-for="(item, index) of rowOptList" :key="index">
+            <template v-if="index < rowOptLen">  <!--默认3，列表默认展示3个-->
+              <row-button :item="item" :row="record"></row-button>
+              <a-divider v-if="index < (rowOptList.length - 1)" type="vertical"/>
+            </template>
+
+            <template v-if="index > rowOptLen-1">
+              <a-dropdown>
+                <a-button type="link">更多<a-icon type="down"/></a-button>
+                <a-menu slot="overlay">
+                  <a-menu-item v-for="(el, i) of item" :key="i">
+                     <row-button :item="el" :row="record"></row-button>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+            </template>
+          </span>
+        </template>
+
+        <!--其他操作-->
+        <div v-for="(item, index) of slots" :key="index" :slot="item" slot-scope="text, record">
+          <slot :name="`opt_${item}`" :row="record"></slot>
+        </div>
+
+      </a-table>
+    </a-spin>
+  </div>
+</template>
+
+<script>
+import rowButton from './rowButton';
+export default {
+  mixins: [],
+  name: 'tabula',
+  props: {
+    excludeResetKey: {
+      type: Array,
+      default: () => []
+    },
+    rowOptLen: {
+      type: Number,
+      default: () => 3
+    },
+    getList: {
+      type: Object
+    },
+    rowSelection: {
+      type: Boolean,
+      default: true
+    },
+    searchList: {
+      type: Array,
+      default: () => []
+    },
+    tableOptList: {
+      type: Array,
+      default: () => []
+    },
+    rowOptList: {
+      type: Array,
+      default: () => []
+    },
+    rowKey: {
+      type: String
+    },
+    columns: {
+      type: Array,
+      default: () => []
+    },
+    dataSource: {
+      type: Array,
+      default: () => []
+    },
+    searchParams: {
+      type: Object,
+      default: () => ({})
+    },
+    listApi: {
+      type: Object,
+      default: () => ({})
+    },
+    addHandleParam: {
+      type: Object,
+      default: () => ({})
+    },
+    deleteParam: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  components: {
+    RowButton: rowButton
+  },
+  data () {
+    return {
+      slots: [],
+      localeText: {
+        emptyText: ''
+      },
+      spinObj: { spinning: false },
+      // queryParam: { page: 1, pagesize: 20 },
+      expandedRowKeys: [],
+      selectedId: [],
+      selectedRowKeys: [],
+      paginationParam: {
+        current: 1,
+        pageSize: 20,
+        total: 0,
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '30', '40'],
+        showTotal: total => {
+          return `共 ${total} 条`;
+        }
+      },
+      tableData: []
+    };
+  },
+  watch: {
+    getList: {
+      handler: function (val) {
+        val.reqList === true && this.getTableList();
+      },
+      deep: true
+    },
+    dataSource (val) {
+      this.tableData = val;
+    }
+  },
+  created () {
+    this.handleRowOpt();
+  },
+  mounted () {
+    if (this.dataSource.length) {
+      this.tableData = this.dataSource;
+    }
+    // Object.assign(this.searchParams, this.queryParam);
+    this.$route.name !== 'smartDoor' && this.listApi.url && this.getTableList(); // 单独处理门禁设备
+  },
+  activated () {
+    if (this.$store.state.isOptData) {
+      let pageParam = this.getLocal('paginationLocal');
+      if (pageParam && pageParam.name === this.$route.name) {
+        this.getTableList(pageParam);
+      } else {
+        this.getTableList();
+      }
+      localStorage.removeItem('paginationLocal');
+      this.$store.commit('setOptData', false);
+    }
+  },
+  methods: {
+    /** 处理自定义列 slot */
+    handleRowOpt () {
+      let slotArr = [];
+      this.columns.forEach((el) => {
+        let slot = el.scopedSlots;
+        if (slot && slot.customRender && slot.customRender !== 'action') { // 默认操作项 customRender 写死为action
+          slotArr.push(slot.customRender);
+        }
+      });
+      this.slots = slotArr;
+    },
+    /* 操作按钮禁用判断 */
+    rowOptDisable (row, el) {
+      let text = el.text;
+      if (text === '删除' && row.isDelete === 0) {
+        return true;
+      } else if (text === '升级' && row.isUpgrade === 0) {
+        return true;
+      } else if (text === '修改' && row.verify_status === 2) { // 单独处理：物业公司修改按钮
+        return true;
+      } else if (text === '回复' && row.status_str === '已回复') { // 单独处理：反馈回复按钮
+        return true;
+      } else if (text === '撤回' && row.status !== 0) { // 单独处理：推送撤回按钮
+        return true;
+      } if (text === '查看子类' && row.can_see_child === 0) { // 处理分类
+        return true;
+      } else if (text === '添加子类' && row.can_add_child === 0) { // 处理分类
+        return true;
+      }
+    },
+    /* 获取列表 */
+    getTableList (pagination = {}) {
+      if (!this.listApi.url) {
+        return;
+      }
+      this.resetSelected();
+      this.searchParams.pageNum = pagination.current || 1;
+      this.searchParams.pageSize = pagination.pageSize || 20;
+      if (!Object.keys(pagination).length) {
+        this.paginationParam.current = this.searchParams.pageNum;
+        this.paginationParam.pageSize = this.searchParams.pageSize;
+      }
+
+      this.$get({
+        url: this.listApi.url,
+        params: this.searchParams,
+        localeText: this.localeText,
+        spinObj: this.spinObj
+      }).then(({data}) => {
+        (data.list || data.data || (Array.isArray(data) && data) || data.rows || []).forEach((ele, index) => {
+          ele.key = `${ele[this.rowKey]}`;
+        });
+        if (this.listApi.resHandle) {
+          this.tableData = this.listApi.resHandle(data.list || data.rows || data);
+        } else {
+          this.tableData = data.list || data.rows || data.data || data;
+        }
+        if (data.hasOwnProperty('total')) {
+          this.paginationParam.total = data.total;
+        }
+        if (this.getList) {
+          this.getList.reqList = false;
+        }
+      });
+    },
+    /* 搜索查询 */
+    searchHandle (val) {
+      localStorage.removeItem('paginationLocal');
+      if (this.listApi.searchHandle) {
+        let resParam = this.listApi.searchHandle(val);
+        Object.assign(this.searchParams, resParam || {});
+      } else {
+        for (let item in val) {
+          if (this.searchParams.hasOwnProperty(item)) {
+            this.searchParams[item] = val[item];
+          }
+        }
+      }
+      this.getTableList();
+    },
+    /* 清空查询 */
+    resetHandle () {
+      localStorage.removeItem('paginationLocal');
+      this.$emit('resetSearch'); // 单独处理分类面包屑 清空搜索条件
+      this.resetData(this.searchParams, this.excludeResetKey);
+      Object.assign(this.paginationParam, { current: 1, pageSize: 20 });
+      this.getTableList();
+    },
+    /**
+     * 分页、筛选、排序变化时触发搜索
+     * @pagination 分页修改后参数
+     * @filters  筛选参数
+     * @sorter 排序参数
+     * */
+    tableChange (pagination, filters, sorter) {
+      let current = pagination.current;
+      let pageSize = pagination.pageSize;
+      this.paginationParam.current = current;
+      this.paginationParam.pageSize = pageSize;
+
+      this.setLocal('paginationLocal', {
+        name: this.$route.name,
+        current: current,
+        pageSize: pageSize
+      });
+
+      // this.searchParams.page = current;
+      // this.searchParams.pagesize = pageSize;
+      this.getTableList(pagination);
+    },
+    /* 翻页后重置 */
+    resetSelected () {
+      this.selectedRowKeys = [];
+      this.selectedId = [];
+      this.selectedRows = [];
+      this.tableOptList.forEach((ele) => {
+        if (ele.hasOwnProperty('disabled')) {
+          this.selectedRowKeys.length ? ele.disabled = false : ele.disabled = true;
+        }
+      });
+    },
+    /** 多选行
+     * @param param1 选中的key
+     * @param param2 选中的整行
+     * */
+    rowSelectChange (selectedRowKeys, selectedRows) {
+      this.tableOptList.forEach((ele) => {
+        if (ele.hasOwnProperty('disabled')) {
+          selectedRowKeys.length ? ele.disabled = false : ele.disabled = true;
+        }
+      });
+      this.selectedRowKeys = selectedRowKeys;
+      this.selectedId = selectedRowKeys;
+      this.selectedRows = selectedRows;
+
+      this.handleMuitDisable(selectedRows);
+      this.$emit('handleSelectChange', this.selectedRows);
+    },
+    /** 处理批量禁用 */
+    handleMuitDisable (rows) {
+
+    },
+    /* 按钮组 */
+    btnsHandler (item) {
+      if (item.handle) {
+        item.handle(this.selectedId, this.selectedRows);
+      } else if (item.text === '新增') {
+        let route = this.getRoute();
+        this.$router.push({ name: route || this.addHandleParam.route });
+      } else if (item.text === '删除') {
+        this.showDeleteConfirm(this.selectedRows);
+      }
+    },
+    getRoute () {
+      if (this.addHandleParam.route && typeof this.addHandleParam.route === 'function') {
+        return this.addHandleParam.route();
+      } else {
+        return this.addHandleParam.route;
+      }
+    },
+    /* 打开删除对话框 */
+    showDeleteConfirm (row) {
+      let deleteParam = this.deleteParam;
+      let id = this.rowKey;
+      let isDelete;
+      let selectedId = [];
+      let isBatch = !!(Array.isArray(row) && row.length);
+      if (isBatch) {
+        let noKey;
+        row.forEach((el) => {
+          !el.hasOwnProperty('isDelete') ? noKey = true : noKey = false;
+          if (noKey === true) {
+            selectedId.push(el[id]);
+          } else {
+            if (el.isDelete === 1) { selectedId.push(el[id]); }
+          }
+        });
+        if (noKey) {
+          isDelete = true;
+        } else {
+          selectedId.length ? isDelete = true : isDelete = false;
+        }
+      } else {
+        if (row.hasOwnProperty('isDelete')) {
+          row.isDelete === 1 ? isDelete = true : isDelete = false;
+        } else { // 列表没有isDelete字段
+          isDelete = true;
+        }
+        selectedId = [row[id]];
+        var name = row[deleteParam.key];
+      }
+      let msg;
+      if (isDelete) {
+        if (isBatch) { // 点击批量删除
+          msg = `确定要删除 ${selectedId.length} 条${deleteParam.title}数据？`;
+        } else { // 点击单条删除
+          msg = `确定要删除${deleteParam.title}：${name}？`;
+        }
+      } else {
+        msg = `没有可删除的数据？`;
+      }
+      this[isDelete ? '$confirm' : '$error']({
+        title: msg,
+        okType: 'danger',
+        centered: true,
+        onOk: () => {
+          if (isDelete) {
+            this.deleteSelected(selectedId);
+          }
+        }
+      });
+    },
+    /* 删除所有选中 */
+    deleteSelected (selectedId) {
+      if (Array.isArray(selectedId)) {
+        selectedId = selectedId.join(',');
+      }
+      // this.deleteParam.param.pk_val = selectedId;
+      // this.deleteParam.param.tag_id = selectedId;
+      this.$delete({
+        url: this.deleteParam.url + selectedId
+        // params: this.deleteParam.param
+      }).then((res) => {
+        this.$message.success(`删除成功！`);
+        this.getTableList();
+        this.tableOptList.forEach((ele) => {
+          if (ele.hasOwnProperty('disabled')) {
+            ele.disabled = true;
+          }
+        });
+        this.deleteParam.resHandle && this.deleteParam.resHandle();
+      });
+    },
+    /* 进入修改页面 */
+    toEdit (row, keyArr) {
+      let paramObj = {};
+      keyArr && keyArr.forEach((el) => {
+        if (typeof row[el] === 'number') {
+          paramObj[el] = `${row[el]}`;
+        } else {
+          paramObj[el] = row[el];
+        }
+      });
+      let route = this.getRoute();
+      this.$router.push({
+        name: route || this.addHandleParam.route,
+        query: { id: row[this.rowKey], title: this.addHandleParam.title, ...paramObj }
+      });
+    }
+  }
+};
+</script>
