@@ -1,15 +1,14 @@
-
-// import empty from '@/utils/empty';
+import { getLocal, setLocal } from '@/utils/common';
 
 export default {
   appAuth: {
     watch: {
       $route (to, from) {
         if (from.name === 'login') {
-          if (this.getLocal('adminStatus') === '1') {
+          if (getLocal('adminStatus') === '1') {
             this.menuList = this.$store.state.menuList;
           } else {
-            localStorage.menuList && (this.menuList = this.getLocal('menuList'));
+            localStorage.menuList && (this.menuList = getLocal('menuList'));
           }
         }
       }
@@ -19,7 +18,7 @@ export default {
     },
     methods: {
       initMenuRoute () {
-        if (this.getLocal('adminStatus') === '1') {
+        if (getLocal('adminStatus') === '1') {
           let state = this.$store.state;
           this.menuList = state.menuList;
           this.$router.addRoutes(state.routes);
@@ -37,8 +36,8 @@ export default {
           routeList.push(noPage);
           this.$router.addRoutes(routeList);
         } else {
-          localStorage.menuList && (this.menuList = this.getLocal('menuList'));
-          let routes = this.getLocal('routeList');
+          localStorage.menuList && (this.menuList = getLocal('menuList'));
+          let routes = getLocal('routeList');
           if (routes) {
             routes.forEach((el) => {
               state.routes.forEach((item) => {
@@ -58,7 +57,7 @@ export default {
   tableAuth: {
     created () {
       this.disableAllBtn();
-      if (this.getLocal('adminStatus') === '1') {
+      if (getLocal('adminStatus') === '1') {
         this.openBtnAuth();
       } else {
         this.setBtnAuth();
@@ -98,7 +97,7 @@ export default {
       },
       /* 设置按钮权限 */
       setBtnAuth () {
-        let btnList = this.getLocal('btnList');
+        let btnList = getLocal('btnList');
         btnList && btnList.forEach((el) => {
           if (this.$route.name === el.componentName) {
             this.tableOptList.forEach((item) => {
@@ -132,9 +131,9 @@ export default {
       return { submitDisabled: true };
     },
     created () {
-      this.$route.name === 'userInfo' && (this.submitDisabled = false);
+      this.$route && this.$route.name === 'userInfo' && (this.submitDisabled = false);
 
-      if (this.getLocal('adminStatus') === '1') {
+      if (getLocal('adminStatus') === '1') {
         this.submitDisabled = false;
       } else {
         this.pageBtnAuth();
@@ -143,7 +142,7 @@ export default {
     methods: {
       /* 设置按钮权限 */
       pageBtnAuth () {
-        let btnList = this.getLocal('btnList');
+        let btnList = getLocal('btnList');
         btnList && btnList.forEach((el) => {
           if (this.$route.name === el.componentName) {
             el.key === 'submit' && (this.submitDisabled = false);
@@ -167,7 +166,7 @@ export default {
     },
     created () {
       this.disableAllBtn();
-      if (this.getLocal('adminStatus') === '1') {
+      if (getLocal('adminStatus') === '1') {
         this.openBtnAuth();
       } else {
         this.setBtnAuth();
@@ -188,7 +187,7 @@ export default {
       },
       /* 设置按钮权限 */
       setBtnAuth () {
-        let btnList = this.getLocal('btnList');
+        let btnList = getLocal('btnList');
         btnList && btnList.forEach((el) => {
           if (this.$route.name === el.componentName) {
             this.keyArr.forEach((item) => {

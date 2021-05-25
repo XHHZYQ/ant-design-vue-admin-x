@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { getLocal, setLocal } from '@/utils/common';
 import rowButton from './rowButton';
 export default {
   mixins: [],
@@ -171,7 +172,7 @@ export default {
   },
   activated () {
     if (this.$store.state.isOptData) {
-      let pageParam = this.getLocal('paginationLocal');
+      let pageParam = getLocal('paginationLocal');
       if (pageParam && pageParam.name === this.$route.name) {
         this.getTableList(pageParam);
       } else {
@@ -283,7 +284,7 @@ export default {
       this.paginationParam.current = current;
       this.paginationParam.pageSize = pageSize;
 
-      this.setLocal('paginationLocal', {
+      setLocal('paginationLocal', {
         name: this.$route.name,
         current: current,
         pageSize: pageSize

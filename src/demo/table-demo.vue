@@ -101,7 +101,6 @@ export default {
         }
       ],
       listApi: {
-        // url: 'community/position/list',
         url: '',
         resHandle: '',
         searchHandle: '' // searchHandle

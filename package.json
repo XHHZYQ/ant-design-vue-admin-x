@@ -4,9 +4,8 @@
   "main": "dist/index.js",
   "version": "1.0.0",
   "files": ["dist/"],
-  "author": "15859256852@163.com",
+  "author": "徐宏辉 <15859256852@163.com>",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"

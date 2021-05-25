@@ -11,7 +11,7 @@ import App from '@/demo/table-demo.vue';
 Vue.use(Antd);
 Vue.use(xhhPkg);
 
-let config = { baseURL: 'https://192.168.255/api/' };
+let config = { baseURL: 'http://192.168.1.225:8000/community/' };
 let $get = GET.bind(config);
 let $post = POST.bind(config);
 let $delete = DELETE.bind(config);

@@ -18,15 +18,13 @@ export default {
       }
     }
   },
-  created () {
-    this.addFormEvent();
-    this.handleListHidden();
-    this.initEvent && this.initEvent();
-  },
   beforeCreate () {
     this.form = this.$form.createForm(this);
   },
-  beforeMount () {
+  created () {
+    this.addFormEvent();
+    this.handleListHidden();
+    this.initEvent && this.initEvent(); // 父组件初始化事件
   },
   methods: {
     /* 添加表单事件 */

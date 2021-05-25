@@ -4,7 +4,7 @@
   <div>
     <slot></slot>
     <!--<a-form :form="form" @submit.prevent="handleSubmit">-->
-    <a-form :form="form">
+    <a-form :form="form" v-bind="itemLayout || $store.state.base_itemLayout">
       <template v-for="(item, index) of formList">
         <!--纯文本-->
         <template v-if="item.inputType==='text'">
@@ -12,9 +12,10 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
-              <span class="ant-form-text">{{textData[item.props[0]]}}</span>
+            <span class="ant-form-text">{{ textData[item.props[0]] }}</span>
           </a-form-item>
         </template>
 
@@ -26,21 +27,26 @@
             :extra="item.extra"
             :help="item.help"
             has-feedback
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-input @blur="(e) => {item.blur && item.blur(e)}" @click="(e) => item.click && item.click(e)" @change="(e) => {item.handle && item.handle(e)}" v-decorator="item.props" :type="item.type" :disabled="item.disabled" :placeholder="item.placeholder"/>
+            <a-input @blur="(e) => {item.blur && item.blur(e)}" @click="(e) => item.click && item.click(e)"
+                     @change="(e) => {item.handle && item.handle(e)}" v-decorator="item.props" :type="item.type"
+                     :disabled="item.disabled" :placeholder="item.placeholder"/>
           </a-form-item>
         </template>
 
         <div v-if="item.inputType==='textarea'" :key="index">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
-          <a-form-item v-if="!item.slot && item.isShow"
+          <a-form-item
+            v-if="!item.slot && item.isShow"
             class="textarea-icon"
             :label="item.label"
-             has-feedback
-             :extra="item.extra"
-            v-bind="itemLayout || $store.state.base_itemLayout"
-            >
+            has-feedback
+            :extra="item.extra"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
+          >
             <a-textarea v-decorator="item.props" :rows="4" :placeholder="item.placeholder" :disabled="item.disabled"/>
           </a-form-item>
         </div>
@@ -51,8 +57,9 @@
             v-if="!item.slot && item.isShow"
             :label="item.label"
             has-feedback
-            v-bind="itemLayout || $store.state.base_itemLayout"
-            >
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
+          >
             <a-select
               @change="(e) => {item.handle && item.handle(e)}"
               v-decorator="item.props"
@@ -67,7 +74,7 @@
                 v-for="(el, order) of item.options"
                 :key="order"
                 :value="el.value">
-                {{el.label}}
+                {{ el.label }}
               </a-select-option>
             </a-select>
           </a-form-item>
@@ -79,8 +86,9 @@
             v-if="!item.slot && item.isShow"
             :label="item.label"
             has-feedback
-            v-bind="itemLayout || $store.state.base_itemLayout"
-            >
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
+          >
             <a-tree-select
               @change="(e) => {item.handle && item.handle(e)}"
               style="width: 100%"
@@ -104,19 +112,18 @@
                   </a-tree-select-node>
                 </a-tree-select-node>
               </a-tree-select-node> -->
-
             </a-tree-select>
           </a-form-item>
         </div>
 
-        <!-- <tree-list v-if="item.inputType=== 'treeList'" :paramsObj="item" :key="index"></tree-list> -->
         <template v-if="item.inputType=== 'cascader'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
             has-feedback
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-cascader
               @change="(e, v) => {item.handle && item.handle(e, v)}"
@@ -138,20 +145,24 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-input-number v-decorator="item.props" :min="item.min" :max="item.max"/>
-            <span v-if="item.unit" class="ant-form-text">{{item.unit}}</span>
+            <span v-if="item.unit" class="ant-form-text">{{ item.unit }}</span>
           </a-form-item>
         </template>
 
         <template v-if="item.inputType==='switch'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
-          <a-form-item v-if="!item.slot && item.isShow"
+          <a-form-item
+            v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-switch v-decorator="item.props" checkedChildren="开" unCheckedChildren="关" :checked="isChecked" @change="switchClick($event, item.handle)"/>
+            <a-switch v-decorator="item.props" checkedChildren="开" unCheckedChildren="关" :checked="isChecked"
+                      @change="switchClick($event, item.handle)"/>
           </a-form-item>
         </template>
 
@@ -161,12 +172,18 @@
             class="checkbox-group"
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-checkbox-group @change="e => {item.handle && item.handle(e)}" v-decorator="item.props" :disabled="item.disabled" :style="{width: '100%'}">
+            <a-checkbox-group
+              @change="e => {item.handle && item.handle(e)}"
+              v-decorator="item.props"
+              :disabled="item.disabled"
+              :style="{width: '100%'}"
+            >
               <a-row>
                 <a-col v-for="(el, order) of item.options" :key="order" :span="8">
-                  <a-checkbox :value="el.value">{{el.label}}</a-checkbox>
+                  <a-checkbox :value="el.value">{{ el.label }}</a-checkbox>
                 </a-col>
               </a-row>
             </a-checkbox-group>
@@ -178,9 +195,10 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-checkbox v-decorator="item.props">{{item.checkboxLabel}}</a-checkbox>
+            <a-checkbox v-decorator="item.props">{{ item.checkboxLabel }}</a-checkbox>
           </a-form-item>
         </template>
 
@@ -190,7 +208,8 @@
             v-if="!item.slot && item.isShow"
             :label="item.label"
             :extra="item.extra"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-upload
               :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item.props[0])"
@@ -199,8 +218,8 @@
               :fileList="item.fileList"
               :remove="(e) => removeFile(item.name, e)"
               v-bind="item.uploadParam"
-              > <!--text 、picture、picture-card-->
-              <a-button icon="upload" :loading="upLoading.loading">{{item.btnTxt || '点击上传'}}</a-button>
+            > <!--text 、picture、picture-card-->
+              <a-button icon="upload" :loading="upLoading.loading">{{ item.btnTxt || '点击上传' }}</a-button>
             </a-upload>
           </a-form-item>
         </template>
@@ -210,7 +229,8 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-range-picker v-decorator="item.props" format="YYYY-MM-DD"/>
           </a-form-item>
@@ -221,7 +241,8 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-range-picker v-decorator="item.props" showTime format="YYYY-MM-DD HH:mm:ss"/>
           </a-form-item>
@@ -232,7 +253,8 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-date-picker v-decorator="item.props" format="YYYY-MM-DD" :disabled="item.disabled"/>
           </a-form-item>
@@ -243,7 +265,8 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-date-picker v-decorator="item.props" showTime format="YYYY-MM-DD HH:mm:ss"/>
           </a-form-item>
@@ -254,8 +277,9 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
-            >
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
+          >
             <a-transfer
               :listStyle="{ width: '43%', height: '250px' }"
               v-decorator="item.props"
@@ -279,9 +303,11 @@
           <a-form-item
             v-else
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-input @change="(e) => treeSearchChange(e, item.options)" placeholder="搜索" allowClear v-model="treeSearchContent" v-if="item.isSearch"/>
+            <a-input @change="(e) => treeSearchChange(e, item.options)" placeholder="搜索" allowClear
+                     v-model="treeSearchContent" v-if="item.isSearch"/>
             <!--:checkedKeys="treeChecked"-->
             <div class="tree-box">
               <a-tree
@@ -295,14 +321,14 @@
                 v-model="defaultTree"
                 checkable
               >
-              <template slot="title" slot-scope="{ title }">
+                <template slot="title" slot-scope="{ title }">
                 <span v-if="title.indexOf(searchValue) > -1">
                   {{ title.substr(0, title.indexOf(searchValue)) }}
                   <span style="color: #f50">{{ searchValue }}</span>
                   {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}
                 </span>
-                <span v-else>{{ title }}</span>
-              </template>
+                  <span v-else>{{ title }}</span>
+                </template>
               </a-tree>
             </div>
           </a-form-item>
@@ -313,14 +339,15 @@
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
-            v-bind="itemLayout || $store.state.base_itemLayout"
+            :labelCol="item.labelCol"
+            :wrapperCol="item.wrapperCol"
             :key="index">
             <a-radio-group
               @change="e => {item.handle && item.handle(e)}"
               v-decorator="item.props"
               :disabled="item.disabled"
             >
-              <a-radio v-for="(el, i) of item.options" :key="i" :value="el.value">{{el.label}}</a-radio>
+              <a-radio v-for="(el, i) of item.options" :key="i" :value="el.value">{{ el.label }}</a-radio>
             </a-radio-group>
           </a-form-item>
         </template>
@@ -334,10 +361,10 @@
 </template>
 
 <script>
-import { addEdit, inputSearch, upload, auth } from '@/utils/mixins';
+import { addEdit, inputSearch, upload } from '@/utils/mixins';
 import empty from '@/utils/empty';
 export default {
-  mixins: [ addEdit, inputSearch, upload, auth.addEditAuth ],
+  mixins: [ addEdit, inputSearch, upload ],
   name: 'addEdit',
   props: {
     initEvent: {
@@ -395,12 +422,12 @@ export default {
     }
   },
   created () {
-    if (this.$route.query.id) {
-      this.routeQuery = this.$route.query.id;
-      this.getDetail();
+    if (this.$route) { // 兼容没配置路由
+      if (this.$route.query.id) {
+        this.routeQuery = this.$route.query.id;
+        this.getDetail();
+      }
     }
-  },
-  mounted () {
   },
   methods: {
     handleChange (info) {

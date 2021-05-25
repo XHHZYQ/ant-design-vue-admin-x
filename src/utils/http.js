@@ -58,7 +58,7 @@ function createHeader (config) {
     if (token) {
       accesstoken = token;
     } else {
-      getToken();
+      getToken(); // todo 打包时要放开
     }
   }
 
