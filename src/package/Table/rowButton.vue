@@ -1,6 +1,5 @@
 <template>
-<!--  <span v-hasPermi="item.permi">-->
-  <span>
+  <span v-hasPermi="item.permi">
     <a-button
       @click="item.handle(row)"
       type="link"
@@ -8,6 +7,7 @@
     >
       {{item.customRender ? (item.rowOptText ? item.rowOptText(row) : statusTxt(row)) : item.text}}
     </a-button>
+    <a-divider v-if="index < (len - 1)" type="vertical"/>
   </span>
 </template>
 
@@ -15,6 +15,12 @@
 export default {
   name: 'rowButton',
   props: {
+    index: {
+      type: Number
+    },
+    len: {
+      type: Number
+    },
     item: {
       type: Object,
       default: () => ({})

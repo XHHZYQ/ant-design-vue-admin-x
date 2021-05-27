@@ -75,7 +75,6 @@
       </a-row>
     </a-form>
 
-<!--    v-hasPermi="item.permi" // todo-->
     <div class="table-opt" v-if="tableOptList.length">
       <a-button
         v-for="(item, index) of tableOptList"
@@ -85,6 +84,7 @@
         type="primary"
         :icon="item.icon"
         :disabled="item.disabled"
+        v-hasPermi="item.permi"
       >{{item.text}}
       </a-button>
     </div>

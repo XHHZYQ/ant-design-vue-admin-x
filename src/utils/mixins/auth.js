@@ -121,8 +121,6 @@ export default {
             });
           }
         });
-        // console.log('set.tableOptList: ', this.tableOptList);
-        // console.log('set.rowOptList: ', this.rowOptList);
       }
     }
   },

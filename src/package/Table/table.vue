@@ -14,9 +14,9 @@
     <slot></slot>
     <slot name="bread"></slot>
     <a-spin :spinning="spinObj.spinning" size="large" :delay="20">
-      <template slot="indicator">
-        <img src="../../assets/images/loading.gif" :style="{width: '60px', height: '60px'}" alt="">
-      </template>
+<!--      <template slot="indicator">-->
+<!--        <img src="../../assets/images/loading.gif" :style="{width: '60px', height: '60px'}" alt="">-->
+<!--      </template>-->
       <a-table
         v-if="columns.length"
         @change="tableChange"
@@ -33,8 +33,7 @@
         <template slot="action" slot-scope="text, record, index"> <!--生成复杂数据的渲染函数，参数分别为当前行的值，当前行数据，行索引-->
           <span v-for="(item, index) of rowOptList" :key="index">
             <template v-if="index < rowOptLen">  <!--默认3，列表默认展示3个-->
-              <row-button :item="item" :row="record"></row-button>
-              <a-divider v-if="index < (rowOptList.length - 1)" type="vertical"/>
+              <row-button :item="item" :row="record" :len="rowOptList.length" :index="index"></row-button>
             </template>
 
             <template v-if="index > rowOptLen-1">
@@ -51,9 +50,11 @@
         </template>
 
         <!--其他操作-->
-<!--        <div v-for="(item, index) of slots" :key="index" :slot="item" slot-scope="text, record">-->
-<!--          <slot :name="`opt_${item}`" :row="record"></slot>-->
-<!--        </div>-->
+        <template v-for="(item, index) of slots">
+          <div :key="index" :slot="item" slot-scope="text, record">
+            <slot :name="`opt_${item}`" :row="record"></slot>
+          </div>
+        </template>
       </a-table>
     </a-spin>
   </div>
@@ -167,8 +168,7 @@ export default {
     if (this.dataSource.length) {
       this.tableData = this.dataSource;
     }
-    // this.$route.name !== 'smartDoor' && this.listApi.url && this.getTableList(); // 单独处理门禁设备
-    this.listApi.url && this.getTableList() // todo
+    this.listApi.url && this.getTableList();
   },
   activated () {
     if (this.$store.state.isOptData) {
@@ -226,7 +226,6 @@ export default {
         this.paginationParam.pageSize = this.searchParams.pageSize;
       }
 
-      console.log('执行到这了 44: ', );
       this.$get({
         url: this.listApi.url,
         params: this.searchParams,

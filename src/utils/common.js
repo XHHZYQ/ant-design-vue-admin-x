@@ -5,15 +5,7 @@ const TokenKey = 'Admin-Token';
 
 /* 获取access token */
 export function getToken () {
-  GET({
-    url: '/access_token',
-    params: { grant_type: 'client_credential' }
-  }).then(({data}) => {
-    let docToken = document.cookie.split('=')[1];
-    if (!docToken) {
-      document.cookie = `accessToken=${data.access_token};max-age=1800`;
-    }
-  });
+  return Cookies.get(TokenKey);
 }
 
 /** 存储 token */

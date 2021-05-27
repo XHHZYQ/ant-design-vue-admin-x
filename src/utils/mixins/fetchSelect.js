@@ -102,7 +102,6 @@ export default {
     },
     /* 获取设备下拉 */
     deviceSelect (index, cascadeParam = {}, scope = 'searchList') {
-      console.log('cascadeParam', cascadeParam);
       this.$get({
         url: 'hm/device/treeselect',
         params: {
@@ -188,7 +187,6 @@ export default {
     // 根据类型获取字典下拉
     dictionarySelect (paramArr) {
       paramArr.forEach(item => {
-        console.log('query', item.query);
         this.$get({
           url: `community/dict/data/dictType/${item.query}`
         }).then(({data}) => {

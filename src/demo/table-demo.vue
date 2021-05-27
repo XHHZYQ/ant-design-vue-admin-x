@@ -66,7 +66,8 @@ export default {
       ],
       rowOptList: [
         { text: '修改', handle: (row) => this.$refs.table.toEdit(row, ['can_delete']), permi: ['community:position:edit'] },
-        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['community:position:remove'] }
+        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['community:position:remove'] },
+        { text: '详情', handle: (row) => {}, permi: ['community:position:detail'] }
       ],
       columns: [
         { title: 'ID', dataIndex: 'position_id', align: 'left', width: '' },
@@ -117,10 +118,22 @@ export default {
       }
     };
   },
+  created () {
+    this.setPpermiList();
+  },
   mounted () {
     // this.getSelect();
   },
   methods: {
+    setPpermiList () {
+      let arr = [
+        'community:position:add',
+        'community:position:remove',
+        'community:position:edit',
+        // 'community:position:detail'
+      ];
+      sessionStorage.setItem('permiList', JSON.stringify(arr))
+    },
     /* 获取下拉 */
     getSelect () {
       this.communitySelect(0, 'searchList', 1);
@@ -132,7 +145,6 @@ export default {
       return res;
     },
     searchHandle (selectData) {
-      console.log('处理搜索数据: ', selectData);
       return selectData;
     }
   }

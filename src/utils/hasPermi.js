@@ -15,6 +15,7 @@ export const hasPermi = {
       });
 
       if (!hasPermissions) {
+        // el.parentNode && (el.parentNode.innerHTML = '');
         el.parentNode && el.parentNode.removeChild(el);
       }
     } else {

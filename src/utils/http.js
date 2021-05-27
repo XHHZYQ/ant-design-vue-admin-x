@@ -31,6 +31,7 @@ const instance = axios.create({
   }
 });
 
+let getTokenCount = 0;
 function createHeader (config) {
   let time = parseInt(new Date().getTime() / 1000);
   let keySecret = {
@@ -58,7 +59,10 @@ function createHeader (config) {
     if (token) {
       accesstoken = token;
     } else {
-      getToken(); // todo 打包时要放开
+      if (getTokenCount < 4) { // todo
+        getToken();
+        getTokenCount++;
+      }
     }
   }
 
@@ -165,6 +169,8 @@ instance.interceptors.request.use(config => {
 
 // 响应拦截器  用于token失效时刷新
 instance.interceptors.response.use((res) => {
+  getTokenCount = 0;
+  // console.log('tokenCunt res: ', getTokenCount);
   if (res.data.code === 401) {
     return newAxios({
       method: 'post',
@@ -192,7 +198,8 @@ instance.interceptors.response.use((res) => {
     return res;
   }
 }, (error) => {
-  console.log('error', error);
+  getTokenCount = 0;
+  // console.log('tokenCunt err: ', getTokenCount);
   return Promise.reject(error);
 });
 
@@ -214,7 +221,7 @@ const fetch = (options, obj) => {
 
   return new Promise((resolve, reject) => {
     instance(options).then((res) => {
-      // console.log('http options: ', options, res);
+      // console.log('http options: ', options.url, options);
       let resData = res.data;
       spinObj && setTimeout(() => { spinObj.spinning = false; }, 300); // 关闭loading
       btnLoading && setTimeout(() => { btnLoading.loading = false; }, 300);
@@ -242,6 +249,7 @@ const fetch = (options, obj) => {
         reject(res);
       }
     }).catch((err) => {
+      // console.log('http error options : ', options.url, options);
       spinObj && setTimeout(() => { spinObj.spinning = false; }, 300); // 关闭loading
       btnLoading && setTimeout(() => { btnLoading.loading = false; }, 300);
       if (localeText) {

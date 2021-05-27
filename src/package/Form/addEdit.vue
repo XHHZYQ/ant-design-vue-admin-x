@@ -354,7 +354,7 @@
       </template>
 
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
-        <a-button  type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
+        <a-button type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
       </a-form-item>
     </a-form>
   </div>
@@ -431,9 +431,6 @@ export default {
   },
   methods: {
     handleChange (info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`);
       } else if (info.file.status === 'error') {
@@ -442,10 +439,8 @@ export default {
     },
     /** tree check 事件 */
     treeCheck (keys, props) {
-      console.log('tree 勾选了: ', keys);
       this.form.setFieldsValue({[props]: keys});
       // let values = this.form.getFieldsValue();
-      // console.log('values: ', values);
     },
     /** tree expand 事件 */
     treeExpand (expandedKeys) {
@@ -470,7 +465,6 @@ export default {
       if (!e.target.value) {
         this.expandedKeys = ['all'];
       }
-      console.log('搜索结果: ', this.expandedKeys);
     },
     getParentKey (title, tree) {
       let parentKey;

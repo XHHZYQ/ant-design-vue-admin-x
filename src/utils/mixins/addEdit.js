@@ -116,7 +116,6 @@ export default {
             }
           });
           if (requireIndex >= 0 && prop[1].rules[requireIndex].required === true) { // 如果为必填，则清空值
-            console.log('有 require: ', prop[1].rules[requireIndex]);
             this.form.resetFields([name]);
           } else { // 如果为非必填，直接赋值为0
             this.fieldData[name] = 0;
