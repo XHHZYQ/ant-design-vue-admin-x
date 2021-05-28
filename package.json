@@ -2,7 +2,7 @@
   "name": "ant-design-vue-admin-x",
   "description": "A form component base on ant-design-vue",
   "main": "dist/index.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "files": ["dist/"],
   "author": "徐宏辉 <15859256852@163.com>",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "not ie <= 8"
   ],
   "devDependencies": {
+    "ant-design-vue-admin-x": "^1.0.3",
     "ant-design-vue": "^1.7.5",
     "axios": "^0.21.1",
     "babel-core": "^6.26.0",

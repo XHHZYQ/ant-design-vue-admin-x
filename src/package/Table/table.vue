@@ -14,9 +14,9 @@
     <slot></slot>
     <slot name="bread"></slot>
     <a-spin :spinning="spinObj.spinning" size="large" :delay="20">
-<!--      <template slot="indicator">-->
-<!--        <img src="../../assets/images/loading.gif" :style="{width: '60px', height: '60px'}" alt="">-->
-<!--      </template>-->
+      <template slot="indicator">
+        <img src="../../assets/images/loading.gif" :style="{width: '60px', height: '60px'}" alt="">
+      </template>
       <a-table
         v-if="columns.length"
         @change="tableChange"

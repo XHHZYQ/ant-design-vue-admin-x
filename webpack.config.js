@@ -6,7 +6,7 @@ module.exports = {
   entry: process.env.NODE_ENV === 'development' ? './src/main.js' : './src/package/index.js', // 调试和开发的入口要区分开
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    publicPath: process.env.NODE_ENV === 'development' ? '/dist/' : './dist/',
     filename: 'index.js',
     library: 'ant-design-vue-admin-x',
     libraryTarget: 'umd'
