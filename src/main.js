@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 
-import xhhPkg, { GET, POST, DELETE, PUT } from '../dist'; // 打包结果引入 dist
+// import xhhPkg, { GET, POST, DELETE, PUT } from '../dist'; // 打包结果引入 dist
 // import xhhPkg, { GET, POST, DELETE, PUT }  from '@/package'; // 直接引入
-// import xhhPkg, { GET, POST, DELETE, PUT }  from 'ant-design-vue-admin-x';
+import xhhPkg, { GET, POST, DELETE, PUT }  from 'ant-design-vue-admin-x';
 
 // import App from './demo/form-demo.vue';
 import App from '@/demo/table-demo.vue';

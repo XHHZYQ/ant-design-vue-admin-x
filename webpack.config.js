@@ -93,6 +93,10 @@ module.exports = {
   performance: {
     hints: false
   },
+  externals: {
+    vue: 'vue',
+    'ant-design-vue': 'ant-design-vue'
+  },
   devtool: '#eval-source-map'
 }
 
