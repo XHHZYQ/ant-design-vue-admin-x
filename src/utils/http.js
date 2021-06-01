@@ -191,7 +191,10 @@ instance.interceptors.response.use((res) => {
         removeToken();
         localStorage.clear();
         sessionStorage.clear();
-        window.location.href = `${location.origin}${location.pathname}${location.hash}?redirect=${router.history.current.name}`; // todo 需改造
+
+        let path = location && location.hash.split('#')[1];
+        console.log('http 401 path: ', path);
+        window.location.href = `${location.origin}${location.pathname}${location.hash}?redirect=${path}`;
       }
     });
   } else {
