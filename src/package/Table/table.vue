@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { getLocal, setLocal } from '@/utils/common';
+import { getLocal, setLocal } from '../../utils/common';
 import rowButton from './rowButton';
 export default {
   mixins: [],
