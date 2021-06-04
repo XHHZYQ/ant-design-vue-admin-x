@@ -1,4 +1,3 @@
-import { GET } from '@/utils/http';
 import Cookies from 'js-cookie';
 
 const TokenKey = 'Admin-Token';

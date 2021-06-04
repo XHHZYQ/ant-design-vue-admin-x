@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { fetchSelect } from '@/utils/mixins';
+import { fetchSelect } from '../utils/mixins';
 let isStrictlySelect = [
   { value: '是', label: 1 },
   { value: '否', label: 0 }

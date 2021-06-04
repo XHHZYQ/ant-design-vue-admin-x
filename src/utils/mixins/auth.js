@@ -1,4 +1,4 @@
-import { getLocal, setLocal } from '@/utils/common';
+import { getLocal, setLocal } from '../common';
 
 export default {
   appAuth: {

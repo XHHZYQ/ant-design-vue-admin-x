@@ -361,8 +361,8 @@
 </template>
 
 <script>
-import { addEdit, inputSearch, upload } from '@/utils/mixins';
-import empty from '@/utils/empty';
+import { addEdit, inputSearch, upload } from '../../utils/mixins';
+import empty from '../../utils/empty';
 export default {
   mixins: [ addEdit, inputSearch, upload ],
   name: 'addEdit',
