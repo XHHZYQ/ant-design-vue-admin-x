@@ -22,7 +22,7 @@
   ],
   "devDependencies": {
     "ant-design-vue": "^1.7.5",
-    "ant-design-vue-admin-x": "^1.0.3",
+    "ant-design-vue-admin-x": "^1.1.1",
     "axios": "^0.21.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
