@@ -572,9 +572,8 @@ export default {
       });
     },
     handleThen (msg) {
-      this.$message.success(`${msg}成功！`).then(() => {
-        this.$router.go(-1);
-      });
+      this.$message.success(`${msg}成功！`);
+      this.$router.go(-1);
     },
     /* 单独处理编辑app应用 */
     handleApp (formValues) {

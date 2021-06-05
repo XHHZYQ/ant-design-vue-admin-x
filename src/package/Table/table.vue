@@ -94,7 +94,7 @@ export default {
       type: Array,
       default: () => []
     },
-    rowKey: {
+    rowKey: { // 删除单项或多项数据的 id，也用于table循环使用的key
       type: String
     },
     columns: {
@@ -117,7 +117,7 @@ export default {
       type: Object,
       default: () => ({})
     },
-    deleteParam: {
+    deleteParam: { // 删除单项或多项的参数
       type: Object,
       default: () => ({})
     }
@@ -138,7 +138,7 @@ export default {
       selectedRowKeys: [],
       paginationParam: {
         current: 1,
-        pageSize: 20,
+        pageSize: 10,
         total: 0,
         showQuickJumper: true,
         showSizeChanger: true,
@@ -220,7 +220,7 @@ export default {
       }
       this.resetSelected();
       this.searchParams.pageNum = pagination.current || 1;
-      this.searchParams.pageSize = pagination.pageSize || 20;
+      this.searchParams.pageSize = pagination.pageSize || 10;
       if (!Object.keys(pagination).length) {
         this.paginationParam.current = this.searchParams.pageNum;
         this.paginationParam.pageSize = this.searchParams.pageSize;
@@ -268,7 +268,7 @@ export default {
       localStorage.removeItem('paginationLocal');
       this.$emit('resetSearch'); // 单独处理分类面包屑 清空搜索条件
       this.resetData(this.searchParams, this.excludeResetKey);
-      Object.assign(this.paginationParam, { current: 1, pageSize: 20 });
+      Object.assign(this.paginationParam, { current: 1, pageSize: 10 });
       this.getTableList();
     },
     /**
@@ -305,25 +305,21 @@ export default {
       });
     },
     /** 多选行
-     * @param param1 选中的key
-     * @param param2 选中的整行
+     * @param selectedRowKeys 选中的key
+     * @param selectedRows 选中的整行
      * */
     rowSelectChange (selectedRowKeys, selectedRows) {
-      this.tableOptList.forEach((ele) => {
-        if (ele.hasOwnProperty('disabled')) {
-          selectedRowKeys.length ? ele.disabled = false : ele.disabled = true;
-        }
-      });
+      this.showDeleteConfirm(selectedRows, 'isBatch', 'verify');
+
       this.selectedRowKeys = selectedRowKeys;
       this.selectedId = selectedRowKeys;
       this.selectedRows = selectedRows;
 
-      this.handleMuitDisable(selectedRows);
+      // this.handleMuitDisable(selectedRows);
       this.$emit('handleSelectChange', this.selectedRows);
     },
     /** 处理批量禁用 */
     handleMuitDisable (rows) {
-
     },
     /* 按钮组 */
     btnsHandler (item) {
@@ -333,7 +329,7 @@ export default {
         let route = this.getRoute();
         this.$router.push({ name: route || this.addHandleParam.route });
       } else if (item.text === '删除') {
-        this.showDeleteConfirm(this.selectedRows);
+        this.showDeleteConfirm(this.selectedRows, 'isBatch');
       }
     },
     getRoute () {
@@ -343,28 +339,38 @@ export default {
         return this.addHandleParam.route;
       }
     },
-    /* 打开删除对话框 */
-    showDeleteConfirm (row) {
+    /**
+     *  验证单选或多选是否能删除
+     *  保留该方法名 showDeleteConfirm 兼容全局多处使用
+     *  */
+    showDeleteConfirm (row, isBatch, verify) {
       let deleteParam = this.deleteParam;
       let id = this.rowKey;
-      let isDelete;
-      let selectedId = [];
-      let isBatch = !!(Array.isArray(row) && row.length);
+      let isDelete; // 是否可以删除
+      let selectedId = []; // 提交删除的id数组
+      console.log('batch: ', isBatch);
       if (isBatch) {
-        let noKey;
+        let noKey; // rows每项是否有isDelete字段
         row.forEach((el) => {
           !el.hasOwnProperty('isDelete') ? noKey = true : noKey = false;
-          if (noKey === true) {
+          if (noKey === true) { // 没有isDelete字段，为可以删除
             selectedId.push(el[id]);
-          } else {
+          } else { // isDelete为1，为可以删除
             if (el.isDelete === 1) { selectedId.push(el[id]); }
           }
         });
+
         if (noKey) {
           isDelete = true;
         } else {
-          selectedId.length ? isDelete = true : isDelete = false;
+          selectedId.length === row.length ? isDelete = true : isDelete = false;
         }
+
+        this.tableOptList.forEach((item) => {
+          if (item.key === 'delete' || item.text === '删除') {
+            item.disabled = isDelete === true ? false : true;
+          }
+        })
       } else {
         if (row.hasOwnProperty('isDelete')) {
           row.isDelete === 1 ? isDelete = true : isDelete = false;
@@ -374,6 +380,7 @@ export default {
         selectedId = [row[id]];
         var name = row[deleteParam.key];
       }
+
       let msg;
       if (isDelete) {
         if (isBatch) { // 点击批量删除
@@ -384,14 +391,18 @@ export default {
       } else {
         msg = `没有可删除的数据？`;
       }
-      this[isDelete ? '$confirm' : '$error']({
-        title: msg,
+
+      console.log('verify: ', verify);
+      !verify && this.deleteConfirm(isDelete, selectedId, msg);
+    },
+    /* 打开删除对话框 */
+    deleteConfirm (canDelete, deleteIds, deleteMsg) {
+      this[canDelete ? '$confirm' : '$error']({
+        title: deleteMsg,
         okType: 'danger',
         centered: true,
         onOk: () => {
-          if (isDelete) {
-            this.deleteSelected(selectedId);
-          }
+          canDelete && this.deleteSelected(deleteIds);
         }
       });
     },
