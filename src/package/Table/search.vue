@@ -91,8 +91,8 @@
   </div>
 </template>
 <script>
-import { fetchSelect, inputSearch } from '../../utils/mixins';
-import empty from '../../utils/empty';
+import { fetchSelect, inputSearch } from '../utils/mixins';
+import empty from '../utils/empty';
 export default {
   mixins: [inputSearch, fetchSelect],
   name: 'search',

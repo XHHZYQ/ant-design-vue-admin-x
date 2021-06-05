@@ -100,7 +100,6 @@ if (process.env.NODE_ENV === 'production') {
   // module.exports.devtool = '#source-map'
   module.exports.devtool = 'none'
   module.exports.externals = {
-    vue: 'vue',
     'ant-design-vue': 'ant-design-vue'
   }
   // http://vue-loader.vuejs.org/en/workflow/production.html
