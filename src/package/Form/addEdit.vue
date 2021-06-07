@@ -213,10 +213,10 @@
             :key="index">
             <a-upload
               :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item.props[0])"
-              :customRequest="(e) => {customRequest(e, item.name, item.url)}"
+              :customRequest="(e) => {customRequest(e, item.props && item.props[0], item.uploadParam.url)}"
               v-decorator="item.props"
               :fileList="item.fileList"
-              :remove="(e) => removeFile(item.name, e)"
+              :remove="(e) => removeFile(item.props && item.props[0], e)"
               v-bind="item.uploadParam"
             > <!--text 、picture、picture-card-->
               <a-button icon="upload" :loading="upLoading.loading">{{ item.btnTxt || '点击上传' }}</a-button>
@@ -516,6 +516,7 @@ export default {
         this.textData = formValues = {...formValues, ...this.handleDate(data)};
         formValues = this.filterParam(formValues);
         this.form.setFieldsValue(formValues);
+        console.log('formValues: ', formValues);
       });
     },
     /* 表单提交 */
@@ -541,6 +542,7 @@ export default {
         //     values[item] = values[item].join(',');
         //   }
         // }
+        console.log('this.fieldData: ', this.fieldData);
         Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
         if (this.routeQuery) { // 编辑
           this.$put({

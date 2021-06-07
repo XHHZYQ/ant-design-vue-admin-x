@@ -50,11 +50,9 @@
         </template>
 
         <!--其他操作-->
-        <template v-for="(item, index) of slots">
-          <div :key="index" :slot="item" slot-scope="text, record">
-            <slot :name="`opt_${item}`" :row="record"></slot>
-          </div>
-        </template>
+        <div v-for="(item, index) of slots" :key="index" :slot="item" slot-scope="text, record">
+          <slot :name="`opt_${item}`" :row="record"></slot>
+        </div>
       </a-table>
     </a-spin>
   </div>

@@ -3,7 +3,7 @@ import empty from '../empty';
 export default {
   data () {
     return {
-      fieldData: {},
+      fieldData: {}, // 整个form表单提交的 upload 文件数据
       textData: {},
       targetKeys: [],
       selectedKeys: []
@@ -74,13 +74,17 @@ export default {
         });
       });
     },
-    /* 处理获取详情fileList */
+    /**
+     * 处理获取详情fileList
+     * param data 详情返回的整个data
+     * */
     handleFileList (data) {
       this.formList.forEach((el, index) => {
         if (el.inputType === 'upload') {
-          let fileUrl = data[el.resUrl] || data[el.name]; // 返回的url
+          let prop = el.props && el.props[0];
+          let fileUrl = data[el.uploadParam.iconUrl] || data[prop]; // 返回的url
           if (fileUrl && typeof fileUrl === 'string' && (fileUrl.includes('http') || fileUrl.includes('https'))) {
-            let fileName = data[el.resName] || data[el.resUrl] || data[el.name]; // 返回的文件名
+            let fileName = data[el.uploadParam.iconName] || data[el.uploadParam.iconUrl] || data[prop]; // 返回的文件名
             el.fileList = [{uid: index, name: fileName, url: fileUrl}];
           }
         }
@@ -103,22 +107,25 @@ export default {
     /* upload 删除文件列表 */
     removeFile (name, e) {
       this.formList.forEach((el, index) => {
-        if (el.inputType === 'upload' && el.name === name) {
+        let field = el.props && el.props[0];
+        if (el.inputType === 'upload' && field === name) {
           let prop = el.props;
           let requireIndex = -1;
           prop &&
           prop[1] &&
           prop[1].hasOwnProperty('rules') &&
           prop[1].rules.length &&
-          prop[1].rules.forEach((el, index) => {
-            if (el.hasOwnProperty('required')) {
+          prop[1].rules.forEach((item, index) => {
+            if (item.hasOwnProperty('required')) {
               requireIndex = index;
             }
           });
-          if (requireIndex >= 0 && prop[1].rules[requireIndex].required === true) { // 如果为必填，则清空值
-            this.form.resetFields([name]);
+          if (requireIndex >= 0 && prop[1].rules[requireIndex].required === true) { // 如果为必填，则清空值。用户端要有完整的rules数据结构
+            // this.form.resetFields([name]);
+            this.form.setFieldsValue({[name]: undefined});
+            console.log('执行到这了 54689: ', name);
           } else { // 如果为非必填，直接赋值为0
-            this.fieldData[name] = 0;
+            this.fieldData[name] = '';
           }
 
           el.fileList = [];
