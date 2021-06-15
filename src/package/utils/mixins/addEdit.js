@@ -24,7 +24,6 @@ export default {
   created () {
     this.addFormEvent();
     this.handleListHidden();
-    this.initEvent && this.initEvent(); // 父组件初始化事件
   },
   methods: {
     /* 添加表单事件 */
@@ -103,34 +102,6 @@ export default {
         }
       });
       return dateValue;
-    },
-    /* upload 删除文件列表 */
-    removeFile (name, e) {
-      this.formList.forEach((el, index) => {
-        let field = el.props && el.props[0];
-        if (el.inputType === 'upload' && field === name) {
-          let prop = el.props;
-          let requireIndex = -1;
-          prop &&
-          prop[1] &&
-          prop[1].hasOwnProperty('rules') &&
-          prop[1].rules.length &&
-          prop[1].rules.forEach((item, index) => {
-            if (item.hasOwnProperty('required')) {
-              requireIndex = index;
-            }
-          });
-          if (requireIndex >= 0 && prop[1].rules[requireIndex].required === true) { // 如果为必填，则清空值。用户端要有完整的rules数据结构
-            // this.form.resetFields([name]);
-            this.form.setFieldsValue({[name]: undefined});
-            console.log('执行到这了 54689: ', name);
-          } else { // 如果为非必填，直接赋值为0
-            this.fieldData[name] = '';
-          }
-
-          el.fileList = [];
-        }
-      });
     },
     /* 处理弹窗 */
     handleConfirm (param) { // 单独处理编辑app应用

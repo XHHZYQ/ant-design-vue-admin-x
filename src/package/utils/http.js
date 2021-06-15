@@ -170,7 +170,6 @@ instance.interceptors.request.use(config => {
 // 响应拦截器  用于token失效时刷新
 instance.interceptors.response.use((res) => {
   getTokenCount = 0;
-  // console.log('tokenCunt res: ', getTokenCount);
   if (res.data.code === 401) {
     return newAxios({
       method: 'post',
@@ -262,7 +261,11 @@ const fetch = (options, obj) => {
       reject(errData);
       if (err.response) {
         /* 错误提示信息 */
-        errData && errData.msg && message.error(errData.msg, 5);
+        if (errData && errData.msg) {
+          message.error(errData.msg, 5);
+        } else {
+          message.error('网络不给力，请刷新重试');
+        }
       } else {
         message.error('网络不给力，请刷新重试');
       }

@@ -3,7 +3,13 @@ export default {
   data () {
     return {
       fileData: '', // upload 提交的文件数据
-      upLoading: { loading: false }
+      upLoading: { loading: false },
+      uploadGetValue: {
+        getValueFromEvent (e) {
+          if (Array.isArray(e)) { return e; }
+          return e && e.fileList;
+        }
+      }
     };
   },
   methods: {
@@ -56,6 +62,33 @@ export default {
       }).catch(() => { // 上传失败清除文件
         this.form.resetFields([name]);
       });
+    },
+    /* upload 删除文件列表 */
+    removeFile (name, e) {
+      this.formList.forEach((el, index) => {
+        let field = el.props && el.props[0];
+        if (el.inputType === 'upload' && field === name) {
+          let prop = el.props;
+          let requireIndex = -1;
+          prop &&
+          prop[1] &&
+          prop[1].hasOwnProperty('rules') &&
+          prop[1].rules.length &&
+          prop[1].rules.forEach((item, index) => {
+            if (item.hasOwnProperty('required')) {
+              requireIndex = index;
+            }
+          });
+          if (requireIndex >= 0 && prop[1].rules[requireIndex].required === true) { // 如果为必填，则清空值。用户端要有完整的rules数据结构
+            this.form.resetFields([name]);
+          } else { // 如果为非必填，直接赋值为0
+            this.fieldData[name] = '';
+          }
+          el.fileList = [];
+        }
+      });
+
+      return true;
     }
   }
 };

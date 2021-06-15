@@ -214,7 +214,7 @@
             <a-upload
               :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item.props[0])"
               :customRequest="(e) => {customRequest(e, item.props && item.props[0], item.uploadParam.url)}"
-              v-decorator="item.props"
+              v-decorator="[item.props[0], Object.assign(item.props[1], uploadGetValue)]"
               :fileList="item.fileList"
               :remove="(e) => removeFile(item.props && item.props[0], e)"
               v-bind="item.uploadParam"
@@ -353,22 +353,32 @@
         </template>
       </template>
 
+      <div v-if="isSubmitBtn && formList.length">
+      <slot name="submitBtn">
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
         <a-button type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
       </a-form-item>
+      </slot>
+      </div>
     </a-form>
   </div>
 </template>
 
 <script>
 import { addEdit, inputSearch, upload } from '../utils/mixins';
-import empty from '../utils/empty';
+import { mapState } from 'vuex';
 export default {
   mixins: [ addEdit, inputSearch, upload ],
   name: 'addEdit',
   props: {
-    initEvent: {
-      type: Function
+    transferVal: '',
+    isSubmitBtn: {
+      type: Boolean,
+      default: () => true
+    },
+    initReqHandle: {
+      type: Boolean,
+      default: () => true
     },
     reqLoading: {
       type: Object,
@@ -402,6 +412,7 @@ export default {
   },
   data () {
     return {
+      isInclude: undefined,
       treeSearchContent: '',
       expandedKeys: [],
       defaultTree: [],
@@ -414,6 +425,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['fromRoute']),
     offset () {
       if (this.itemLayout) {
         return this.itemLayout.labelCol.span;
@@ -425,9 +437,21 @@ export default {
     if (this.$route) { // 兼容没配置路由
       if (this.$route.query.id) {
         this.routeQuery = this.$route.query.id;
-        this.getDetail();
+        this.routeQuery && this.initReqHandle && this.getDetail();
       }
     }
+
+    this.isInclude = this.$route.name.toLowerCase().includes(this.fromRoute.toLowerCase());
+    console.log('addEdit include', this.isInclude, this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
+  },
+  watch: {
+    transferVal (val) {
+      this.targetKeys = val;
+    },
+    // routeQuery (newValue, oldValue) {
+    //   this.routeQuery = newValue;
+    //   this.getDetail();
+    // }
   },
   methods: {
     handleChange (info) {
@@ -492,6 +516,7 @@ export default {
     },
     /* 获取详情 */
     getDetail (url) {
+      if (!this.detailParam.url && !url) { return; }
       this.$get({
         url: url || `${this.detailParam.url}${this.routeQuery}`,
         params: {}
@@ -516,7 +541,6 @@ export default {
         this.textData = formValues = {...formValues, ...this.handleDate(data)};
         formValues = this.filterParam(formValues);
         this.form.setFieldsValue(formValues);
-        console.log('formValues: ', formValues);
       });
     },
     /* 表单提交 */
@@ -542,15 +566,18 @@ export default {
         //     values[item] = values[item].join(',');
         //   }
         // }
-        console.log('this.fieldData: ', this.fieldData);
         Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
+
+        let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
+
         if (this.routeQuery) { // 编辑
           this.$put({
             url: `${this.editParam.url}${this.routeQuery}`,
             params: values,
-            btnLoading: (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading
+            btnLoading: loading
           }).then((res) => {
-            this.$store.commit('setOptData', true);
+            this.isInclude && this.$store.commit('setOptData', true);
+
             if (this.editParam.resHandle) {
               this.editParam.resHandle(res);
             } else {
@@ -561,9 +588,10 @@ export default {
           this.$post({
             url: this.addParam.url,
             params: values,
-            btnLoading: (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading
+            btnLoading: loading
           }).then((res) => {
-            empty.$emit('setAliveComponent');
+            this.isInclude && this.$store.commit('setAliveComponent', []);
+
             if (this.addParam.resHandle) {
               this.addParam.resHandle(res);
             } else {

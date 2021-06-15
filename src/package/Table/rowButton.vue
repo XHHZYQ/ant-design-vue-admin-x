@@ -44,9 +44,11 @@ export default {
         return true;
       } else if (text === '撤回' && row.status !== 0) { // 单独处理：推送撤回按钮
         return true;
-      } if (text === '查看子类' && row.can_see_child === 0) { // 处理分类
+      } if (text === '查看子类' && row.isSeeChild === 0) { // 处理分类
         return true;
-      } else if (text === '添加子类' && row.can_add_child === 0) { // 处理分类
+      } else if (text === '添加子类' && row.isAddChild === 0) { // 处理分类
+        return true;
+      } else if (text === '审核' && row.status !== 0) {
         return true;
       }
     },

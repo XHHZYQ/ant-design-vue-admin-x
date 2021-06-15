@@ -15,7 +15,7 @@
     <slot name="bread"></slot>
     <a-spin :spinning="spinObj.spinning" size="large" :delay="20">
       <template slot="indicator">
-        <img src="../../assets/images/loading.gif" :style="{width: '60px', height: '60px'}" alt="">
+        <img src="loading.gif" :style="{width: '60px', height: '60px'}" alt="">
       </template>
       <a-table
         v-if="columns.length"
@@ -61,6 +61,7 @@
 <script>
 import { getLocal, setLocal } from '../utils/common';
 import rowButton from './rowButton';
+import { mapState } from 'vuex';
 export default {
   mixins: [],
   name: 'tabula',
@@ -131,6 +132,7 @@ export default {
       },
       spinObj: { spinning: false },
       // queryParam: { page: 1, pagesize: 20 },
+      selectedRows: [],
       expandedRowKeys: [],
       selectedId: [],
       selectedRowKeys: [],
@@ -159,8 +161,12 @@ export default {
       this.tableData = val;
     }
   },
+  computed: {
+    ...mapState(['fromRoute'])
+  },
   created () {
     this.handleRowOpt();
+    this.tableOptStatus();
   },
   mounted () {
     if (this.dataSource.length) {
@@ -169,14 +175,9 @@ export default {
     this.listApi.url && this.getTableList();
   },
   activated () {
-    if (this.$store.state.isOptData) {
-      let pageParam = getLocal('paginationLocal');
-      if (pageParam && pageParam.name === this.$route.name) {
-        this.getTableList(pageParam);
-      } else {
-        this.getTableList();
-      }
-      localStorage.removeItem('paginationLocal');
+    if (this.$store.state.isOptData && this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase())) {
+      console.log('table include', this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase()), this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
+      this.getTableList();
       this.$store.commit('setOptData', false);
     }
   },
@@ -205,9 +206,9 @@ export default {
         return true;
       } else if (text === '撤回' && row.status !== 0) { // 单独处理：推送撤回按钮
         return true;
-      } if (text === '查看子类' && row.can_see_child === 0) { // 处理分类
+      } if (text === '查看子类' && row.isSeeChild === 0) { // 处理分类
         return true;
-      } else if (text === '添加子类' && row.can_add_child === 0) { // 处理分类
+      } else if (text === '添加子类' && row.isAddChild === 0) { // 处理分类
         return true;
       }
     },
@@ -248,7 +249,6 @@ export default {
     },
     /* 搜索查询 */
     searchHandle (val) {
-      localStorage.removeItem('paginationLocal');
       if (this.listApi.searchHandle) {
         let resParam = this.listApi.searchHandle(val);
         Object.assign(this.searchParams, resParam || {});
@@ -263,7 +263,6 @@ export default {
     },
     /* 清空查询 */
     resetHandle () {
-      localStorage.removeItem('paginationLocal');
       this.$emit('resetSearch'); // 单独处理分类面包屑 清空搜索条件
       this.resetData(this.searchParams, this.excludeResetKey);
       Object.assign(this.paginationParam, { current: 1, pageSize: 10 });
@@ -281,12 +280,6 @@ export default {
       this.paginationParam.current = current;
       this.paginationParam.pageSize = pageSize;
 
-      setLocal('paginationLocal', {
-        name: this.$route.name,
-        current: current,
-        pageSize: pageSize
-      });
-
       // this.searchParams.page = current;
       // this.searchParams.pagesize = pageSize;
       this.getTableList(pagination);
@@ -296,28 +289,28 @@ export default {
       this.selectedRowKeys = [];
       this.selectedId = [];
       this.selectedRows = [];
-      this.tableOptList.forEach((ele) => {
-        if (ele.hasOwnProperty('disabled')) {
-          this.selectedRowKeys.length ? ele.disabled = false : ele.disabled = true;
-        }
-      });
+
+      this.tableOptStatus();
     },
     /** 多选行
      * @param selectedRowKeys 选中的key
      * @param selectedRows 选中的整行
      * */
     rowSelectChange (selectedRowKeys, selectedRows) {
-      this.showDeleteConfirm(selectedRows, 'isBatch', 'verify');
-
       this.selectedRowKeys = selectedRowKeys;
       this.selectedId = selectedRowKeys;
       this.selectedRows = selectedRows;
 
-      // this.handleMuitDisable(selectedRows);
-      this.$emit('handleSelectChange', this.selectedRows);
+      this.tableOptStatus();
+      this.$emit('handleSelectChange', selectedRows);
     },
-    /** 处理批量禁用 */
-    handleMuitDisable (rows) {
+    /** 判断 tableOpt 按钮状态 */
+    tableOptStatus () {
+      this.tableOptList.forEach((item) => {
+        if (item.hasOwnProperty('disabled')) { // 判断 删除 按钮禁用状态
+          this.selectedRows.length ? item.disabled = false : item.disabled = true;
+        }
+      })
     },
     /* 按钮组 */
     btnsHandler (item) {
@@ -326,7 +319,7 @@ export default {
       } else if (item.text === '新增') {
         let route = this.getRoute();
         this.$router.push({ name: route || this.addHandleParam.route });
-      } else if (item.text === '删除') {
+      } else if (item.text.includes('删除') || item.key === 'delete') {
         this.showDeleteConfirm(this.selectedRows, 'isBatch');
       }
     },
@@ -339,42 +332,25 @@ export default {
     },
     /**
      *  验证单选或多选是否能删除
-     *  保留该方法名 showDeleteConfirm 兼容全局多处使用
      *  */
     showDeleteConfirm (row, isBatch, verify) {
       let deleteParam = this.deleteParam;
       let id = this.rowKey;
       let isDelete; // 是否可以删除
       let selectedId = []; // 提交删除的id数组
-      console.log('batch: ', isBatch);
       if (isBatch) {
-        let noKey; // rows每项是否有isDelete字段
         row.forEach((el) => {
-          !el.hasOwnProperty('isDelete') ? noKey = true : noKey = false;
-          if (noKey === true) { // 没有isDelete字段，为可以删除
+          // 1.没删除字段：可以；2.有删除字段，为0：不可以；3.有删除字段，为1：可以
+          if (el.hasOwnProperty('isDelete') && el.isDelete === 1) { // isDelete 为接口字段判断能否删除
             selectedId.push(el[id]);
-          } else { // isDelete为1，为可以删除
-            if (el.isDelete === 1) { selectedId.push(el[id]); }
+          } else if (!el.hasOwnProperty('isDelete')) {
+            selectedId.push(el[id]);
           }
         });
 
-        if (noKey) {
-          isDelete = true;
-        } else {
-          selectedId.length === row.length ? isDelete = true : isDelete = false;
-        }
-
-        this.tableOptList.forEach((item) => {
-          if (item.key === 'delete' || item.text === '删除') {
-            item.disabled = isDelete === true ? false : true;
-          }
-        })
-      } else {
-        if (row.hasOwnProperty('isDelete')) {
-          row.isDelete === 1 ? isDelete = true : isDelete = false;
-        } else { // 列表没有isDelete字段
-          isDelete = true;
-        }
+        selectedId.length ? isDelete = true : isDelete = false;
+      } else { // 点击 row 按钮 已在按钮状态上判断
+        isDelete = true;
         selectedId = [row[id]];
         var name = row[deleteParam.key];
       }
@@ -382,7 +358,11 @@ export default {
       let msg;
       if (isDelete) {
         if (isBatch) { // 点击批量删除
-          msg = `确定要删除 ${selectedId.length} 条${deleteParam.title}数据？`;
+          if (selectedId.length === row.length) {
+            msg = `确定要删除 ${selectedId.length}条 ${deleteParam.title}数据？`;
+          } else {
+            msg = `确定要删除 ${selectedId.length}条 ${deleteParam.title}数据？其中 ${row.length - selectedId.length}条 不可删除`;
+          }
         } else { // 点击单条删除
           msg = `确定要删除${deleteParam.title}：${name}？`;
         }
@@ -390,8 +370,7 @@ export default {
         msg = `没有可删除的数据？`;
       }
 
-      console.log('verify: ', verify);
-      !verify && this.deleteConfirm(isDelete, selectedId, msg);
+      this.deleteConfirm(isDelete, selectedId, msg);
     },
     /* 打开删除对话框 */
     deleteConfirm (canDelete, deleteIds, deleteMsg) {
@@ -399,6 +378,7 @@ export default {
         title: deleteMsg,
         okType: 'danger',
         centered: true,
+        width: 440,
         onOk: () => {
           canDelete && this.deleteSelected(deleteIds);
         }
@@ -409,11 +389,11 @@ export default {
       if (Array.isArray(selectedId)) {
         selectedId = selectedId.join(',');
       }
-      // this.deleteParam.param.pk_val = selectedId;
-      // this.deleteParam.param.tag_id = selectedId;
+
       this.$delete({
-        url: this.deleteParam.url + selectedId
+        url: this.deleteParam.url + selectedId,
         // params: this.deleteParam.param
+        params: {}
       }).then((res) => {
         this.$message.success(`删除成功！`);
         this.getTableList();
@@ -422,7 +402,7 @@ export default {
             ele.disabled = true;
           }
         });
-        this.deleteParam.resHandle && this.deleteParam.resHandle();
+        this.deleteParam.resHandle && this.deleteParam.resHandle(); // 删除完成回调
       });
     },
     /* 进入修改页面 */
