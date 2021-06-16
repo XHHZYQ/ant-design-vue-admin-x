@@ -15,7 +15,7 @@
     <slot name="bread"></slot>
     <a-spin :spinning="spinObj.spinning" size="large" :delay="20">
       <template slot="indicator">
-        <img src="loading.gif" :style="{width: '60px', height: '60px'}" alt="">
+        <img src="./loading.gif" :style="{width: '60px', height: '60px'}" alt="">
       </template>
       <a-table
         v-if="columns.length"
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import { getLocal, setLocal } from '../utils/common';
 import rowButton from './rowButton';
 import { mapState } from 'vuex';
 export default {
@@ -175,7 +174,7 @@ export default {
     this.listApi.url && this.getTableList();
   },
   activated () {
-    if (this.$store.state.isOptData && this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase())) {
+    if (this.$route && this.$store.state.isOptData && this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase())) {
       console.log('table include', this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase()), this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
       this.getTableList();
       this.$store.commit('setOptData', false);

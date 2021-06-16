@@ -20,3 +20,5 @@ const install = (Vue) => {
 
 export { GET, POST, DELETE, PUT };
 export default install;
+export { addEdit, upload, inputSearch, fetchSelect } from './utils/mixins/index';
+

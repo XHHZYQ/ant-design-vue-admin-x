@@ -439,10 +439,10 @@ export default {
         this.routeQuery = this.$route.query.id;
         this.routeQuery && this.initReqHandle && this.getDetail();
       }
-    }
 
-    this.isInclude = this.$route.name.toLowerCase().includes(this.fromRoute.toLowerCase());
-    console.log('addEdit include', this.isInclude, this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
+      this.isInclude = this.$route.name.toLowerCase().includes(this.fromRoute.toLowerCase());
+      console.log('addEdit include', this.isInclude, this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
+    }
   },
   watch: {
     transferVal (val) {
