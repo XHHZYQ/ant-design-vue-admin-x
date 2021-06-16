@@ -174,7 +174,7 @@ export default {
     this.listApi.url && this.getTableList();
   },
   activated () {
-    if (this.$route && this.$store.state.isOptData && this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase())) {
+    if (this.fromRoute && this.$store.state.isOptData && this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase())) {
       console.log('table include', this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase()), this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
       this.getTableList();
       this.$store.commit('setOptData', false);

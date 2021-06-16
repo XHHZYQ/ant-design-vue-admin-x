@@ -1,1 +1,2 @@
-
+这三个方法要移出至项目引入：handleConfirm、 editForm、 handleApp
+selectSearch文件中的 handleChange方法 ： 可能没用
