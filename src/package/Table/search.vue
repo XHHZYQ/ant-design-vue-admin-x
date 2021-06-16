@@ -91,10 +91,10 @@
   </div>
 </template>
 <script>
-import { fetchSelect, inputSearch } from '../utils/mixins';
+import { inputSearch } from '../utils/mixins';
 import empty from '../utils/empty';
 export default {
-  mixins: [inputSearch, fetchSelect],
+  mixins: [inputSearch],
   name: 'search',
   props: {
     searchList: {
@@ -177,18 +177,6 @@ export default {
           picker[i].style && (picker[i].style.width = '100%');
         }
       });
-    },
-    /* 输入为手机号时，验证手机位数 */
-    validateMobile (rule, value, callback, placeholder) {
-      if (placeholder.indexOf('手机') > -1) {
-        if (value && value.length > 11) {
-          callback(new Error('手机号为11位数字'));
-        } else {
-          callback();
-        }
-      } else {
-        callback();
-      }
     },
     /* 分发btn事件 */
     dispatchBtns (item) {

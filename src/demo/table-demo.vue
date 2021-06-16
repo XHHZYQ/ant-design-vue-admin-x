@@ -26,27 +26,25 @@
 </template>
 
 <script>
-import { fetchSelect } from '../package/utils/mixins';
 let isStrictlySelect = [
   { value: '是', label: 1 },
   { value: '否', label: 0 }
 ];
 
 export default {
-  mixins: [fetchSelect],
   name: 'location',
   data () {
     return {
       cascadeParam: {},
       searchList: [
-        { props: ['communityId'], placeholder: '小区', options: [], inputType: 'select', handle: ($event) => this.communityChange(7, $event) },
+        { props: ['communityId'], placeholder: '小区', options: [], inputType: 'select', handle: ($event) => {} },
         { props: ['keywords'], placeholder: '名称', options: [], inputType: 'input' },
         { props: ['positionType'], placeholder: '分类', options: [], inputType: 'cascader' },
         { props: ['isStrictly'], placeholder: '是否受限', options: isStrictlySelect, inputType: 'select' },
         { props: ['createDate'], placeholder: ['创建时间', '创建时间'], options: [], inputType: 'datePick' },
         { props: ['areas'], placeholder: '省市', options: [], inputType: 'cascader', changeOnSelect: true },
         { props: ['propertyId'], placeholder: '物业公司', options: [], inputType: 'select' },
-        { props: ['buildingId'], placeholder: '楼栋', options: [], inputType: 'select', handle: ($event) => this.buildingChange(8, $event) },
+        { props: ['buildingId'], placeholder: '楼栋', options: [], inputType: 'select', handle: ($event) => {} },
         { props: ['unitId'], placeholder: '单元', options: [], inputType: 'select' }
       ],
       searchParams: {
@@ -122,7 +120,6 @@ export default {
     this.setPpermiList();
   },
   mounted () {
-    // this.getSelect();
   },
   methods: {
     setPpermiList () {
@@ -133,13 +130,6 @@ export default {
         // 'community:position:detail'
       ];
       sessionStorage.setItem('permiList', JSON.stringify(arr))
-    },
-    /* 获取下拉 */
-    getSelect () {
-      this.communitySelect(0, 'searchList', 1);
-      this.regionSelect(5);
-      this.propertySelect(6);
-      this.dictionarySelect([{index: 2, scope: 'searchList', query: 'comu_position_type'}]);
     },
     resHandle (res) {
       return res;

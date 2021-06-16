@@ -166,23 +166,6 @@ export default {
     transferChange (nextTargetKeys, direction, moveKeys) {
       this.targetKeys = nextTargetKeys;
     },
-
-    /* 获取用户范围下拉列表 */
-    userRangeList (regionIndex, communityIndex, fn1, fn2) {
-      this.regionSelect((data) => {
-        this.formList[regionIndex].options = data;
-        fn1 && fn1(data); // 需要时可以添加回调
-      }, null, '1,2');
-
-      this.communitySelect((data) => {
-        let arr = [];
-        data.forEach((el) => {
-          arr.push({key: `${el.value}`, title: el.label});
-        });
-        this.formList[communityIndex].options = arr;
-        fn2 && fn2(arr); // 需要时可以添加回调
-      });
-    },
     /* 处理用户范围提交值 */
     rangeReqVal (param) {
       let scopeArr = ['cityScope', 'communityScope', 'accountScope'];
