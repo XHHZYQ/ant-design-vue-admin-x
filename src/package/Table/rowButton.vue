@@ -38,9 +38,9 @@ export default {
         return true;
       } else if (text === '升级' && row.isUpgrade === 0) {
         return true;
-      } else if (text === '修改' && row.verify_status === 2) { // 单独处理：物业公司修改按钮
+      } else if (text === '修改' && row.verifyStatus === 2) { // 单独处理：物业公司修改按钮
         return true;
-      } else if (text === '回复' && row.status_str === '已回复') { // 单独处理：反馈回复按钮
+      } else if (text === '回复' && row.statusStr === '已回复') { // 单独处理：反馈回复按钮
         return true;
       } else if (text === '撤回' && row.status !== 0) { // 单独处理：推送撤回按钮
         return true;
