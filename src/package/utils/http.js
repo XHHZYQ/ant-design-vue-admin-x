@@ -4,7 +4,7 @@ import axios from 'axios';
 import Qs from 'qs';
 import CryptoJS from 'crypto-js';
 import { message } from 'ant-design-vue';
-import empty from './empty';
+import { empty } from './empty';
 import { getToken, setToken, removeToken } from './common';
 
 const newAxios = axios.create({ timeout: 1000 * 30, baseURL: process.env.VUE_APP_BASE_API });

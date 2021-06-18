@@ -92,7 +92,7 @@
 </template>
 <script>
 import { inputSearch } from '../utils/mixins';
-import empty from '../utils/empty';
+import { empty } from '../utils/empty';
 export default {
   mixins: [inputSearch],
   name: 'search',
