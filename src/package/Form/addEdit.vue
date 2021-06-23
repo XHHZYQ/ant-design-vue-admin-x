@@ -372,6 +372,10 @@ export default {
   name: 'addEdit',
   props: {
     transferVal: '',
+    formType: {
+        type: String,
+        default: () => 'unModal'
+    },
     isSubmitBtn: {
       type: Boolean,
       default: () => true
@@ -435,7 +439,7 @@ export default {
   },
   created () {
     if (this.$route) { // 兼容没配置路由
-      if (this.$route.query.id) {
+      if (this.formType === 'unModal' && this.$route.query.id) {
         this.routeQuery = this.$route.query.id;
         this.routeQuery && this.initReqHandle && this.getDetail();
       }
