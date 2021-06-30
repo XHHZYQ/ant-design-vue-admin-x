@@ -1,4 +1,8 @@
-# form 属性
+# ant-design-vue-admin-x
+
+# form表单
+
+## options 属性
 
 | 参数 | 说明 | 类型 | 默认值 |
 | ------ | ------ | ------ | ----- |
@@ -13,7 +17,7 @@
 |initReqHandle|初始化页面，是否需要请求获取详情接口。一般在非弹窗表单，进入详情且不需要初始化获取详情时很有必要| Boolean|true|
 |isSubmitBtn|表单是否需要提交按钮，一般在弹窗表单中使用|Boolean|true
 
-# addParam、editParam、detailParam参数
+## addParam、editParam、detailParam参数
 
 | 参数 | 说明 | 类型 | 默认值 |
 | ------ | ------ | ------ | ----- |
@@ -21,7 +25,7 @@
 |reqHandle|表单新增、编辑接口提交前事件，函数的参数为表单数据 values。需要再请求前处理数据时使用。此参数只有addParam中有该属性，如果有如果有赋值表单编辑时，也会调用改事件|Function|undefined|
 |resHandle|表单在新增、编辑、详情数据，接口提交成功后的回调|Function|undefined|
 
-# formList参数
+## formList参数
 
 |参数| 说明| 是否必填| 类型| 默认值|
 |-----|-----|-----|-----|-----|
@@ -49,7 +53,7 @@
 |slot|
 |subList|
 
-# uploadParam 参数
+## uploadParam 参数
 
 |参数| 说明| 类型| 默认值|
 |-----|-----|-----|-----|
@@ -59,10 +63,58 @@
 |accept| upload选择文件的格式（只能过滤选择文件时格式，提交前并没有验证）| String| undefined|
 |listType| upload展示的格式，有text、picture、picture-card三种| String| text|
 
-
-能使用refs方法或参数
+## 能通过refs调用或修改组件内部的方法、属性或数据
 
 |方法|说明|类型|
 |---|---|---|
-|handleSubmit|||
+|handleSubmit|表单提交方法|Function|
+|routeQuery|表单为弹窗时，查看表单详情该条数据的 id| String/Number|
+|getDetail|调用获取表单详情的方法|Function|
+|setFieldsValue|给表单赋值，ant form 方法|Function({ [fieldName]: value })|
+|validateFields|验证表单，ant form 方法|Function|
+|targetKeys|transfer选中的项赋值|Array|
+|resetSubValue|清空联动表单, 第二级的值和下拉选项|Function([keys: string[]])|
 
+
+# table
+
+## table options
+
+|参数|说明|类型|默认值|
+|---|---|---|---|
+|searchList|搜索列表|Array|[]|
+|searchParams|搜索参数，对应searchList每项的值|Object|{}|
+|tableOptList|全局操作项|Array|[]|
+|rowOptList|每一项的操作项|Array|[]|
+|columns|表格列的配置数组|Array|[]|
+|dataSource|表格默认数据|Array|[]|
+|excludeResetKey|重置搜索忽略的字段|Array|[]|
+|rowOptLen|每项操作项默认展示的个数|Number|3|
+|rowSelection|table是否需要多选按钮 checkbox|Boolean|true|
+|rowKey|单独删除或多选删除的 id，也用于table循环需要的key|String|undefined|
+
+## listApi
+ table 接口请求配置参数
+
+|参数|说明|类型|默认|
+|---|---|---|---|
+|url|接口地址|String|undefined|
+|resHandle|接口成功后的回调|Function|undefined|
+|searchHandle|接口请求前事件|Function|undefined|
+
+##addHandleParam
+新增一条table数据配置参数
+
+|参数|说明|类型|默认|
+|---|---|---|---|
+|route|跳转的路由|String|undefined|
+|title|跳转至新页面面包屑名称|String|undefined|
+
+##deleteParam
+单独删除或批量参数配置参数
+
+|参数|说明|类型|默认|
+|---|---|---|---|
+|url|接口地址|String|undefined|
+|title|删除时弹窗内容的 类型名称，如：门禁设备|String|undefined|
+|key|删除时弹窗内容的 提示内容的key, 如：deviceName|String|undefined|
