@@ -1,6 +1,39 @@
 # ant-design-vue-admin-x
 
-# form表单
+1.基于ant-design-vue封装的后台管理系统，包括 table 和 form 两大组件；
+2.无需写ui组件，简单配置参数即可快速实现后台管理中大部分页面的开发，可以大幅度减少代码量，易于维护，提升开发效率；
+3.集成 axios 封装的 http 请求；
+4.全局集成了v-hasPermi 指令可以对不同角色进行显隐的控制
+
+#install
+该插件基于ant-design-vue，也需要同时安装
+
+    npm i ant-design-vue --save
+    npm i ant-design-vue-admin-x --save
+# usage
+    import Vue from 'vue';
+    import App from './App';
+    import Antd from 'ant-design-vue';
+    import 'ant-design-vue/dist/antd.css';
+    import antAdminX, { GET, POST, DELETE, PUT } from 'ant-design-vue-admin-x';
+
+    Vue.use(Antd);
+    Vue.use(antAdminX);
+
+    Vue.prototype.$get = GET; // 将请求方法挂载值vue原型
+    Vue.prototype.$post = POST;
+    Vue.prototype.$delete = DELETE;
+    Vue.prototype.$put = PUT;
+
+    new Vue({
+      el: '#app',
+      components: { App },
+      template: '<App/>',
+    });`
+
+详情使用方法可以查看项目中 demo 示例
+
+# form表单组件
 
 ## options 属性
 
@@ -27,7 +60,7 @@
 
 ## formList参数
 
-|参数| 说明| 是否必填| 类型| 默认值|
+|参数| 说明| 必填| 类型| 默认值|
 |-----|-----|-----|-----|-----|
 |label| form-item label的名称| 否| String| undefined|
 |inputType| form-item 输入框的的表单类型，如：input，select| 是| String| undefined|
@@ -44,14 +77,14 @@
 |extra| 额外的提示信息，和 help 类似，当需要错误信息和提示文案同时出现时，可以使用，[详情见官网](https://www.antdv.com/components/form-cn/#API)| 否 |String |undefined|
 |disabled| 禁用该表单项| 否| Boolean| false|
 |treeCheckable| 当inputType为 tree-select时，是否显示 checkbox| 否| Boolean |undefined|
-|fieldNames| inputType为 cascader 自定义 options 中 label name children 的字段 否| String |undefined|
+|fieldNames| inputType为 cascader 自定义 options 中 label name children 的字段| 否| String |undefined|
 |type| inputType为 input ,当type为textarea、number/、password分别展示为textarea输入框、number输入框、密码框| 否| String| input|
 |titles| transfer 的标题集合，[详情见官网](https://www.antdv.com/components/transfer-cn/#API)| 否| String| undefined|
 |changeOnSelect| inputType为 cascader 当此项为 true 时，点选每级菜单选项值都会发生变化| 否| Boolean| false|
 |help| 提示信息，如不设置，则会根据校验规则自动生成| 否| String| undefined|
-|isSearch| tree 组件 是否展示搜索框 否| Boolean| undefined|
-|slot|
-|subList|
+|isSearch| tree 组件 是否展示搜索框 |否| Boolean| undefined|
+|slot|slot的name名,form-item需要自定义时使用|否|String||
+|subList|同一个form-item内部嵌套多个输入框时使用,配置项和formList相同|否|Array|undefined|
 
 ## uploadParam 参数
 
@@ -63,7 +96,7 @@
 |accept| upload选择文件的格式（只能过滤选择文件时格式，提交前并没有验证）| String| undefined|
 |listType| upload展示的格式，有text、picture、picture-card三种| String| text|
 
-## 能通过refs调用或修改组件内部的方法、属性或数据
+## 能通过refs操作组件内部的方法、数据
 
 |方法|说明|类型|
 |---|---|---|
@@ -76,7 +109,7 @@
 |resetSubValue|清空联动表单, 第二级的值和下拉选项|Function([keys: string[]])|
 
 
-# table
+# table 组件
 
 ## table options
 
@@ -118,3 +151,40 @@
 |url|接口地址|String|undefined|
 |title|删除时弹窗内容的 类型名称，如：门禁设备|String|undefined|
 |key|删除时弹窗内容的 提示内容的key, 如：deviceName|String|undefined|
+
+##通过refs操作组件内部方法或数据
+
+|参数|说明|类型|
+|---|---|---|
+|getTableList|请求接口获取表格数据|Function|
+|showDeleteConfirm|打开删除确定框，方法参数为单条数据或多条数据数组|showDeleteConfirm(rows)|
+|toEdit|进入该条数据表单的详情，方法参数为该条数据|toEdit(row)|
+|setFieldsValue|设置搜索框的值|setFieldsValue（{key:value}）|
+
+#http 使用方法
+
+          this.$get({ // 包含四个请求方式$get、$post、$put、$delete
+            url: '/users',
+            params: { id: this.id },
+            btnLoading: this.loading
+            config: { timeout: 20000 } // axios 配置参数会合并默认参数
+          }).then(({ data }) => {
+            // do something
+          }).catch((err) => {
+            // do error handle
+          });
+
+|参数|说明|类型|默认值|
+|---|---|---|---|
+|url|接口url,baseUrl已处理，通过process.env.VUE_APP_BASE_API获取|String|undefined|
+|params|接口参数，get、post、put、delete都使用该字段|Object|{}|
+|btnLoading|loading处理，格式为：{loading: false}|Object|undefined|
+|config|自定义axios配置参数，会合并默认参数|Object|undefined|
+|then|接口成功的方法，参数为完整的返回数据对象|Function|undefined|
+|catch|接口失败的方法,参数为error|Function|undefined|
+
+# v-hasPermi 指令
+
+    v-hasPermi="[user:list:add]" // hasPermi指令的值为数组，角色值格式为：a:b:c
+
+
