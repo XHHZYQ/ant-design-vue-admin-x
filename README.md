@@ -1,11 +1,12 @@
 # ant-design-vue-admin-x
+> 基于 ant-design-vue 封装的后台管理组件
 
-1.基于ant-design-vue封装的后台管理系统，包括 table 和 form 两大组件；
-2.无需写ui组件，简单配置参数即可快速实现后台管理中大部分页面的开发，可以大幅度减少代码量，易于维护，提升开发效率；
-3.集成 axios 封装的 http 请求；
-4.全局集成了v-hasPermi 指令可以对不同角色进行显隐的控制
+1.基于 ant-design-vue 封装的后台管理组件，包括 table 和 form 两大组件；<br/>
+2.无需写ui组件，简单配置参数即可快速实现后台管理中大部分页面的开发，可以大幅度减少代码量，易于维护，提升开发效率；<br/>
+3.集成 axios 封装的 http 请求；<br/>
+4.全局集成了v-hasPermi 指令可以对不同角色进行显隐的控制。<br/>
 
-#install
+# install
 该插件基于ant-design-vue，也需要同时安装
 
     npm i ant-design-vue --save
@@ -135,7 +136,7 @@
 |resHandle|接口成功后的回调|Function|undefined|
 |searchHandle|接口请求前事件|Function|undefined|
 
-##addHandleParam
+## addHandleParam
 新增一条table数据配置参数
 
 |参数|说明|类型|默认|
@@ -143,7 +144,7 @@
 |route|跳转的路由|String|undefined|
 |title|跳转至新页面面包屑名称|String|undefined|
 
-##deleteParam
+## deleteParam
 单独删除或批量参数配置参数
 
 |参数|说明|类型|默认|
@@ -152,7 +153,7 @@
 |title|删除时弹窗内容的 类型名称，如：门禁设备|String|undefined|
 |key|删除时弹窗内容的 提示内容的key, 如：deviceName|String|undefined|
 
-##通过refs操作组件内部方法或数据
+## 通过refs操作组件内部方法或数据
 
 |参数|说明|类型|
 |---|---|---|
@@ -161,7 +162,7 @@
 |toEdit|进入该条数据表单的详情，方法参数为该条数据|toEdit(row)|
 |setFieldsValue|设置搜索框的值|setFieldsValue（{key:value}）|
 
-#http 使用方法
+# http 使用方法
 
           this.$get({ // 包含四个请求方式$get、$post、$put、$delete
             url: '/users',
