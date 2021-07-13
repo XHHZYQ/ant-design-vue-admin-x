@@ -242,6 +242,7 @@ export default {
       width: 100%;
     }
     .search-btns {
+      line-height: 40px;
       .reset {
         margin-left: 8px;
       }

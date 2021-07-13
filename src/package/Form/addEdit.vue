@@ -446,7 +446,6 @@ export default {
 
       if (this.fromRoute) {
         this.isInclude = this.$route.name.toLowerCase().includes(this.fromRoute.toLowerCase())
-        console.log('addEdit include', this.isInclude, this.$route.name.toLowerCase(), this.fromRoute.toLowerCase());
       }
     }
   },

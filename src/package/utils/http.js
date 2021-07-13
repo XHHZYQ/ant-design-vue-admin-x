@@ -192,7 +192,6 @@ instance.interceptors.response.use((res) => {
         sessionStorage.clear();
 
         let path = location && location.hash.split('#')[1];
-        console.log('http 401 path: ', path);
         window.location.href = `${location.origin}${location.pathname}${location.hash}?redirect=${path}`;
       }
     });
