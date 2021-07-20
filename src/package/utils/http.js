@@ -158,6 +158,17 @@ function sortObjArr (arr) {
   return result;
 }
 
+function refreshToken (config) {
+  return POST({
+    url: 'community/userLogin/refresh',
+    params: {
+      refreshToekn: config.params.refreshToekn,
+      userId: config.params.userId,
+      grantType: 'refresh_token'
+    }
+  })
+}
+
 // 请求拦截器
 instance.interceptors.request.use(config => {
     config = createHeader(config);
@@ -168,33 +179,43 @@ instance.interceptors.request.use(config => {
 );
 
 // 响应拦截器  用于token失效时刷新
+let isRefreshing = false
+let requestList = []
 instance.interceptors.response.use((res) => {
   getTokenCount = 0;
   if (res.data.code === 401) {
-    return newAxios({
-      method: 'post',
-      url: 'community/userLogin/refresh',
-      data: {
-        refreshToekn: localStorage.refresh_token,
-        userId: localStorage.userId,
-        grantType: 'refresh_token'
-      }
-    }).then(res1 => {
-      if (res1.data.code === 200) {
-        setToken(res1.data.data.access_token);
-        localStorage.refresh_token = res1.data.data.refresh_token;
-        let {params, url, method} = res.config;
-        res.config.headers.Authorization = 'Bearer ' + res1.data.data.access_token;
-        return newAxios(res.config);
-      } else {
+    if (!isRefreshing) {
+      isRefreshing = true
+      return refreshToken({
+        params: {
+          refreshToekn: localStorage.refresh_token,
+          userId: localStorage.userId
+        }
+      }).then(newRes => {
+        const newToken = newRes.data.access_token
+        setToken(newToken);
+        localStorage.refresh_token = newRes.data.refresh_token;
+        res.config.headers.Authorization = 'Bearer ' + newToken;
+        requestList.forEach(callback => callback(newToken))
+        requestList = []
+        return instance(res.config)
+      }).catch(err => {
         removeToken();
         localStorage.clear();
         sessionStorage.clear();
-
         let path = location && location.hash.split('#')[1];
         window.location.href = `${location.origin}${location.pathname}${location.hash}?redirect=${path}`;
-      }
-    });
+      }).finally(() => {
+        isRefreshing = false
+      })
+    } else {
+      return new Promise(resolve => {
+        requestList.push(newToken => {
+          res.config.headers.Authorization = 'Bearer ' + newToken;
+          resolve(instance(res.config))
+        })
+      })
+    }
   } else {
     return res;
   }
