@@ -1,3 +1,4 @@
+import { handleHttpMethod } from '../common';
 
 export default {
   data () {
@@ -40,7 +41,7 @@ export default {
     customRequest (e, name, url) {
       let formdata = new FormData();
       formdata.append('file', this.fileData); // 默认提交字段为file
-      this.$post({
+      this[handleHttpMethod('post', this)]({
         url: url || this.$store.state.uploadUrl,
         params: formdata,
         btnLoading: this.upLoading,

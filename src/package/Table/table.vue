@@ -60,11 +60,15 @@
 
 <script>
 import rowButton from './rowButton';
-import { mapState } from 'vuex';
+import { handleHttpMethod } from '../utils/common';
 export default {
   mixins: [],
   name: 'tabula',
   props: {
+    apiOrigin: {
+      type: String,
+      default: () => 'JAVA'
+    },
     excludeResetKey: {
       type: Array,
       default: () => []
@@ -161,7 +165,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fromRoute'])
   },
   created () {
     this.handleRowOpt();
@@ -172,12 +175,6 @@ export default {
       this.tableData = this.dataSource;
     }
     this.listApi.url && this.getTableList();
-  },
-  activated () {
-    if (this.fromRoute && this.$store.state.isOptData && this.fromRoute.toLowerCase().includes(this.$route.name.toLowerCase())) {
-      this.getTableList();
-      this.$store.commit('setOptData', false);
-    }
   },
   methods: {
     /** 处理自定义列 slot */
@@ -223,7 +220,7 @@ export default {
         this.paginationParam.pageSize = this.searchParams.pageSize;
       }
 
-      this.$get({
+      this[handleHttpMethod('get', this)]({
         url: this.listApi.url,
         params: this.searchParams,
         localeText: this.localeText,
@@ -388,7 +385,7 @@ export default {
         selectedId = selectedId.join(',');
       }
 
-      this.$delete({
+      this[handleHttpMethod('delete', this)]({
         url: this.deleteParam.url + selectedId,
         // params: this.deleteParam.param
         params: {}

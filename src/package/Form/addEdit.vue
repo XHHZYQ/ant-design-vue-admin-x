@@ -366,11 +366,15 @@
 
 <script>
 import { addEdit, inputSearch, upload } from '../utils/mixins';
-import { mapState } from 'vuex';
+import { handleHttpMethod } from '../utils/common';
 export default {
   mixins: [ addEdit, inputSearch, upload ],
   name: 'addEdit',
   props: {
+    apiOrigin: {
+      type: String,
+      default: () => 'JAVA'
+    },
     transferVal: '',
     formType: {
         type: String,
@@ -416,7 +420,6 @@ export default {
   },
   data () {
     return {
-      isInclude: undefined,
       treeSearchContent: '',
       expandedKeys: [],
       defaultTree: [],
@@ -429,7 +432,6 @@ export default {
     };
   },
   computed: {
-    ...mapState(['fromRoute']),
     offset () {
       if (this.itemLayout) {
         return this.itemLayout.labelCol.span;
@@ -442,10 +444,6 @@ export default {
       if (this.formType === 'unModal' && this.$route.query.id) {
         this.routeQuery = this.$route.query.id;
         this.routeQuery && this.initReqHandle && this.getDetail();
-      }
-
-      if (this.fromRoute) {
-        this.isInclude = this.$route.name.toLowerCase().includes(this.fromRoute.toLowerCase())
       }
     }
   },
@@ -522,7 +520,7 @@ export default {
     /* 获取详情 */
     getDetail (url) {
       if (!this.detailParam.url && !url) { return; }
-      this.$get({
+      this[handleHttpMethod('get', this)]({
         url: url || `${this.detailParam.url}${this.routeQuery}`,
         params: {}
       }).then(({data}) => {
@@ -576,13 +574,11 @@ export default {
         let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
 
         if (this.routeQuery) { // 编辑
-          this.$put({
+          this[handleHttpMethod('put', this)]({
             url: `${this.editParam.url}${this.routeQuery}`,
             params: values,
             btnLoading: loading
           }).then((res) => {
-            this.isInclude && this.$store.commit('setOptData', true);
-
             if (this.editParam.resHandle) {
               this.editParam.resHandle(res);
             } else {
@@ -590,7 +586,7 @@ export default {
             }
           });
         } else { // 新增
-          this.$post({
+          this[handleHttpMethod('post', this)]({
             url: this.addParam.url,
             params: values,
             btnLoading: loading

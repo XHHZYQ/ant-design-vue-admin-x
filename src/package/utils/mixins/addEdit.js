@@ -141,11 +141,10 @@ export default {
         }
       }
       Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
-      this.$put({
+      this[handleHttpMethod('put', this)]({
         url: `${this.editParam.url}${this.routeQuery}`,
         params: values
       }).then((res) => {
-        this.$store.commit('setOptData', true);
         this.handleThen('编辑');
       });
     },
