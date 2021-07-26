@@ -29,7 +29,6 @@ const instance = axios.create({
   }
 });
 
-let getTokenCount = 0;
 function createHeader (config) {
   let time = parseInt(new Date().getTime() / 1000);
   let keySecret = {
@@ -50,25 +49,12 @@ function createHeader (config) {
   let urlEncoded = stringifyArr(sortRes);
   let md5Param = CryptoJS.MD5(urlEncoded).toString().toLowerCase();
 
-  let accesstoken;
-  if (config.url !== '/access_token') {
-    let token = document.cookie.split('=')[1];
-
-    if (token) {
-      accesstoken = token;
-    } else {
-      if (getTokenCount < 4) { // todo
-        getToken();
-        getTokenCount++;
-      }
-    }
-  }
-
-  if (localStorage.userToken) {
-    var usertoken = localStorage.userToken;
+  let usertoken;
+  if (getToken()) {
+    usertoken = getToken();
   }
   let aesStr = getAesString(
-    `${keySecret.app_key}:${usertoken || ''}:${accesstoken || ''}`,
+    `${keySecret.app_key}:${usertoken || ''}:''`,
     'hm2KzN8k32UyVAEm', // 加密key
     '9aec6fb8db98e4b4' // 偏移量
   );
@@ -180,7 +166,6 @@ instance.interceptors.request.use(config => {
 let isRefreshing = false
 let requestList = []
 instance.interceptors.response.use((res) => {
-  getTokenCount = 0;
   if (res.data.code === 401) {
     if (!isRefreshing) {
       isRefreshing = true
@@ -218,8 +203,6 @@ instance.interceptors.response.use((res) => {
     return res;
   }
 }, (error) => {
-  getTokenCount = 0;
-  // console.log('tokenCunt err: ', getTokenCount);
   return Promise.reject(error);
 });
 
