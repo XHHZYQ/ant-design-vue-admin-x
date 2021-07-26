@@ -139,6 +139,7 @@ export default {
       expandedRowKeys: [],
       selectedId: [],
       selectedRowKeys: [],
+      delKey: ['isDelete', 'is_delete'],
       paginationParam: {
         current: 1,
         pageSize: 10,
@@ -191,7 +192,7 @@ export default {
     /* 操作按钮禁用判断 */
     rowOptDisable (row, el) {
       let text = el.text;
-      if (text === '删除' && row.isDelete === 0) {
+      if (text === '删除' && this.delKey.some(item => row[item] === 0)) {
         return true;
       } else if (text === '升级' && row.isUpgrade === 0) {
         return true;
@@ -336,9 +337,10 @@ export default {
       if (isBatch) {
         row.forEach((el) => {
           // 1.没删除字段：可以；2.有删除字段，为0：不可以；3.有删除字段，为1：可以
-          if (el.hasOwnProperty('isDelete') && el.isDelete === 1) { // isDelete 为接口字段判断能否删除
-            selectedId.push(el[id]);
-          } else if (!el.hasOwnProperty('isDelete')) {
+          const canDel = this.delKey.every(item => !el.hasOwnProperty(item)) || ( this.delKey.some(item => el.hasOwnProperty(item)) && this.delKey.some(item => el[item] === 1) );
+
+          console.log('canDel: ', canDel);
+          if (canDel) { // isDelete 为接口字段判断能否删除
             selectedId.push(el[id]);
           }
         });
@@ -384,12 +386,15 @@ export default {
       if (Array.isArray(selectedId)) {
         selectedId = selectedId.join(',');
       }
+      let paramObj;
+      if (this.apiOrigin === 'JAVA') {
+        paramObj = { url: this.deleteParam.url + selectedId, params: {} };
+      } else {
+        this.deleteParam.param.pk_val = selectedId
+        paramObj = { url: this.deleteParam.url, params: this.deleteParam.param };
+      }
 
-      this[handleHttpMethod('delete', this)]({
-        url: this.deleteParam.url + selectedId,
-        // params: this.deleteParam.param
-        params: {}
-      }).then((res) => {
+      this[handleHttpMethod('delete', this)](paramObj).then((res) => {
         this.$message.success(`删除成功！`);
         this.getTableList();
         this.tableOptList.forEach((ele) => {

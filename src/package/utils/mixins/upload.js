@@ -1,4 +1,5 @@
 import { handleHttpMethod } from '../common';
+import store from '@/store';
 
 export default {
   data () {
@@ -41,8 +42,15 @@ export default {
     customRequest (e, name, url) {
       let formdata = new FormData();
       formdata.append('file', this.fileData); // 默认提交字段为file
+      let reqUrl;
+      if (this.apiOrigin === 'JAVA') {
+        reqUrl = url || store.state.uploadUrlJava;
+      } else {
+        reqUrl = url || store.state.uploadUrl;
+      }
+
       this[handleHttpMethod('post', this)]({
-        url: url || this.$store.state.uploadUrl,
+        url: reqUrl,
         params: formdata,
         btnLoading: this.upLoading,
         config: { timeout: 200000 }
