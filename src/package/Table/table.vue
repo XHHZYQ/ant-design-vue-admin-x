@@ -399,7 +399,8 @@ export default {
       if (this.apiOrigin === 'JAVA') {
         paramObj = { url: this.deleteParam.url + selectedId, params: {} };
       } else {
-        this.deleteParam.param.pk_val = selectedId
+        this.deleteParam.param.pk_val = selectedId;
+        this.deleteParam.param.tag_val = selectedId;
         paramObj = { url: this.deleteParam.url, params: this.deleteParam.param };
       }
 

@@ -84,7 +84,7 @@ export default {
           let fileUrl = data[el.uploadParam.iconUrl] || data[prop]; // 返回的url
           if (fileUrl && typeof fileUrl === 'string' && (fileUrl.includes('http') || fileUrl.includes('https'))) {
             let fileName = data[el.uploadParam.iconName] || data[el.uploadParam.iconUrl] || data[prop]; // 返回的文件名
-            el.fileList = [{uid: index, name: fileName, url: fileUrl}];
+            el.fileList = [{uid: index, name: fileName, url: fileUrl}]; // 目前只处理一个 upload 组件返回单张图片
           }
         }
       });

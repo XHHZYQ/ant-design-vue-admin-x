@@ -9,3 +9,5 @@ selectSearch文件中的 handleChange方法 ： 可能没用
 5.判断按钮禁用的字段（完成）
 6.分页参数，pageSize，pageNum（完成）
 5.所有的组件都要检查一遍？
+
+当前版本： 1.2.5，还没发布

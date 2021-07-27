@@ -57,13 +57,13 @@ export default {
       }).then(({data}) => {
         let file = e.file;
 
-        let fileObj = { [name]: data };
+        let fileObj = { [name]: data.file_id || data }; // 3.0表单提交的是file_id，4.0是 url 地址
         this.formList.forEach((el) => {
           if (el.inputType === 'upload' && (el.props && el.props[0] === name)) {
-            el.fileList = [{
+            el.fileList = [{ // 目前只处理单张图片的上传
               uid: file.uid,
               name: file.name,
-              url: data
+              url: data.file_url || data // 3.0返回的是 data.file_url，4.0是 data
             }];
           }
         });
