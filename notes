@@ -2,7 +2,10 @@
 selectSearch文件中的 handleChange方法 ： 可能没用
 
 插件要兼容4.0和3.0
-1.是否能删除字段 isDelete和is_delete？
+1.是否能删除字段 isDelete和is_delete（完成）
 2.删除接口传参区分(完成)
-3.处理获取详情fileList
-4.upload 上传地址？
+3.upload 返回详情 fileList(不用修改)
+4.upload 上传地址（完成）
+5.判断按钮禁用的字段（完成）
+6.分页参数，pageSize，pageNum（完成）
+5.所有的组件都要检查一遍？

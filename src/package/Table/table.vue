@@ -214,11 +214,11 @@ export default {
         return;
       }
       this.resetSelected();
-      this.searchParams.pageNum = pagination.current || 1;
-      this.searchParams.pageSize = pagination.pageSize || 10;
+      this.searchParams[this.handlePageParam('pageNum')] = pagination.current || 1;
+      this.searchParams[this.handlePageParam('pageSize')] = pagination.pageSize || 10;
       if (!Object.keys(pagination).length) {
-        this.paginationParam.current = this.searchParams.pageNum;
-        this.paginationParam.pageSize = this.searchParams.pageSize;
+        this.paginationParam.current = this.searchParams[this.handlePageParam('pageNum')];
+        this.paginationParam.pageSize = this.searchParams[this.handlePageParam('pageSize')];
       }
 
       this[handleHttpMethod('get', this)]({
@@ -242,6 +242,14 @@ export default {
           this.getList.reqList = false;
         }
       });
+    },
+    /** 处理分页参数 */
+    handlePageParam (param) {
+      let pageType = {
+        JAVA: { pageSize: 'pageSize', pageNum: 'pageNum' },
+        PHP: { pageSize: 'pagesize', pageNum: 'page' }
+      };
+      return pageType[this.apiOrigin][param];
     },
     /* 搜索查询 */
     searchHandle (val) {
@@ -337,7 +345,8 @@ export default {
       if (isBatch) {
         row.forEach((el) => {
           // 1.没删除字段：可以；2.有删除字段，为0：不可以；3.有删除字段，为1：可以
-          const canDel = this.delKey.every(item => !el.hasOwnProperty(item)) || ( this.delKey.some(item => el.hasOwnProperty(item)) && this.delKey.some(item => el[item] === 1) );
+          const canDel = this.delKey.every(item => !el.hasOwnProperty(item)) ||
+            (this.delKey.some(item => el.hasOwnProperty(item)) && this.delKey.some(item => el[item] === 1));
 
           console.log('canDel: ', canDel);
           if (canDel) { // isDelete 为接口字段判断能否删除
