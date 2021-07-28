@@ -579,6 +579,7 @@ export default {
             params: values,
             btnLoading: loading
           }).then((res) => {
+            this.$store.commit('setOptData', true);
             if (this.editParam.resHandle) {
               this.editParam.resHandle(res);
             } else {
@@ -591,7 +592,11 @@ export default {
             params: values,
             btnLoading: loading
           }).then((res) => {
-            this.isInclude && this.$store.commit('setAliveComponent', []);
+            this.$store.commit('setOptData', true);
+            let fromRoute = this.$store.state.fromRoute;
+            let preRouteCached = this.$store.state.cachedViews.some(item => item === fromRoute.name);
+            preRouteCached && this.$store.commit('DEL_CACHED_VIEW', fromRoute);
+            console.log('新增 preRoute: ', preRouteCached, fromRoute.name);
 
             if (this.addParam.resHandle) {
               this.addParam.resHandle(res);

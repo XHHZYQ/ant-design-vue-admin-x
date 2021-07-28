@@ -18,6 +18,7 @@ const install = (Vue) => {
 };
 
 export { empty } from './utils/empty';
+export { handleHttpMethod } from './utils/common';
 export { addEdit, upload, inputSearch } from './utils/mixins/index';
 export { GET, POST, DELETE, PUT } from './utils/http';
 export default install;

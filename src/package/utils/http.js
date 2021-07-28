@@ -144,7 +144,7 @@ function sortObjArr (arr) {
 
 function refreshToken (config) {
   return POST({
-    url: 'community/userLogin/refresh',
+    url: '/userLogin/refresh',
     params: {
       refreshToekn: config.params.refreshToekn,
       userId: config.params.userId,

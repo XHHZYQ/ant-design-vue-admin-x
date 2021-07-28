@@ -165,7 +165,11 @@ export default {
       this.tableData = val;
     }
   },
-  computed: {
+  activated () {
+    if (this.$store.state.isOptData) {
+      this.getTableList();
+      this.$store.commit('setOptData', false);
+    }
   },
   created () {
     this.handleRowOpt();
@@ -188,25 +192,6 @@ export default {
         }
       });
       this.slots = slotArr;
-    },
-    /* 操作按钮禁用判断 */
-    rowOptDisable (row, el) {
-      let text = el.text;
-      if (text === '删除' && this.delKey.some(item => row[item] === 0)) {
-        return true;
-      } else if (text === '升级' && row.isUpgrade === 0) {
-        return true;
-      } else if (text === '修改' && row.verify_status === 2) { // 单独处理：物业公司修改按钮
-        return true;
-      } else if (text === '回复' && row.status_str === '已回复') { // 单独处理：反馈回复按钮
-        return true;
-      } else if (text === '撤回' && row.status !== 0) { // 单独处理：推送撤回按钮
-        return true;
-      } if (text === '查看子类' && row.isSeeChild === 0) { // 处理分类
-        return true;
-      } else if (text === '添加子类' && row.isAddChild === 0) { // 处理分类
-        return true;
-      }
     },
     /* 获取列表 */
     getTableList (pagination = {}) {
@@ -412,7 +397,7 @@ export default {
             ele.disabled = true;
           }
         });
-        this.deleteParam.resHandle && this.deleteParam.resHandle(); // 删除完成回调
+        this.deleteParam.resHandle && this.deleteParam.resHandle(res); // 删除完成回调
       });
     },
     /* 进入修改页面 */
