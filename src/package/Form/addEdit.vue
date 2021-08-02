@@ -128,9 +128,10 @@
             <a-cascader
               @change="(e, v) => {item.handle && item.handle(e, v)}"
               @click="(e, v) => {item.click && item.click(e, v)}"
+              :loadData="item.loadData"
               v-decorator="item.props"
               :options="item.options"
-              expandTrigger="hover"
+              :expandTrigger="item.expandTrigger || 'hover'"
               :placeholder="item.placeholder"
               :showSearch="{filter}"
               :disabled="item.disabled"

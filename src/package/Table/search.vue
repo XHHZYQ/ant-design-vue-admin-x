@@ -40,9 +40,10 @@
           >
             <a-cascader
               :showSearch="{filter}"
+              :loadData="item.loadData"
               v-decorator="item.props"
               :options="item.options"
-              expandTrigger="hover"
+              :expandTrigger="item.expandTrigger || 'hover'"
               :placeholder="item.placeholder"
               :fieldNames="item.fieldNames || {label: 'label', value: 'value', children: 'children'}"
               :changeOnSelect="item.changeOnSelect"
