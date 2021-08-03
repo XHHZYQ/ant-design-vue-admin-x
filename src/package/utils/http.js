@@ -146,7 +146,7 @@ function refreshToken (config) {
   return POST({
     url: '/userLogin/refresh',
     params: {
-      refreshToekn: config.params.refreshToekn,
+      refreshToken: config.params.refreshToken,
       userId: config.params.userId,
       grantType: 'refresh_token'
     }
@@ -171,7 +171,7 @@ instance.interceptors.response.use((res) => {
       isRefreshing = true
       return refreshToken({
         params: {
-          refreshToekn: localStorage.refresh_token,
+          refreshToken: localStorage.refresh_token,
           userId: localStorage.userId
         }
       }).then(newRes => {
