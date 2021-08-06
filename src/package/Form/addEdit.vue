@@ -593,7 +593,6 @@ export default {
             params: values,
             btnLoading: loading
           }).then((res) => {
-            this.$store.commit('setOptData', true);
             let fromRoute = this.$store.state.fromRoute;
             let preRouteCached = this.$store.state.cachedViews.some(item => item === fromRoute.name);
             preRouteCached && this.$store.commit('DEL_CACHED_VIEW', fromRoute);

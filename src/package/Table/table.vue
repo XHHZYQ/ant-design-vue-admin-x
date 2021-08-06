@@ -139,7 +139,7 @@ export default {
       expandedRowKeys: [],
       selectedId: [],
       selectedRowKeys: [],
-      delKey: ['isDelete', 'is_delete'],
+      delKey: ['canDelete' ,'isDelete', 'is_delete'],
       paginationParam: {
         current: 1,
         pageSize: 10,
