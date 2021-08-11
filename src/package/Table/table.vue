@@ -226,6 +226,8 @@ export default {
         if (this.getList) {
           this.getList.reqList = false;
         }
+      }).catch(() => {
+        this.tableData = [];
       });
     },
     /** 处理分页参数 */

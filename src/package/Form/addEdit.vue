@@ -214,7 +214,7 @@
             :key="index">
             <a-upload
               :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item.props[0])"
-              :customRequest="(e) => {customRequest(e, item.props && item.props[0], item.uploadParam.url)}"
+              :customRequest="e => customRequest(e, item.props && item.props[0], item.uploadParam.url, item.uploadParam.uploadType)"
               v-decorator="[item.props[0], Object.assign(item.props[1], uploadGetValue)]"
               :fileList="item.fileList"
               :remove="(e) => removeFile(item.props && item.props[0], e)"

@@ -39,9 +39,10 @@ export default {
      * @param name 字段名
      * @param url 上传的url
      */
-    customRequest (e, name, url) {
+    customRequest (e, name, url, type) {
       let formdata = new FormData();
       formdata.append('file', this.fileData); // 默认提交字段为file
+      formdata.append('type', type || 4); // 上传的文件类型
       let reqUrl;
       if (this.apiOrigin === 'JAVA') {
         reqUrl = url || store.state.uploadUrlJava;
@@ -57,13 +58,13 @@ export default {
       }).then(({data}) => {
         let file = e.file;
 
-        let fileObj = { [name]: data.file_id || data }; // 3.0表单提交的是file_id，4.0是 url 地址
+        let fileObj = { [name]: data.file_id || data.fileId }; // 3.0表单提交的是file_id，4.0是 url 地址
         this.formList.forEach((el) => {
           if (el.inputType === 'upload' && (el.props && el.props[0] === name)) {
             el.fileList = [{ // 目前只处理单张图片的上传
               uid: file.uid,
               name: file.name,
-              url: data.file_url || data // 3.0返回的是 data.file_url，4.0是 data
+              url: data.file_url || data.fileUrl // 3.0返回的是 data.file_url，4.0是 data
             }];
           }
         });
