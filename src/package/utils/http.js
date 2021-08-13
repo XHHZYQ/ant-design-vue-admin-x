@@ -247,6 +247,10 @@ const fetch = (options, obj) => {
       } else if (resData.code === 401) { // 令牌失效
       } else if (resData.code === 403) { // 无权限
         resData.msg && message.error(resData.msg, 5);
+      } else if (resData.code === 40000) {
+        message.error(resData.msg, 5).then((res) => {
+          empty.$emit('setCacheData');
+        })
       } else {
         resData.msg && message.error(resData.msg, 5); // 错误提示信息
         reject(res);

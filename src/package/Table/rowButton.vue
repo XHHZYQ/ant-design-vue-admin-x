@@ -36,9 +36,9 @@ export default {
       let text = el.text;
       if (text === '删除' && (row.canDelete === 0 || row.isDelete === 0 || row.is_delete === 0)) {
         return true;
-      } else if (text === '查看子类' && (row.isSeeChild === 0 || row.can_see_child === 0)) { // 处理分类
+      } else if (text === '查看子类' && (row.canSeeChild === 0 || row.can_see_child === 0)) { // 处理分类
         return true;
-      } else if (text === '添加子类' && (row.isAddChild === 0 || row.can_add_child === 0)) { // 处理分类
+      } else if (text === '添加子类' && (row.canAddChild === 0 || row.can_add_child === 0)) { // 处理分类
         return true;
       } else if (text === '审核' && row.status !== 0) {
         return true;
