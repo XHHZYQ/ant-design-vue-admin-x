@@ -1,4 +1,5 @@
 import { empty } from '../empty';
+import { handleHttpMethod } from '../common';
 
 export default {
   data () {
@@ -45,7 +46,7 @@ export default {
         }
       });
       let keyArr = ['city_scope', 'community_scope', 'account_scope'];
-      this.formList.forEach((el) => {
+      this.formList && this.formList.forEach((el) => {
         let isSame = keyArr.some(item => item === (el.props && el.props[0]));
         isSame && (el.isShow = false);
       });

@@ -40,7 +40,7 @@ export default {
         return true;
       } else if (text === '添加子类' && (row.canAddChild === 0 || row.can_add_child === 0)) { // 处理分类
         return true;
-      } else if (text === '审核' && row.status !== 0) {
+      } else if (text === '审核' && (row.status !== 0 || row.status !== '0')) {
         return true;
       }
     },
@@ -55,7 +55,7 @@ export default {
         var el = statusKey[i];
         if (record.hasOwnProperty(el)) {
          if (el === 'status' && isStatus) {
-            return record[el] === 0 ? '启用' : '禁用';
+            return record[el] === 0 || record[el] === '0' ? '启用' : '禁用';
           } else {
             return record[el];
           }
