@@ -241,14 +241,14 @@ const fetch = (options, obj) => {
       } else if (resData.code === 9003) { // 重定向至登录页
         location.href = `http://${location.host}/#/login`;
       } else if (resData.code === 9004) { // 登录的账号被删除（包括其他电脑）后强退
-        message.error('当前登录账号已被删除', 5).then((res) => {
+        message.error('当前登录账号已被删除', 1).then((res) => {
           empty.$emit('setCacheData');
         });
       } else if (resData.code === 401) { // 令牌失效
       } else if (resData.code === 403) { // 无权限
         resData.msg && message.error(resData.msg, 5);
       } else if (resData.code === 40000) {
-        message.error(resData.msg, 5).then((res) => {
+        message.error(resData.msg, 1).then((res) => {
           empty.$emit('setCacheData');
         })
       } else {
