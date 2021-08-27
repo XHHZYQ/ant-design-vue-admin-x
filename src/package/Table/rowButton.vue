@@ -3,7 +3,7 @@
     <a-button
       @click="item.handle(row)"
       type="link"
-      :disabled="item.rowOptDisHandle && item.rowOptDisHandle(row, item) || rowOptDisable(row, item)"
+      :disabled="item.rowOptDisHandle ? item.rowOptDisHandle(row, item) : rowOptDisable(row, item)"
     >
       {{item.customRender ? (item.rowOptText ? item.rowOptText(row) : statusTxt(row)) : item.text}}
     </a-button>
@@ -55,7 +55,7 @@ export default {
         var el = statusKey[i];
         if (record.hasOwnProperty(el)) {
          if (el === 'status' && isStatus) {
-            return record[el] === 0 || record[el] === '0' ? '启用' : '禁用';
+            return record[el] === 0 ? '启用' : '禁用';
           } else {
             return record[el];
           }

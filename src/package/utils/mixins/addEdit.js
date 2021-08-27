@@ -146,6 +146,7 @@ export default {
         url: `${this.editParam.url}${this.routeQuery}`,
         params: values
       }).then((res) => {
+        this.$store.commit('setOptData', true);
         this.handleThen('编辑');
       });
     },

@@ -3,6 +3,7 @@
   <!--table组件-->
   <div>
     <x-search
+      ref="search"
       @searchHandle="searchHandle"
       @resetHandle="resetHandle"
       @btnsHandler="btnsHandler"
