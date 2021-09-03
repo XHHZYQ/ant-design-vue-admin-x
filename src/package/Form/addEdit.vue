@@ -596,7 +596,6 @@ export default {
             let fromRoute = this.$store.state.fromRoute;
             let preRouteCached = this.$store.state.cachedViews.some(item => item === fromRoute.name);
             preRouteCached && this.$store.commit('DEL_CACHED_VIEW', fromRoute);
-            console.log('新增 preRoute: ', preRouteCached, fromRoute.name);
 
             if (this.addParam.resHandle) {
               this.addParam.resHandle(res);

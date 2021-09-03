@@ -336,7 +336,6 @@ export default {
           const canDel = this.delKey.every(item => !el.hasOwnProperty(item)) ||
             (this.delKey.some(item => el.hasOwnProperty(item)) && this.delKey.some(item => el[item] === 1));
 
-          console.log('canDel: ', canDel);
           if (canDel) { // isDelete 为接口字段判断能否删除
             selectedId.push(el[id]);
           }

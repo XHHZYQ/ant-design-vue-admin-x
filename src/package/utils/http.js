@@ -183,11 +183,9 @@ instance.interceptors.response.use((res) => {
         requestList = []
         return instance(res.config)
       }).catch(err => {
-        removeToken();
-        localStorage.clear();
-        sessionStorage.clear();
-        let path = location && location.hash.split('#')[1];
-        window.location.href = `${location.origin}${location.pathname}${location.hash}?redirect=${path}`;
+        message.error('登录已失效', 1).then((res) => {
+          empty.$emit('setCacheData');
+        });
       }).finally(() => {
         isRefreshing = false
       })
@@ -238,8 +236,6 @@ const fetch = (options, obj) => {
         resolve(resData); // 注意：resolve只接收一个参数
       } else if (resData.code === 9002) { // accessToken失效
         document.cookie = `accessToken=`;
-      } else if (resData.code === 9003) { // 重定向至登录页
-        location.href = `http://${location.host}/#/login`;
       } else if (resData.code === 9004) { // 登录的账号被删除（包括其他电脑）后强退
         message.error('当前登录账号已被删除', 1).then((res) => {
           empty.$emit('setCacheData');
@@ -247,7 +243,7 @@ const fetch = (options, obj) => {
       } else if (resData.code === 401) { // 令牌失效
       } else if (resData.code === 403) { // 无权限
         resData.msg && message.error(resData.msg, 5);
-      } else if (resData.code === 40000) {
+      } else if (resData.code === 9003 || resData.code === 40000) {
         message.error(resData.msg, 1).then((res) => {
           empty.$emit('setCacheData');
         })
