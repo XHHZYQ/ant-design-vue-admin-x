@@ -310,7 +310,10 @@ export default {
         item.handle(this.selectedId, this.selectedRows);
       } else if (item.text === '新增') {
         let route = this.getRoute();
-        this.$router.push({ name: route || this.addHandleParam.route });
+        this.$router.push({
+          name: route,
+          query: { title: this.addHandleParam.addTitle ? this.addHandleParam.addTitle : undefined }
+        });
       } else if (item.text.includes('删除') || item.key === 'delete') {
         this.showDeleteConfirm(this.selectedRows, 'isBatch');
       }
@@ -414,8 +417,12 @@ export default {
       });
       let route = this.getRoute();
       this.$router.push({
-        name: route || this.addHandleParam.route,
-        query: { id: row[this.rowKey], title: this.addHandleParam.title, ...paramObj }
+        name: route,
+        query: {
+         id: row[this.rowKey],
+         title: this.addHandleParam.editTitle ? this.addHandleParam.editTitle : undefined,
+          ...paramObj
+        }
       });
     }
   }
