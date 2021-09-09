@@ -357,7 +357,7 @@
       <div v-if="isSubmitBtn && formList.length">
       <slot name="submitBtn">
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
-        <a-button type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
+        <a-button type="primary" @click="handleSubmit" size="large" :disabled="upLoading.loading" :loading="btnLoading.loading">确定</a-button>
       </a-form-item>
       </slot>
       </div>
@@ -565,11 +565,11 @@ export default {
           return;
         }
 
-        // for (let item in values) {
-        //   if (Array.isArray(values[item])) {
-        //     values[item] = values[item].join(',');
-        //   }
-        // }
+        for (let item in values) {
+          if (Array.isArray(values[item])) {
+            values[item] = values[item].join(',');
+          }
+        }
         Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
 
         let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
