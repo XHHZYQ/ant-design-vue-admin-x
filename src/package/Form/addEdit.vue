@@ -62,14 +62,33 @@
           >
             <a-select
               @change="(e) => {item.handle && item.handle(e)}"
+              @search="selectSearch(item, $event)"
+              @popupScroll="selectScroll(item, $event)"
               v-decorator="item.props"
               :mode="item.mode || 'default'"
               allowClear
               showSearch
               :labelInValue="item.labelInValue"
               :disabled="item.disabled"
-              :filterOption="filterOption"
+              :filterOption="typeof item.fetchOptions === 'function' ? () => true : filterOption"
               :placeholder="item.placeholder">
+
+                <template slot="dropdownRender" slot-scope="menu">
+                  <v-nodes :vnodes="menu" />
+                  <div style="padding: 6px 12px 0">
+                     <a-spin v-if="isFetched"/>
+                  </div>
+                  <div v-if="typeof item.fetchOptions === 'function'" style="padding: 4px 8px;" @mousedown="e => e.preventDefault()">
+                      <a-pagination
+                       v-model="selectCurrentPage"
+                       @change="selectPageChange(item, $event)"
+                       :total="item.paginationTotal"
+                       :showTotal="total => total + ' items'"
+                       size="small"
+                       />
+                  </div>
+                </template>
+
               <a-select-option
                 v-for="(el, order) of item.options"
                 :key="order"
@@ -357,7 +376,7 @@
       <div v-if="isSubmitBtn && formList.length">
       <slot name="submitBtn">
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
-        <a-button type="primary" @click="handleSubmit" size="large" :disabled="upLoading.loading" :loading="btnLoading.loading">确定</a-button>
+        <a-button type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
       </a-form-item>
       </slot>
       </div>
@@ -371,6 +390,12 @@ import { handleHttpMethod } from '../utils/common';
 export default {
   mixins: [ addEdit, inputSearch, upload ],
   name: 'addEdit',
+  components: {
+    VNodes: {
+      functional: true,
+      render: (h, ctx) => ctx.props.vnodes,
+    }
+  },
   props: {
     apiOrigin: {
       type: String,
@@ -421,6 +446,8 @@ export default {
   },
   data () {
     return {
+      selectCurrentPage: 1,
+      isFetched: false,
       treeSearchContent: '',
       expandedKeys: [],
       defaultTree: [],
@@ -458,6 +485,50 @@ export default {
     // }
   },
   methods: {
+    /** 处理 a-select 滚动加载下一页 */
+    selectScroll (item, e) {
+      if (!item.fetchOptions) { return; }
+      let scrollHeight = e.target.scrollHeight;
+      let dropdown = document.getElementsByClassName('ant-select-dropdown-menu')[0];
+      let dropdownHeight = dropdown.getBoundingClientRect().height;
+      let canScrollHeight = scrollHeight - dropdownHeight;
+      if (canScrollHeight - e.target.scrollTop <= 40) {
+        if (this.isFetched) { return; }
+        this.isFetched = true;
+        if (this.selectCurrentPage < item.totalPage) {
+          this.selectCurrentPage += 1;
+          item.fetchOptions(this.selectCurrentPage, item.searchValue, item, true).then((data) => { // 第四个参数判断是否为滚动
+            item.paginationTotal = data.total;
+            item.totalPage = data.totalPage;
+            setTimeout(() => {
+              this.isFetched = false;
+            }, 150);
+          });
+        }
+      }
+    },
+    /** 下拉框 search 事件 */
+    selectSearch (item, e) {
+      item.searchValue = e; // 搜索值
+      if (this.isFetched) { return; }
+      this.isFetched = true;
+
+      typeof item.fetchOptions === 'function' && item.fetchOptions(undefined, e, item).then((data) => {
+        item.paginationTotal = data.total;
+        item.totalPage = data.totalPage;
+
+        setTimeout(() => {
+           this.isFetched = false;
+        }, 100);
+      });
+    },
+    /** 下拉框分页 change 事件 */
+    selectPageChange (item, pageNum) {
+      item.fetchOptions(pageNum, item.searchValue, item).then((data) => {
+        item.paginationTotal = data.total;
+        item.totalPage = data.totalPage;
+      });
+    },
     handleChange (info) {
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`);
@@ -566,9 +637,9 @@ export default {
         }
 
         // for (let item in values) {
-        //   if (Array.isArray(values[item])) {
-        //     values[item] = values[item].join(',');
-        //   }
+        //  if (Array.isArray(values[item])) {
+        //    values[item] = values[item].join(',');
+        //  }
         // }
         Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
 
