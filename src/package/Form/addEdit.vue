@@ -565,11 +565,11 @@ export default {
           return;
         }
 
-        for (let item in values) {
-          if (Array.isArray(values[item])) {
-            values[item] = values[item].join(',');
-          }
-        }
+        // for (let item in values) {
+        //   if (Array.isArray(values[item])) {
+        //     values[item] = values[item].join(',');
+        //   }
+        // }
         Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
 
         let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;

@@ -2,7 +2,7 @@
   "name": "ant-design-vue-admin-x",
   "description": "A form component base on ant-design-vue",
   "main": "src/package",
-  "version": "1.3.7",
+  "version": "1.3.9",
   "files": [
     "src/package"
   ],
