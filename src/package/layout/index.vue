@@ -4,8 +4,8 @@
       <div id="components-layout">
         <aside class="layout-sider" :style="siderWidth">
           <div class="logo" :class="{center: isCollapse}">
-            <img v-if="!isCollapse" src="../assets/images/btn_logo.png" alt="">
-            <img v-else src="../assets/images/logo.png" alt="">
+            <img v-if="!isCollapse" src="../images/btn_logo.png" alt="">
+            <img v-else src="../images/logo.png" alt="">
           </div>
           <a-menu
             theme="dark"
@@ -86,8 +86,8 @@
 
           <footer :class="!visitedViews.length ? 'blank' : 'foot'">
             <div>
-              <img v-if="visitedViews.length" class="logo" src="../assets/images/icon_haomiao.png" alt="">
-              <img v-else class="logo" src="../assets/images/icon_haomiao1.png" alt="">
+              <img v-if="visitedViews.length" class="logo" src="../images/icon_haomiao.png" alt="">
+              <img v-else class="logo" src="../images/icon_haomiao1.png" alt="">
               <p class="txt">Copyright © 厦门浩邈科技有限公司</p>
             </div>
           </footer>
@@ -124,7 +124,7 @@
 import zhCn from 'ant-design-vue/lib/locale-provider/zh_CN';
 import { mapState, mapGetters } from 'vuex';
 import tagViews from './tagViews';
-import { updateTheme, colorList } from '@/utils/settingDrawer/settingConfig';
+import { updateTheme, colorList } from '../utils/settingDrawer/settingConfig';
 import { setCacheData } from '@/utils/mixins';
 
 export default {
@@ -136,11 +136,8 @@ export default {
       visible: false,
       colorList,
       locale: zhCn,
-      isNewViews: '',
       isDataVisual: false,
-      menuList: [],
       userInfo: {},
-      loginInfo: {},
       hasLayout: false,
       isCollapse: false,
       openKeys: [],
@@ -253,18 +250,14 @@ export default {
     init () {
       this.rootSubmenuKeys = this.permission_routes.map(el => el.path); // 一级菜单的 Key
 
-      let routeArr = ['login', 'forget', 'allVis', 'communityVis', 'over', 'monitor', 'manage'];
-      routeArr.some(ele => this.$route.name === ele) ? (this.hasLayout = false) : (this.hasLayout = true);
+      let routeArr = ['login', 'forget'];
+      let subPage = ['over', 'monitor', 'manage'];
+      let viewPage = ['allVis', 'communityVis', ...subPage];
+      [...routeArr, ...viewPage, subPage].some(ele => this.$route.name === ele) ? this.hasLayout = false : this.hasLayout = true;
       let body = document.getElementsByTagName('body')[0];
-      if (this.hasLayout === true && ['allVis', 'communityVis', 'over', 'monitor', 'manage'].some(el => el === this.$route.name)) {
+      if (this.hasLayout === false && viewPage.some(el => el === this.$route.name)) {
         this.isDataVisual = true;
-        if (['over', 'monitor', 'manage'].includes(this.$route.name)) {
-          this.isNewViews = true;
-          body.style.backgroundColor = '#F3F5F8';
-        } else {
-          this.isNewViews = false;
-          body.style.backgroundColor = '#060C30';
-        }
+        subPage.includes(this.$route.name) ? body.style.backgroundColor = '#F3F5F8' : body.style.backgroundColor = '#060C30';
       } else {
         body.style.backgroundColor = '#F3F5F8';
         this.isDataVisual = false;
@@ -368,13 +361,13 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../style/index";
+@import "~/src/style/index"; // todo
 
 .data-visual {
   width: 100vw;
   height: 100vh;
   //background-image: url("~/static/dataVisual/images/bg.jpg");
-  background-image: url("/static/dataVisual/images/bg.jpg");
+  // background-image: url("~/static/dataVisual/images/bg.png");
   background-repeat: no-repeat;
 }
 
@@ -397,4 +390,151 @@ export default {
   opacity: 0;
   transform: translateX(20px);
 }
+
+/*S- app 布局*/
+#components-layout {
+  display: flex;
+  transition: all 0.2s;
+  .layout-sider {
+    overflow: auto;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background-color: $aside-bg;
+    box-shadow: 2px 0 6px rgba(0,21,41,.35);
+    transition: all .2s;
+    .logo {
+      padding: 16px 0 16px 15px;
+      cursor: pointer;
+    }
+    .center {
+      text-align: center;
+      padding: 16px 0;
+    }
+    .ant-menu {
+      padding: 16px 0;
+      width: 100%;
+    }
+  }
+
+  .layout-main {
+    padding-left: 250px;
+    width: 100vw;
+    transition: all 0.2s;
+    .layout-nav {
+      position: fixed;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      width: 100vw;
+    }
+    header {
+      position: fixed;
+      z-index: 5;
+      top: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      height: 48px;
+      background-color: #fff;
+      box-shadow: 0 1px 4px rgba(0,21,41,.08);
+      //background: linear-gradient(120deg, #00e4d0, #5983e8);
+      .trigger {
+        font-size: 20px;
+        line-height: 48px;
+        padding: 0 24px;
+        cursor: pointer;
+        transition: color .3s;
+      }
+      .trigger:hover {
+        background-color: $black_4;
+        color: #1890ff;
+      }
+      .rt {
+        padding-right: 20px;
+        display: flex;
+        >span {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          padding: 0 12px;
+          cursor: pointer;
+          transition: all .3s;
+          .anticon {
+            font-size: 16px;
+          }
+          .avatar {
+            margin-right: 5px;
+            width: 24px;
+            height: 24px;
+            border-radius: 24px;
+            overflow: hidden;
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+        >span:hover {
+          background-color: $black_4;
+        }
+      }
+    }
+    .page-header {
+      display: flex;
+      padding: 16px 24px;
+      background-color: #fff;
+      transition: all 0.2s;
+      .headering {
+        margin-top: 12px;
+        color: $black_2;
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 1.4;
+      }
+    }
+    .layout-content {
+      margin: 170px 18px 18px;
+      padding: 16px;
+      background-color: #fff;
+      min-height: 280px;
+      transition: all 0.2s;
+    }
+    .blank {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .logo {
+        width: 300px;
+      }
+      .txt {
+        text-align: center;
+        font-size: 13px;
+        color: #9FADB8;
+      }
+    }
+    .foot {
+      height: auto;
+      display: block;
+      margin: 24px 0 66px;
+      padding: 0 16px;
+      text-align: center;
+      .logo {
+        margin-bottom: 10px;
+        width: 90px;
+      }
+      .txt {
+        font-size: 12px;
+        color: $gray_3;
+      }
+    }
+  }
+}
+.ant-layout {
+  background-color: transparent;
+}
+/*E- app 布局*/
 </style>

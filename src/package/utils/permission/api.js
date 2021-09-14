@@ -1,9 +1,10 @@
 import { GET } from '../http';
 import store from '@/store';
 import Common from '@/utils/common';
+import Layout from '../../layout/index';
 
 // 获取用户信息
-export function GetInfo ({ commit, state, dispatch }) {
+export function GetInfo () {
   return new Promise((resolve, reject) => {
     GET({
       url: '/user/getInfo'
@@ -33,12 +34,12 @@ export function GetInfo ({ commit, state, dispatch }) {
   });
 }
 // 生成路由
-export function GenerateRoutes ({ commit }) {
+export function GenerateRoutes () {
   return new Promise((resolve, reject) => {
     GET({ // 向后端请求路由数据
       url: '/user/getRouters'
-    }).then(res => {
-      res.data.push({
+    }).then(({ data }) => {
+      data.push({
         component: 'Layout',
         hidden: true,
         path: '/userData',
@@ -50,8 +51,28 @@ export function GenerateRoutes ({ commit }) {
           name: 'userInfo'
         }]
       });
-      const accessedRoutes = filterAsyncRouter(res.data);
-      accessedRoutes.push({ path: '*', redirect: '/404', hidden: true });
+      let accessedRoutes = filterAsyncRouter(data);
+      let router = [
+        {
+          path: '/redirect',
+          component: Layout,
+          hidden: true,
+          children: [{
+            path: '/redirect/:path(.*)',
+            component: () => import('./redirect')
+          }]
+        },
+        {
+          path: '/empty',
+          component: Layout,
+          hidden: true,
+          children: [{
+            path: '',
+            component: () => import('./emptyPage')
+          }]
+        }
+      ];
+      accessedRoutes = [...accessedRoutes, ...router, { path: '*', redirect: '/404', hidden: true }];
       store.commit('SET_ROUTES', accessedRoutes);
       resolve(accessedRoutes);
     }).catch(error => {
