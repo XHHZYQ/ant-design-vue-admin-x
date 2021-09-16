@@ -59,7 +59,7 @@ export function GenerateRoutes () {
           hidden: true,
           children: [{
             path: '/redirect/:path(.*)',
-            component: () => import('./redirect')
+            component: () => import('./views/redirect')
           }]
         },
         {
@@ -68,7 +68,7 @@ export function GenerateRoutes () {
           hidden: true,
           children: [{
             path: '',
-            component: () => import('./emptyPage')
+            component: () => import('./views/emptyPage')
           }]
         }
       ];

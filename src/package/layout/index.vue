@@ -366,8 +366,7 @@ export default {
 .data-visual {
   width: 100vw;
   height: 100vh;
-  //background-image: url("~/static/dataVisual/images/bg.jpg");
-  // background-image: url("~/static/dataVisual/images/bg.png");
+  background-image: url("../images/bg.png");
   background-repeat: no-repeat;
 }
 
