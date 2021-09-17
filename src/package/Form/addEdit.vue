@@ -308,10 +308,17 @@
               :selectedKeys="selectedKeys"
               :disabled="item.disabled"
               :filterOption="transferFilter"
-              @change="transferChange"
-              @selectChange="transferSelectChange"
+              @change="e => {
+                transferChange(e);
+                item.change && item.change(e);
+              }"
+              @selectChange="(sourceKeys, targetKeys) => {
+                transferSelectChange(sourceKeys, targetKeys);
+                item.selectChange && item.selectChange(sourceKeys, targetKeys);
+              }"
               :titles="item.titles || ['Source', 'Target']"
               :render="item => item.title"
+              :showSelectAll="item.hasOwnProperty('showSelectAll') ? item.showSelectAll : true"
               showSearch
             />
           </a-form-item>
