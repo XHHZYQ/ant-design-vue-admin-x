@@ -167,8 +167,6 @@ export default {
       dataSource: [],
       searchParams: {
         roleName: undefined
-        // status: undefined
-        // create_date: undefined
       },
       listApi: {
         url: '/role/list',
@@ -321,7 +319,6 @@ export default {
       return res.rows;
     },
     searchHandle (selectData) {
-      console.log('处理搜索数据: ', selectData);
       // return selectData;
     }
   }

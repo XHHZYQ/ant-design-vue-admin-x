@@ -177,18 +177,6 @@ export default {
         this.$nextTick(() => {
           this.$refs.form.getDetail(url);
           this.$refs.form.routeQuery = row.dictId;
-
-          // this.$get({
-          //   url: `/menu/roleMenuTreeselect/${row.roleId}`
-          // }).then(res => {
-          //   this.$refs.form.defaultTree = res.data.checkedKeys;
-          //   this.$refs.form.treeCheck(res.data.checkedKeys, 'menuIds');
-          //   if (row.roleId === '1') {
-          //     this.formList[4].disabled = true;
-          //   } else {
-          //     this.formList[4].disabled = false;
-          //   }
-          // });
         });
       } else {
         title = '新增字典类型';

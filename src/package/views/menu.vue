@@ -19,7 +19,7 @@
         <a-icon :type="row.icon" />
       </template>
     </x-tabula>
-    <!-- <a-table :columns="columns1" :data-source="data1" /> -->
+
     <!--添加菜单弹窗-->
     <a-modal
       width="700px"
@@ -90,7 +90,6 @@ export default {
           label: '上级菜单',
           inputType: 'treeSelect',
           options: [],
-          handle: this.handleSelect,
           placeholder: '请输入角色名称',
           props: ['parentId', {
             rules: [
@@ -102,7 +101,11 @@ export default {
           label: '菜单类型',
           inputType: 'radioGroup',
           handle: this.handleClickMenuType,
-          options: [{ label: '目录', value: 'M' }, { label: '菜单', value: 'C' }, { label: '按钮', value: 'F' }],
+          options: [
+            { label: '目录', value: 'M' },
+            { label: '菜单', value: 'C' },
+            { label: '按钮', value: 'F' }
+          ],
           placeholder: '请选择菜单类型',
           props: ['menuType', {
             rules: [
@@ -211,30 +214,6 @@ export default {
             ]
           }]
         },
-        // {
-        //   isShow: false,
-        //   label: '路由地址',
-        //   inputType: 'input',
-        //   options: [],
-        //   placeholder: '请输入路由地址',
-        //   props: ['path', {
-        //     rules: [
-        //       { required: true, message: '请输入路由地址' }
-        //     ]
-        //   }]
-        // },
-        // {
-        //   isShow: false,
-        //   label: '路由名称',
-        //   inputType: 'input',
-        //   options: [],
-        //   placeholder: '请输入路由名称',
-        //   props: ['routeName', {
-        //     rules: [
-        //       { required: true, message: '请输入路由名称' }
-        //     ]
-        //   }]
-        // },
         {
           isShow: true,
           label: '显示状态',
@@ -304,16 +283,9 @@ export default {
     this.form = this.$form.createForm(this);
   },
   mounted () {
-    // this.getMenuList();
     this.getSelect();
   },
   methods: {
-    getMenuList () {
-      this.$get({
-        url: 'menu/list'
-      }).then(res => {
-      });
-    },
     getSelect () {
       this.$get({
         url: 'menu/treeselect'
@@ -335,12 +307,9 @@ export default {
           this.$refs.form.getDetail(url);
         });
       } else {
-        // this.$refs.form.routeQuery = '';
         if (row.length) {
           this.$nextTick(() => {
-            this.$refs.form.form.setFieldsValue({
-              parentId: row
-            });
+            this.$refs.form.form.setFieldsValue({ parentId: row });
           });
         }
         title = '新增菜单';
@@ -348,8 +317,6 @@ export default {
         this.handleClickMenuType('M');
       }
       this.modalTitle = title;
-    },
-    handleSelect (val) {
     },
     handleClick () {
       this.visibleIcon = true;
@@ -386,9 +353,7 @@ export default {
     },
     handleIconChange (icon) {
       this.formList[2].prefix = icon;
-      this.$refs.form.form.setFieldsValue({
-        icon
-      });
+      this.$refs.form.form.setFieldsValue({ icon });
       this.visibleIcon = false;
     },
     cancel () {
