@@ -175,9 +175,13 @@ instance.interceptors.response.use((res) => {
           userId: localStorage.userId
         }
       }).then(newRes => {
-        const newToken = newRes.data.access_token
+        let data = newRes.data;
+        if (typeof data === 'string') {
+          data = JSON.parse(data);
+        }
+        const newToken = data.access_token
         setToken(newToken);
-        localStorage.refresh_token = newRes.data.refresh_token;
+        localStorage.refresh_token = data.refresh_token;
         res.config.headers.Authorization = 'Bearer ' + newToken;
         requestList.forEach(callback => callback(newToken))
         requestList = []
@@ -224,6 +228,10 @@ const fetch = (options, obj) => {
     instance(options).then((res) => {
       // console.log('http options: ', options.url, options);
       let resData = res.data;
+      console.log('res: ', typeof resData, resData);
+      if (typeof resData === 'string') {
+        resData = JSON.parse(resData);
+      }
       spinObj && setTimeout(() => { spinObj.spinning = false; }, 300); // 关闭loading
       btnLoading && setTimeout(() => { btnLoading.loading = false; }, 300);
       if (localeText && resData.data) {
