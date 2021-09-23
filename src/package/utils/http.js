@@ -228,7 +228,6 @@ const fetch = (options, obj) => {
     instance(options).then((res) => {
       // console.log('http options: ', options.url, options);
       let resData = res.data;
-      console.log('res: ', typeof resData, resData);
       if (typeof resData === 'string') {
         resData = JSON.parse(resData);
       }

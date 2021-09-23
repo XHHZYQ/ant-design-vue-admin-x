@@ -61,7 +61,7 @@
             :wrapperCol="item.wrapperCol"
           >
             <a-select
-              @change="(e) => {item.handle && item.handle(e)}"
+              @change="(e, option) => {item.handle && item.handle(e, option)}"
               @search="selectSearch(item, $event)"
               @popupScroll="selectScroll(item, $event)"
               v-decorator="item.props"
@@ -147,6 +147,10 @@
             <a-cascader
               @change="(e, v) => {item.handle && item.handle(e, v)}"
               @click="(e, v) => {item.click && item.click(e, v)}"
+              :displayRender="({ labels, selectedOptions }) => {
+                item.displayRender && item.displayRender(labels, selectedOptions);
+                return labels.join(' / ');
+              }"
               :loadData="item.loadData"
               v-decorator="item.props"
               :options="item.options"
