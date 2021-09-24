@@ -214,6 +214,8 @@ instance.interceptors.response.use((res) => {
  * @param obj, 其他参数
  * @returns {Promise<any>}
  */
+let isShowMsg = false;
+let errMsg;
 const fetch = (options, obj) => {
   let { spinObj } = obj;
   let { btnLoading } = obj;
@@ -255,7 +257,12 @@ const fetch = (options, obj) => {
           empty.$emit('setCacheData');
         })
       } else {
+        if (resData.msg === errMsg) { return; }
         resData.msg && message.error(resData.msg, 5); // 错误提示信息
+        errMsg = resData.msg;
+        setTimeout(() => { // 防止错误信息频繁弹窗
+          errMsg = undefined;
+        }, 1000 * 5);
         reject(res);
       }
     }).catch((err) => {
@@ -267,6 +274,10 @@ const fetch = (options, obj) => {
       }
       let errData = (err.response || {}).data;
       reject(errData);
+
+      if (isShowMsg) { return; }
+      isShowMsg = true;
+
       if (err.response) {
         /* 错误提示信息 */
         if (errData && errData.msg) {
@@ -277,6 +288,9 @@ const fetch = (options, obj) => {
       } else {
         message.error('网络不给力，请刷新重试');
       }
+      setTimeout(() => { // 防止错误信息频繁弹窗
+        isShowMsg = false;
+      }, 1000 * 5);
     });
   });
 };

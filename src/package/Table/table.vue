@@ -312,7 +312,10 @@ export default {
         let route = this.getRoute();
         this.$router.push({
           name: route,
-          query: { title: this.addHandleParam.addTitle ? this.addHandleParam.addTitle : undefined }
+          query: {
+            title: this.addHandleParam.addTitle ? this.addHandleParam.addTitle : undefined,
+            ...this.breadParam(this)
+          }
         });
       } else if (item.text.includes('删除') || item.key === 'delete') {
         this.showDeleteConfirm(this.selectedRows, 'isBatch');
@@ -421,7 +424,8 @@ export default {
         query: {
          id: row[this.rowKey],
          title: this.addHandleParam.editTitle ? this.addHandleParam.editTitle : undefined,
-          ...paramObj
+          ...paramObj,
+          ...this.breadParam(this)
         }
       });
     }
