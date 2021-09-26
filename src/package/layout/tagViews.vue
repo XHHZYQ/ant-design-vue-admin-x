@@ -9,7 +9,7 @@
         type="card"
       >
         <a-tab-pane ref="tag" v-for="pane in visitedViews" :key="pane.path">
-          <template slot="tab">
+          <div @click.middle="closeSelectedTag(pane)" slot="tab">
             <span style="margin-right: 8px">{{ pane.title }}</span>
             <a-icon
               style="margin-right: 8px"
@@ -24,7 +24,7 @@
               class="reload"
               type="close"
             />
-          </template>
+          </div>
         </a-tab-pane>
       </a-tabs>
 

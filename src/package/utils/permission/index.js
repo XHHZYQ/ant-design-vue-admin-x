@@ -26,7 +26,7 @@ export function routerBeforeEach (to, from, next) {
             }
           });
         }).catch(() => {
-          store.dispatch('FedLogOut').then(() => {
+          store.dispatch('FedLogOut').then(() => { // todo 该代码执行不到
             next({ path: '/login' });
           });
         });
@@ -38,7 +38,10 @@ export function routerBeforeEach (to, from, next) {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next();
     } else {
-      let redirect = to.fullPath;
+      let redirect;
+      if (from.path !== '/login') {
+        redirect = to.fullPath;
+      }
       let path = redirect ? `/login?redirect=${redirect}` : '/login';
       next(path); // 否则全部重定向到登录页
     }

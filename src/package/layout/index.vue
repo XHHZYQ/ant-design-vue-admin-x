@@ -354,6 +354,9 @@ export default {
       }
       this.breadList = JSON.parse(localStorage.getItem('breadListStorage')) || [];
       this.breadList.splice(breadNumber, this.breadList.length - breadNumber, newBread);
+      if (breadNumber > 0 && query.parentTitle) {
+        this.breadList = [{ name: query.parentTitle, path: query.parentPath }, newBread];
+      }
       localStorage.setItem('breadListStorage', JSON.stringify(this.breadList));
     }
   }
