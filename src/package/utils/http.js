@@ -5,7 +5,7 @@ import Qs from 'qs';
 import CryptoJS from 'crypto-js';
 import { message } from 'ant-design-vue';
 import { empty } from './empty';
-import { getToken, setToken, removeToken } from './common';
+import Common from '@/utils/common';
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -50,8 +50,8 @@ function createHeader (config) {
   let md5Param = CryptoJS.MD5(urlEncoded).toString().toLowerCase();
 
   let usertoken;
-  if (getToken()) {
-    usertoken = getToken();
+  if (Common.getToken()) {
+    usertoken = Common.getToken();
   }
   let aesStr = getAesString(
     `${keySecret.app_key}:${usertoken || ''}:''`,
@@ -64,7 +64,7 @@ function createHeader (config) {
     'signature': md5Param,
     'app-type': 'web',
     authentication: aesStr,
-    Authorization: `Bearer ${getToken()}`
+    Authorization: `Bearer ${Common.getToken()}`
   };
   config.headers = {...config.headers, ...head};
   return config;
