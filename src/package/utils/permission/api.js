@@ -2,10 +2,10 @@ import { GET } from '../http';
 import store from '@/store';
 import Common from '@/utils/common';
 import Layout from '../../layout/index';
-import platform from '@/utils/platform';
+import { PLAT_FORM } from '@/utils/platform';
 
 let baseUrl;
-if (platform === 'property' || platform === 'government') {
+if (PLAT_FORM === 'property' || PLAT_FORM === 'government') {
   baseUrl = process.env.VUE_APP_BASE_API_JAVA;
 } else {
   baseUrl = process.env.VUE_APP_BASE_API;

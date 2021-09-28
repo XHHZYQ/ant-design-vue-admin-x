@@ -1,9 +1,9 @@
-import platform from '@/utils/platform';
+import { PLAT_FORM } from '@/utils/platform';
 
 /** 处理http请求方法名 */
 export function handleHttpMethod (type, self) {
-  console.log('platform apiOrigin: ', platform, self.apiOrigin);
-  if (platform === 'property' || platform === 'government') { // 物业、政务
+  console.log('PLAT_FORM apiOrigin: ', PLAT_FORM, self.apiOrigin);
+  if (PLAT_FORM === 'property' || PLAT_FORM === 'government') { // 物业、政务
     return self.apiOrigin === 'JAVA' ? `_${type}`: `$${type}`;
   } else { // 社区
     return self.apiOrigin === 'PHP' ? `_${type}`: `$${type}`;

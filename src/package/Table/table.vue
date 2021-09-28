@@ -62,7 +62,7 @@
 <script>
 import rowButton from './rowButton';
 import { handleHttpMethod } from '../utils/common';
-import platform from '@/utils/platform';
+import { PLAT_FORM } from '@/utils/platform';
 
 export default {
   mixins: [],
@@ -71,7 +71,7 @@ export default {
     apiOrigin: {
       type: String,
       default: () => {
-        if (platform === 'property' || platform === 'government') {
+        if (PLAT_FORM === 'property' || PLAT_FORM === 'government') {
           return 'PHP';
         } else {
           return 'JAVA';

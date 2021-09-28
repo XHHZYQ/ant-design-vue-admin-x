@@ -1,11 +1,11 @@
 /* axios config配置 */
 import axios from 'axios';
-// import router from '../router';
 import Qs from 'qs';
 import CryptoJS from 'crypto-js';
 import { message } from 'ant-design-vue';
 import { empty } from './empty';
 import Common from '@/utils/common';
+import { PLAT_FORM } from '@/utils/platform';
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -58,7 +58,13 @@ function createHeader (config) {
     'hm2KzN8k32UyVAEm', // 加密key
     '9aec6fb8db98e4b4' // 偏移量
   );
-  aesStr = `admin ${aesStr}`;
+
+  const appType = {
+    community: 'admin',
+    property: 'property',
+    government: 'government',
+  };
+  aesStr = `${appType[PLAT_FORM]} ${aesStr}`;
   let head = {
     'timestamp': time,
     'signature': md5Param,

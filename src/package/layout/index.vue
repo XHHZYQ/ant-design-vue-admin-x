@@ -2,13 +2,13 @@
   <a-config-provider :locale="locale">
     <div id="app" v-if="hasLayout">
       <div id="components-layout">
-        <aside class="layout-sider" :style="siderWidth">
+        <aside class="layout-aside" :style="{backgroundColor: platFormDiffer[platform].asideColor, ...siderWidth}">
           <div class="logo" :class="{center: isCollapse}">
-            <img v-if="!isCollapse" src="../images/btn_logo.png" alt="">
+            <img v-if="!isCollapse" :src="platFormDiffer[platform].menuLogo" alt="">
             <img v-else src="../images/logo.png" alt="">
           </div>
           <a-menu
-            theme="dark"
+            :theme="platFormDiffer[platform].menuTheme"
             mode="inline"
             @click="({ item, key, keyPath }) => handleClick(key)"
             @openChange="onOpenChange"
@@ -126,6 +126,8 @@ import { mapState, mapGetters } from 'vuex';
 import tagViews from './tagViews';
 import { updateTheme, colorList } from '../utils/settingDrawer/settingConfig';
 import { setCacheData } from '@/utils/mixins';
+import { PLAT_FORM } from '@/utils/platform';
+import { communityLogo, propertyLogo, govLogo } from '../images';
 
 export default {
   name: 'App',
@@ -133,6 +135,7 @@ export default {
   components: { tagViews },
   data () {
     return {
+      platform: PLAT_FORM,
       visible: false,
       colorList,
       locale: zhCn,
@@ -142,7 +145,27 @@ export default {
       isCollapse: false,
       openKeys: [],
       rootSubmenuKeys: [],
-      breadList: []
+      breadList: [],
+      platFormDiffer: {
+        community: {
+          menuLogo: communityLogo,
+          menuTheme: 'dark',
+          asideColor: '#001529',
+          backgroundLogo: undefined
+        },
+        property: {
+          menuLogo: propertyLogo,
+          menuTheme: 'light',
+          asideColor: '#fff',
+          backgroundLogo: undefined
+        },
+        government: {
+          menuLogo: govLogo,
+          menuTheme: 'dark',
+          asideColor: '#001529',
+          backgroundLogo: undefined
+        },
+      }
     };
   },
   watch: {
@@ -397,14 +420,13 @@ export default {
 #components-layout {
   display: flex;
   transition: all 0.2s;
-  .layout-sider {
+  .layout-aside {
     overflow: auto;
     position: fixed;
     z-index: 10;
     top: 0;
     left: 0;
     height: 100vh;
-    background-color: $aside-bg;
     box-shadow: 2px 0 6px rgba(0,21,41,.35);
     transition: all .2s;
     .logo {
