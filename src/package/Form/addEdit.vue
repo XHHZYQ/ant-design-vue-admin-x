@@ -398,6 +398,8 @@
 <script>
 import { addEdit, inputSearch, upload } from '../utils/mixins';
 import { handleHttpMethod } from '../utils/common';
+import platform from '@/utils/platform';
+
 export default {
   mixins: [ addEdit, inputSearch, upload ],
   name: 'addEdit',
@@ -410,7 +412,13 @@ export default {
   props: {
     apiOrigin: {
       type: String,
-      default: () => 'JAVA'
+      default: () => {
+        if (platform === 'property' || platform === 'government') {
+          return 'PHP';
+        } else {
+          return 'JAVA';
+        }
+      }
     },
     transferVal: '',
     formType: {

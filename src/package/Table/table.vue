@@ -62,13 +62,21 @@
 <script>
 import rowButton from './rowButton';
 import { handleHttpMethod } from '../utils/common';
+import platform from '@/utils/platform';
+
 export default {
   mixins: [],
   name: 'tabula',
   props: {
     apiOrigin: {
       type: String,
-      default: () => 'JAVA'
+      default: () => {
+        if (platform === 'property' || platform === 'government') {
+          return 'PHP';
+        } else {
+          return 'JAVA';
+        }
+      }
     },
     excludeResetKey: {
       type: Array,

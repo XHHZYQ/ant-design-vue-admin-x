@@ -2,12 +2,20 @@ import { GET } from '../http';
 import store from '@/store';
 import Common from '@/utils/common';
 import Layout from '../../layout/index';
+import platform from '@/utils/platform';
+
+let baseUrl;
+if (platform === 'property' || platform === 'government') {
+  baseUrl = process.env.VUE_APP_BASE_API_JAVA;
+} else {
+  baseUrl = process.env.VUE_APP_BASE_API;
+}
 
 // 获取用户信息
 export function GetInfo () {
   return new Promise((resolve, reject) => {
     GET({
-      url: '/user/getInfo'
+      url: baseUrl + '/user/getInfo'
     }).then(res => {
       const user = res.data.user;
       let userInfo = {
@@ -37,17 +45,17 @@ export function GetInfo () {
 export function GenerateRoutes () {
   return new Promise((resolve, reject) => {
     GET({ // 向后端请求路由数据
-      url: '/user/getRouters'
+      url: baseUrl + '/user/getRouters'
     }).then(({ data }) => {
       data.push({
         component: 'Layout',
         hidden: true,
-        path: '/userData',
+        path: '/userInfo',
         children: [{
           component: 'login/userInfo',
           hidden: false,
           meta: { title: '账户信息' },
-          path: '/userInfo',
+          path: '',
           name: 'userInfo'
         }]
       });
@@ -100,5 +108,5 @@ export function filterAsyncRouter (asyncRouterMap) {
 }
 
 export const loadView = (view) => { // 路由懒加载
-  return (resolve) => require([`@/views/${view}`], resolve);
+  return () => import(`@/views/${view}`);
 };
