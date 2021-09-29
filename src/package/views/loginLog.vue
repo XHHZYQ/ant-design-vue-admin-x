@@ -4,6 +4,7 @@
   <div>
     <x-tabula
       ref="table"
+      :apiOrigin="apiOrigin"
       :dataSource="dataSource"
       rowKey="loginLogId"
       :searchList="searchList"
@@ -42,11 +43,13 @@
 
 <script>
 import { fetchSelect } from '@/utils/mixins';
+import { handleHttpMethod } from '../utils/common'
 export default {
   mixins: [fetchSelect],
   name: 'loginLog',
   data () {
     return {
+      apiOrigin: 'JAVA',
       visible: false,
       searchList: [
         { props: ['ipaddr'], placeholder: '登入地址', options: [], inputType: 'input' },
@@ -88,7 +91,7 @@ export default {
   },
   methods: {
     getSelect () {
-      this.$get({
+      this[handleHttpMethod('get', this)]({
         url: '/select_list/admin_manage_list',
         params: {}
       }).then(({data}) => {
