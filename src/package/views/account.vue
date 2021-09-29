@@ -290,8 +290,10 @@ export default {
             }
           }
         } else {
-          this.$refs.form.form.setFieldsValue({ [prop]: undefined });
-          index > -1 && (this.formList[index].disabled = false);
+          if (this.formList[index].disabled) {
+            this.$refs.form.form.setFieldsValue({ [prop]: undefined });
+            index > -1 && (this.formList[index].disabled = false);
+          }
           this.formList[index].extra = undefined;
         }
       });
@@ -446,7 +448,6 @@ export default {
     },
     /* 新增或编辑用户 */
     openModal (row) {
-      console.log('row: ', row);
       this.formList[0].extra = undefined;
       this.formList[1].extra = undefined;
       this.visible = true;
@@ -474,16 +475,9 @@ export default {
           item.disabled = true;
         }
       });
-      let url = `/user/${userId}`;
       this.$nextTick(() => {
-        this.$refs.form.getDetail(url);
         this.$refs.form.routeQuery = userId;
-        this[handleHttpMethod('get', this)]({
-          url: `/user/${userId}`
-        }).then(res => {
-          this.$refs.form.defaultTree = res.data.checkedKeys;
-          // this.$refs.form.treeCheck(res.data.checkedKeys, 'menuIds');
-        });
+        this.$refs.form.getDetail();
       });
     },
     detailResHandle (res) {
