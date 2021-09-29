@@ -5,7 +5,7 @@ import table from './Table/table';
 import addEdit from './Form/addEdit';
 import { hasPermi } from './utils/hasPermi';
 import Layout from './layout';
-import { role, menu, dictionaries, dictionaryData } from './views';
+import { account, role, menu, dictionaries, dictionaryData } from './views';
 import { routerBeforeEach } from './utils/permission';
 
 let component = {
@@ -28,7 +28,7 @@ export { addEdit, upload, inputSearch } from './utils/mixins/index';
 export { GET, POST, DELETE, PUT } from './utils/http';
 export { routerBeforeEach };
 export { Layout };
-export { role, menu, dictionaries, dictionaryData };
+export { account, role, menu, dictionaries, dictionaryData };
 export { updateTheme } from  './utils/settingDrawer/settingConfig';
 export default install;
 

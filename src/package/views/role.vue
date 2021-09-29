@@ -3,6 +3,7 @@
   <div>
     <x-tabula
       ref="table"
+      :apiOrigin="apiOrigin"
       :dataSource="dataSource"
       rowKey="roleId"
       :searchList="searchList"
@@ -32,6 +33,7 @@
     >
     <x-addEdit
       ref="form"
+      :apiOrigin="apiOrigin"
       :formList="formList"
       :formKey="formKey"
       :addParam="addParam"
@@ -45,8 +47,12 @@
 </template>
 
 <script>
+import { handleHttpMethod } from '../utils/common';
 export default {
   name: 'role',
+  props: {
+    apiOrigin: { default: () => 'JAVA' }
+  },
   data () {
     return {
       modalTitle: '添加角色',
@@ -149,12 +155,12 @@ export default {
         { props: ['roleName'], placeholder: '角色名称', options: [], inputType: 'input' }
       ],
       tableOptList: [
-        { text: '新增', icon: 'plus', handle: this.openModal, permi: ['system:role:add'] },
-        { text: '删除', icon: 'close', disabled: true, permi: ['system:role:remove'] }
+        { text: '新增', icon: 'plus', handle: this.openModal, permi: ['system:role:add', 'property:role:add'] },
+        { text: '删除', icon: 'close', disabled: true, permi: ['system:role:remove', 'property:role:delete'] }
       ],
       rowOptList: [
-        { text: '修改', handle: (row) => this.openModal(row), permi: ['system:role:edit'] },
-        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['system:role:remove'] }
+        { text: '修改', handle: (row) => this.openModal(row), permi: ['system:role:edit', 'property:role:edit'] },
+        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['system:role:remove', 'property:role:delete'] }
       ],
       columns: [
         { title: '角色名称', dataIndex: 'roleName', align: 'left', width: '' },
@@ -186,7 +192,7 @@ export default {
   },
   methods: {
     getSelect () {
-      this.$get({
+      this[handleHttpMethod('get', this)]({
         url: '/menu/treeselect'
       }).then(res => {
         this.recursionList(res.data);
@@ -213,7 +219,7 @@ export default {
           this.$refs.form.getDetail(url);
           this.$refs.form.routeQuery = row.roleId;
 
-          this.$get({
+          this[handleHttpMethod('get', this)]({
             url: `/menu/roleMenuTreeselect/${row.roleId}`
           }).then(res => {
             this.$refs.form.defaultTree = res.data.checkedKeys;
@@ -240,7 +246,7 @@ export default {
         okText: '确定',
         centered: true,
         onOk: () => {
-          this.$put({
+          this[handleHttpMethod('put', this)]({
             url: `/role/changeStatus/${id}`,
             params: {
               status: checked ? 1 : 0
