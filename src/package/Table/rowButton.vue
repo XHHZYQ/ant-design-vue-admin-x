@@ -34,7 +34,7 @@ export default {
     /* 操作按钮禁用判断 */
     rowOptDisable (row, el) {
       let text = el.text;
-      if (text === '删除' && (row.canDelete === 0 || row.isDelete === 0 || row.is_delete === 0)) {
+      if (text === '删除' && (row.canDelete === 0 || row.can_delete === 0 || row.isDelete === 0 || row.is_delete === 0)) {
         return true;
       } else if (text === '查看子类' && (row.canSeeChild === 0 || row.can_see_child === 0)) { // 处理分类
         return true;

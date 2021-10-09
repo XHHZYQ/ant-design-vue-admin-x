@@ -54,6 +54,18 @@
 import { fetchSelect } from '@/utils/mixins';
 import { handleHttpMethod } from '../utils/common';
 import { PLAT_FORM } from '@/utils/platform';
+
+const sysOperType = [
+  { 'label': '新增', 'value': '1' },
+  { 'label': '修改', 'value': '2' },
+  { 'label': '删除', 'value': '3' },
+  { 'label': '授权', 'value': '4' },
+  { 'label': '导出', 'value': '5' },
+  { 'label': '导入', 'value': '6' },
+  { 'label': '强退', 'value': '7' },
+  { 'label': '生成代码', 'value': '8' },
+  { 'label': '清空数据', 'value': '9' }
+];
 export default {
   mixins: [fetchSelect],
   name: 'operLog',
@@ -116,11 +128,12 @@ export default {
   },
   methods: {
     getSelect () {
-      console.log('操作日志 PLAT_FORM: ', PLAT_FORM);
       if (PLAT_FORM === 'community') { // 社区4.*才有有字典表，物业没有
         this.dictionarySelect([{index: 2, scope: 'searchList', query: 'sys_oper_type'}]);
+      } else {
+        this.searchList[2].options = sysOperType;
       }
-      this.searchList[3].options = [{label: '正常', value: 1}, {label: '失败', value: 0}];
+      this.searchList[3].options = [{label: '成功', value: 1}, {label: '失败', value: 0}];
     },
     /* 查看账号详情 */
     showAccountInfo (id) {

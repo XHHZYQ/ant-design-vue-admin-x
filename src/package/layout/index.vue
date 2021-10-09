@@ -128,6 +128,7 @@ import { updateTheme, colorList } from '../utils/settingDrawer/settingConfig';
 import { setCacheData } from '@/utils/mixins';
 import { PLAT_FORM } from '@/utils/platform';
 import { communityLogo, propertyLogo, govLogo } from '../images';
+import { handleHttpMethod } from '../utils/common'
 
 export default {
   name: 'App',
@@ -135,6 +136,7 @@ export default {
   components: { tagViews },
   data () {
     return {
+      apiOrigin: 'JAVA',
       platform: PLAT_FORM,
       visible: false,
       colorList,
@@ -326,7 +328,7 @@ export default {
         cancelText: '取消',
         okText: '确定',
         onOk: () => {
-          this.$delete({
+          this[handleHttpMethod('delete', this)]({
             url: '/userLogin/logout',
             params: {}
           }).then((res) => {
