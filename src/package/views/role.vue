@@ -51,7 +51,15 @@ import { handleHttpMethod } from '../utils/common';
 export default {
   name: 'role',
   props: {
-    apiOrigin: { default: () => 'JAVA' }
+    apiOrigin: { default: () => 'JAVA' },
+    listsApi: { default: () => '/role/list' },
+    deleteApi: { default: () => '/role/'  },
+    addApi: { default: () => '/role' },
+    editApi: { default: () => '/role/'  },
+    detailApi: { default: () => '/role/'  },
+    changeStatusApi: { default: () => '/role/changeStatus/' },
+    authMenuApi: { default: () => '/menu/treeselect' },
+    authMenuByRoleApi: { default: () => '/menu/roleMenuTreeselect/' },
   },
   data () {
     return {
@@ -61,16 +69,16 @@ export default {
       btnLoading: { loading: false },
       // 表单参数
       addParam: {
-        url: '/role',
+        url: this.addApi,
         reqHandle: this.reqHandle,
         resHandle: this.addResHandle
       },
       editParam: {
-        url: '/role/',
+        url: this.editApi,
         resHandle: this.addResHandle
       },
       detailParam: {
-        url: '', // /room/
+        url: undefined,
         resHandle: this.detailResHandle
       },
       formKey: {
@@ -175,12 +183,12 @@ export default {
         roleName: undefined
       },
       listApi: {
-        url: '/role/list',
+        url: this.listsApi,
         resHandle: '', // this.resHandle
         searchHandle: '' // searchHandle
       },
       deleteParam: {
-        url: 'role/',
+        url: this.deleteApi,
         param: {},
         title: '角色',
         key: 'roleName'
@@ -193,7 +201,7 @@ export default {
   methods: {
     getSelect () {
       this[handleHttpMethod('get', this)]({
-        url: '/menu/treeselect'
+        url: this.authMenuApi
       }).then(res => {
         this.recursionList(res.data);
         this.formList[4].options = res.data;
@@ -214,13 +222,13 @@ export default {
       let title = '';
       if (row.roleId) {
         title = '修改角色';
-        let url = `/role/${row.roleId}`;
+        let url = `${this.detailApi}${row.roleId}`;
         this.$nextTick(() => {
           this.$refs.form.getDetail(url);
           this.$refs.form.routeQuery = row.roleId;
 
           this[handleHttpMethod('get', this)]({
-            url: `/menu/roleMenuTreeselect/${row.roleId}`
+            url: `${this.authMenuByRoleApi}${row.roleId}`
           }).then(res => {
             this.$refs.form.defaultTree = res.data.checkedKeys;
             this.$refs.form.treeCheck(res.data.checkedKeys, 'menuIds');
@@ -247,7 +255,7 @@ export default {
         centered: true,
         onOk: () => {
           this[handleHttpMethod('put', this)]({
-            url: `/role/changeStatus/${id}`,
+            url: `${this.changeStatusApi}${id}`,
             params: {
               status: checked ? 1 : 0
             }

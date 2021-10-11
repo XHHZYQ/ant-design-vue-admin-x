@@ -66,6 +66,14 @@ export default {
   components: {
     IconSelector
   },
+  props: {
+    listsApi: { default: () => 'menu/list' },
+    deleteApi: { default: () => 'menu/'  },
+    addApi: { default: () => 'menu' },
+    editApi: { default: () => 'menu/'  },
+    detailApi: { default: () => 'menu/'  },
+    authMenuApi: { default: () => 'menu/treeselect' },
+  },
   data () {
     return {
       visibleIcon: false,
@@ -232,16 +240,16 @@ export default {
       btnLoading: { loading: false },
       // 表单参数
       addParam: {
-        url: 'menu',
+        url: this.addApi,
         reqHandle: '', // this.reqHandle
         resHandle: this.addResHandle
       },
       editParam: {
-        url: 'menu/',
+        url: this.editApi,
         resHandle: this.addResHandle
       },
       detailParam: {
-        url: '', // /room/
+        url: '',
         resHandle: this.detailResHandle
       },
       searchList: [
@@ -267,12 +275,12 @@ export default {
         menuName: undefined
       },
       listApi: {
-        url: 'menu/list',
+        url: this.listsApi,
         resHandle: this.listResHandle, // this.resHandle
         searchHandle: '' // searchHandle
       },
       deleteParam: {
-        url: 'menu/',
+        url: this.deleteApi,
         param: {},
         title: '菜单',
         key: 'menuName'
@@ -288,7 +296,7 @@ export default {
   methods: {
     getSelect () {
       this.$get({
-        url: 'menu/treeselect'
+        url: this.authMenuApi
       }).then(res => {
         this.recursionList(res.data);
         let arr = [{ key: '0', value: '0', id: '0', label: '主类目', children: res.data }];
@@ -300,7 +308,7 @@ export default {
       let title = '';
       if (row.menuId) {
         title = '修改菜单';
-        let url = `menu/${row.menuId}`;
+        let url = `${this.editApi}${row.menuId}`;
         this.$nextTick(() => {
           this.$refs.form.routeQuery = row.menuId;
           this.handleClickMenuType(row.menuType, row.btnType);

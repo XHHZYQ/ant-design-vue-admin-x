@@ -52,7 +52,17 @@ import { handleHttpMethod } from '../utils/common';
 export default {
   name: 'account',
   props: {
-    apiOrigin: { default: () => 'JAVA' }
+    apiOrigin: { default: () => 'JAVA' },
+    listsApi: { default: () => '/user/list' },
+    deleteApi: { default: () => '/user/' },
+    addApi: { default: () => '/user' },
+    editApi: { default: () => '/user/' },
+    detailApi: { default: () => '/user/' },
+    roleSelectApi: { default: () => '/role/optionselect' },
+    changeStatusApi: { default: () => '/user/changeStatus/' },
+    resetPwdApi: { default: () => '/user/resetPassword' },
+    getByPhoneApi: { default: () => '/user/getByPhone' },
+    getByUserNameApi: { default: () => '/user/getByUserName' }
   },
   data () {
     return {
@@ -72,16 +82,16 @@ export default {
 
       // 表单参数
       addParam: {
-        url: '/user',
+        url: this.addApi,
         reqHandle: '', // this.addReqHandle
         resHandle: this.addResHandle
       },
       editParam: {
-        url: '/user/',
+        url: this.editApi,
         resHandle: this.editResHandle
       },
       detailParam: {
-        url: '/user/',
+        url: this.detailApi,
         resHandle: this.detailResHandle
       },
       formKey: {
@@ -191,7 +201,7 @@ export default {
       searchList: [
         { props: ['userName'], placeholder: '账号名', options: [], inputType: 'input' },
         { props: ['mobile'], placeholder: '手机号码', options: [], inputType: 'input' },
-        { props: ['status'], placeholder: '用户状态', options: [], inputType: 'select' }
+        { props: ['status'], placeholder: '用户状态', options: [{label: '正常', value: 1}, {label: '停用', value: 0}], inputType: 'select' }
         // { props: ['create_date'], placeholder: ['创建时间', '创建时间'], inputType: 'datePick' },
       ],
       searchParams: {
@@ -206,8 +216,7 @@ export default {
       rowOptList: [
         // {text: '重置密码', handle: (row) => this.confirmReset(row), permi: ['system:user:resetPwd']},
         {text: '修改', handle: (row) => this.openModal(row), permi: ['system:user:edit', 'property:user:edit']},
-        {text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['system:user:remove', 'property:user:delete']},
-        {text: '分管小区', handle: (row) => this.toAllocCommunity(row), permi: ['property:user:alloc']}
+        {text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['system:user:remove', 'property:user:delete']}
       ],
       columns: [
         { title: '账号名', dataIndex: 'userName', align: 'left', width: '' },
@@ -221,7 +230,7 @@ export default {
       ],
       dataSource: [],
       listApi: {
-        url: '/user/list',
+        url: this.listsApi,
         resHandle: '', // this.listResHandle
         searchHandle: '' // searchHandle
       },
@@ -230,7 +239,7 @@ export default {
         title: '修改房间'
       },
       deleteParam: {
-        url: '/user/',
+        url: this.deleteApi,
         param: {},
         title: '账号',
         key: 'userName',
@@ -239,14 +248,21 @@ export default {
     };
   },
   created () {
-    this.searchList[2].options = [{label: '正常', value: 1}, {label: '停用', value: 0}];
+    console.log('PLAT_FORM: ', this['PLAT_FORM']);
+    if (this['PLAT_FORM'] === 'property') {
+      this.rowOptList.push({
+        text: '分管小区', handle: (row) => this.toAllocCommunity(row), permi: ['property:user:alloc']
+      });
+    } else {
+      this.rowOptList.splice(2, 1);
+    }
     this.getRoleList();
   },
   methods: {
     /** 获取角色下拉 */
     getRoleList () {
       this[handleHttpMethod('get', this)]({
-        url: '/role/optionselect'
+        url: this.roleSelectApi
       }).then(res => {
         let arr = [];
         res.data.forEach(item => {
@@ -272,7 +288,7 @@ export default {
     },
     /** 手机号码 change 事件 */
     handleChange (e, key) {
-      let url = key === 'mobile' ? '/user/getByPhone' : '/user/getByUserName';
+      let url = key === 'mobile' ? this.getByPhoneApi : this.getByUserNameApi;
       this[handleHttpMethod('get', this)]({
         url: url,
         params: { [key]: e.target.value }
@@ -311,7 +327,7 @@ export default {
     /* 重置密码 */
     resetPwd (row) {
       this[handleHttpMethod('put', this)]({
-        url: '/user/resetPassword',
+        url: this.resetPwdApi,
         params: {
           userId: row.userId
         }
@@ -330,7 +346,7 @@ export default {
         centered: true,
         onOk: () => {
           this[handleHttpMethod('put', this)]({
-            url: `/user/changeStatus/${id}`,
+            url: `${this.changeStatusApi}${id}`,
             params: {
               status: checked ? 1 : 0
             }
