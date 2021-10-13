@@ -24,7 +24,7 @@ const install = (Vue) => {
 export { state, actions, mutations, getters };
 export { empty } from './utils/empty';
 export { handleHttpMethod } from './utils/common';
-export { addEdit, upload, inputSearch } from './utils/mixins/index';
+export { addEdit, upload, inputSearch, searchMobileOrAccount } from './utils/mixins/index';
 export { GET, POST, DELETE, PUT } from './utils/http';
 export { routerBeforeEach };
 export { Layout };

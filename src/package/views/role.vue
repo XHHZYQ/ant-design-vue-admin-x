@@ -163,12 +163,12 @@ export default {
         { props: ['roleName'], placeholder: '角色名称', options: [], inputType: 'input' }
       ],
       tableOptList: [
-        { text: '新增', icon: 'plus', handle: this.openModal, permi: ['system:role:add', 'property:role:add'] },
-        { text: '删除', icon: 'close', disabled: true, permi: ['system:role:remove', 'property:role:delete'] }
+        { text: '新增', icon: 'plus', handle: this.openModal, permi: ['system:role:add', 'property:role:add', 'government:govRole:add'] },
+        { text: '删除', icon: 'close', disabled: true, permi: ['system:role:remove', 'property:role:delete', 'government:govRole:delete'] }
       ],
       rowOptList: [
-        { text: '修改', handle: (row) => this.openModal(row), permi: ['system:role:edit', 'property:role:edit'] },
-        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['system:role:remove', 'property:role:delete'] }
+        { text: '修改', handle: (row) => this.openModal(row), permi: ['system:role:edit', 'property:role:edit', 'government:govRole:edit'] },
+        { text: '删除', handle: (row) => this.$refs.table.showDeleteConfirm(row), permi: ['system:role:remove', 'property:role:delete', 'government:govRole:delete'] }
       ],
       columns: [
         { title: '角色名称', dataIndex: 'roleName', align: 'left', width: '' },

@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { authRoute } from '@/router';
+import { authRoute } from '@/router'; // authRoute 命名在每个端要一致
 
 export const state = {
   visitedViews: [], // 展示使用的

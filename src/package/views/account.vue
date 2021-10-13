@@ -49,8 +49,10 @@
 <script>
 import { empty } from 'ant-design-vue-admin-x';
 import { handleHttpMethod } from '../utils/common';
+import { searchMobileOrAccount } from '../utils/mixins';
 export default {
   name: 'account',
+  mixins: [searchMobileOrAccount],
   props: {
     apiOrigin: { default: () => 'JAVA' },
     listsApi: { default: () => '/user/list' },
@@ -102,7 +104,9 @@ export default {
         status: undefined,
         sex: undefined,
         remarks: undefined,
-        roleIds: undefined
+        roleIds: undefined,
+
+        manageArea: undefined
       },
       formList: [
         {
@@ -110,7 +114,7 @@ export default {
           inputType: 'input',
           options: [],
           placeholder: '请输入手机号码',
-          blur: e => this.handleChange(e, 'mobile'),
+          blur: e => this.searchMobileOrAccount(e, 'mobile'),
           props: ['mobile', {
             rules: [
               { required: true, message: '请输入手机号码' },
@@ -123,7 +127,7 @@ export default {
           inputType: 'input',
           options: [],
           placeholder: '请输入账号名',
-          blur: e => this.handleChange(e, 'userName'),
+          blur: e => this.searchMobileOrAccount(e, 'userName'),
           props: ['userName', {
             rules: [
               { required: true, message: '请输入账号名' }
@@ -186,6 +190,17 @@ export default {
             ]
           }]
         },
+
+        {
+          label: '分管区域',
+          inputType: 'cascader',
+          options: [],
+          placeholder: '请选择管理区域',
+          props: ['manageArea', {
+            rules: [{ required: true, message: '请选择管理区域' }]
+          }]
+        },
+
         {
           label: '描述',
           inputType: 'textarea',
@@ -248,7 +263,6 @@ export default {
     };
   },
   created () {
-    console.log('PLAT_FORM: ', this['PLAT_FORM']);
     if (this['PLAT_FORM'] === 'property') {
       this.rowOptList.push({
         text: '分管小区', handle: (row) => this.toAllocCommunity(row), permi: ['property:user:alloc']
@@ -283,34 +297,6 @@ export default {
           true_name: row.true_name,
           role_name: row.role_name,
           mobile: row.mobile
-        }
-      });
-    },
-    /** 手机号码 change 事件 */
-    handleChange (e, key) {
-      let url = key === 'mobile' ? this.getByPhoneApi : this.getByUserNameApi;
-      this[handleHttpMethod('get', this)]({
-        url: url,
-        params: { [key]: e.target.value }
-      }).then(({ data }) => {
-        const prop = key === 'mobile' ? 'userName' : 'mobile';
-        let index = this.formList.findIndex(item => item.props && item.props[0] === prop);
-
-        let propValue = this.$refs.form.form.getFieldValue(prop);
-        if (data && data[prop]) {
-          if (data[prop] !== propValue) {
-            this.$refs.form.form.setFieldsValue({ [prop]: data[prop] });
-            if (index > -1) {
-              this.formList[index].disabled = true;
-              this.formList[index].extra = prop === 'userName' ? '该手机已存在对应账户名' : '该账户已存在对应手机号';
-            }
-          }
-        } else {
-          if (this.formList[index].disabled) {
-            this.$refs.form.form.setFieldsValue({ [prop]: undefined });
-            index > -1 && (this.formList[index].disabled = false);
-          }
-          this.formList[index].extra = undefined;
         }
       });
     },

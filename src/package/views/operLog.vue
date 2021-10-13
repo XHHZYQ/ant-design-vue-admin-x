@@ -83,7 +83,7 @@ export default {
       ],
       tableOptList: [],
       rowOptList: [
-        { text: '详细', handle: (row) => this.showAccountInfo(row.operId), permi: ['system:operlog:detail', 'property:operlog:detail'] }
+        { text: '详细', handle: (row) => this.showAccountInfo(row.operId), permi: ['system:operlog:detail', 'property:operlog:detail', 'government:operation:detail'] }
       ],
       columns: [
         { title: '系统模块', dataIndex: 'title', align: 'left', width: '' },
