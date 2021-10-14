@@ -20,10 +20,10 @@ export function GetInfo () {
       const user = res.data.user;
       let userInfo = {
         avatar: user.avatar,
-        user_name: user.userName,
+        userName: user.userName,
         mobile: user.mobile,
         trueName: user.trueName,
-        role_desc: user.roleName,
+        roleName: user.roleName,
         sex: user.sex
       };
       Common.setLocal('userInfo', userInfo);
@@ -48,15 +48,14 @@ export function GenerateRoutes () {
       url: baseUrl + '/user/getRouters'
     }).then(({ data }) => {
       data.push({
+        path: '/userInfo',
         component: 'Layout',
         hidden: true,
-        path: '/userInfo',
         children: [{
-          component: 'login/userInfo',
-          hidden: false,
-          meta: { title: '账户信息' },
           path: '',
-          name: 'userInfo'
+          name: 'userInfo',
+          component: 'login/userInfo',
+          meta: { title: '账户信息' }
         }]
       });
       let accessedRoutes = filterAsyncRouter(data);

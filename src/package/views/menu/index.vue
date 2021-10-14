@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import IconSelector from '@/components/package/IconSelector';
+import IconSelector from '../IconSelector';
 
 export default {
   name: 'manageMenu',

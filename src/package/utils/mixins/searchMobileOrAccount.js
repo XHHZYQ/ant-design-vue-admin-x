@@ -12,7 +12,7 @@ export default {
         const prop = key === 'mobile' ? 'userName' : 'mobile';
         let index = this.formList.findIndex(item => item.props && item.props[0] === prop);
 
-        let propValue = this.$refs.form.form.getFieldValue(prop);
+        let propValue = this.$refs.form.form.getFieldValue(prop); // 引用位置的 ref 名称须为 form
         if (data && data[prop]) {
           if (data[prop] !== propValue) {
             this.$refs.form.form.setFieldsValue({ [prop]: data[prop] });

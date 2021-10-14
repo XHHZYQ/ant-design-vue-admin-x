@@ -5,7 +5,7 @@ import table from './Table/table';
 import addEdit from './Form/addEdit';
 import { hasPermi } from './utils/hasPermi';
 import Layout from './layout';
-import { account, role, menu, dictionaries, dictionaryData, loginLog, operLog  } from './views';
+import { account, role, menu, IconSelector, dictionaries, dictionaryData, loginLog, operLog  } from './views';
 import { routerBeforeEach } from './utils/permission';
 
 let component = {
@@ -28,7 +28,7 @@ export { addEdit, upload, inputSearch, searchMobileOrAccount } from './utils/mix
 export { GET, POST, DELETE, PUT } from './utils/http';
 export { routerBeforeEach };
 export { Layout };
-export { account, role, menu, dictionaries, dictionaryData, loginLog, operLog };
+export { account, role, menu, IconSelector, dictionaries, dictionaryData, loginLog, operLog };
 export { updateTheme } from  './utils/settingDrawer/settingConfig';
 export default install;
 
