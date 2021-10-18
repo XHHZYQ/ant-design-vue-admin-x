@@ -114,7 +114,8 @@
       </a-modal>
     </div>
 
-    <div :class="{'data-visual': isDataVisual}" v-else>
+    <div :class="[{'data-visual': isDataVisual && isNewViews}, {'old-visual': isDataVisual && !isNewViews}]" v-else>
+      <views-head v-if="isNewViews"></views-head>
       <router-view/>
     </div>
   </a-config-provider>
@@ -129,11 +130,12 @@ import { setCacheData } from '@/utils/mixins';
 import { PLAT_FORM } from '@/utils/platform';
 import { communityLogo, propertyLogo, govLogo } from '../images';
 import { handleHttpMethod } from '../utils/common'
+import viewsHead from '@/components/dataviews/viewsHead';
 
 export default {
   name: 'App',
   mixins: [setCacheData],
-  components: { tagViews },
+  components: { tagViews, ViewsHead: viewsHead },
   data () {
     return {
       apiOrigin: 'JAVA',
@@ -141,6 +143,7 @@ export default {
       visible: false,
       colorList,
       locale: zhCn,
+      isNewViews: false,
       isDataVisual: false,
       userInfo: {},
       hasLayout: false,
@@ -282,7 +285,13 @@ export default {
       let body = document.getElementsByTagName('body')[0];
       if (this.hasLayout === false && viewPage.some(el => el === this.$route.name)) {
         this.isDataVisual = true;
-        subPage.includes(this.$route.name) ? body.style.backgroundColor = '#F3F5F8' : body.style.backgroundColor = '#060C30';
+        if (subPage.includes(this.$route.name)) {
+          this.isNewViews = true;
+          body.style.backgroundColor = '#060C30';
+        } else {
+          this.isNewViews = false;
+          body.style.backgroundColor = '#F3F5F8';
+        }
       } else {
         body.style.backgroundColor = '#F3F5F8';
         this.isDataVisual = false;
