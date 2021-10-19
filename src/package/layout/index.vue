@@ -45,7 +45,7 @@
                   <span class="avatar">
                   <img v-if="userInfo.avatar" :src="userInfo.avatar" alt="">
                   </span>
-                  <span>{{userInfo.user_name}}</span>
+                  <span>{{userInfo.userName}}</span>
                 </span>
               </a-tooltip>
               <a-tooltip title="修改密码">

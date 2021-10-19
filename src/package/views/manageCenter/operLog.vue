@@ -52,7 +52,7 @@
 
 <script>
 import { fetchSelect } from '@/utils/mixins';
-import { handleHttpMethod } from '../utils/common';
+import { handleHttpMethod } from '../../utils/common';
 import { PLAT_FORM } from '@/utils/platform';
 
 const sysOperType = [

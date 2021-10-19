@@ -43,7 +43,7 @@
 
 <script>
 import { fetchSelect } from '@/utils/mixins';
-import { handleHttpMethod } from '../utils/common'
+import { handleHttpMethod } from '../../utils/common'
 export default {
   mixins: [fetchSelect],
   name: 'loginLog',

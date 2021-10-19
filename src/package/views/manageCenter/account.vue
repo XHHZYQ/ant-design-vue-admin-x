@@ -48,8 +48,8 @@
 
 <script>
 import { empty } from 'ant-design-vue-admin-x';
-import { handleHttpMethod } from '../utils/common';
-import { searchMobileOrAccount } from '../utils/mixins';
+import { handleHttpMethod } from '../../utils/common';
+import { searchMobileOrAccount } from '../../utils/mixins';
 export default {
   name: 'account',
   mixins: [searchMobileOrAccount],
@@ -104,9 +104,7 @@ export default {
         status: undefined,
         sex: undefined,
         remarks: undefined,
-        roleIds: undefined,
-
-        manageArea: undefined
+        roleIds: undefined
       },
       formList: [
         {
@@ -190,17 +188,6 @@ export default {
             ]
           }]
         },
-
-        {
-          label: '分管区域',
-          inputType: 'cascader',
-          options: [],
-          placeholder: '请选择管理区域',
-          props: ['manageArea', {
-            rules: [{ required: true, message: '请选择管理区域' }]
-          }]
-        },
-
         {
           label: '描述',
           inputType: 'textarea',

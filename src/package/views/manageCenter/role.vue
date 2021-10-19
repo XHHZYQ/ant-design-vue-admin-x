@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { handleHttpMethod } from '../utils/common';
+import { handleHttpMethod } from '../../utils/common';
 export default {
   name: 'role',
   props: {
