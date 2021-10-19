@@ -285,13 +285,8 @@ export default {
       let body = document.getElementsByTagName('body')[0];
       if (this.hasLayout === false && viewPage.some(el => el === this.$route.name)) {
         this.isDataVisual = true;
-        if (subPage.includes(this.$route.name)) {
-          this.isNewViews = true;
-          body.style.backgroundColor = '#060C30';
-        } else {
-          this.isNewViews = false;
-          body.style.backgroundColor = '#F3F5F8';
-        }
+        body.style.backgroundColor = '#060C30';
+        subPage.includes(this.$route.name) ? this.isNewViews = true : this.isNewViews = false;
       } else {
         body.style.backgroundColor = '#F3F5F8';
         this.isDataVisual = false;
@@ -403,6 +398,7 @@ export default {
 .data-visual {
   width: 100vw;
   height: 100vh;
+  padding: 1.388vh 0.7vw;
   background-image: url("../images/bg.png");
   background-repeat: no-repeat;
 }

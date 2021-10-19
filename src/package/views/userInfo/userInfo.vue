@@ -55,7 +55,8 @@
 <script>
 import { empty } from 'ant-design-vue-admin-x';
 import CryptoJS from 'crypto-js';
-import { handleHttpMethod } from '@/package'
+import { handleHttpMethod } from '../../utils/common'
+
 export default {
   name: 'userInfo',
   data () {
