@@ -128,7 +128,8 @@ export default {
           blur: e => this.searchMobileOrAccount(e, 'userName'),
           props: ['userName', {
             rules: [
-              { required: true, message: '请输入账号名' }
+              { required: true, message: '请输入账号名' },
+              { min: 2, max: 30, message: '账号名为2-30个字' }
             ]
           }]
         },
@@ -279,10 +280,10 @@ export default {
     toAllocCommunity (row) {
       this.$router.push({
         name: 'allocCommunity',
-        query: { // todo
-          id: row.id,
-          true_name: row.true_name,
-          role_name: row.role_name,
+        query: {
+          id: row.userId,
+          trueName: row.trueName,
+          roleName: row.roleName,
           mobile: row.mobile
         }
       });
