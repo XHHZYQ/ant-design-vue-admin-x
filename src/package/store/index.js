@@ -1,11 +1,13 @@
 import Cookies from 'js-cookie';
 import { authRoute } from '@/router'; // authRoute 命名在每个端要一致
+import Common from '@/utils/common';
 
 export const state = {
   visitedViews: [], // 展示使用的
   cachedViews: [], // keep-alive 使用
   fromRoute: '',
   roles: [],
+  addRoutes: [],
   routes: [],
   permissions: [],
   existView: undefined,
@@ -14,6 +16,15 @@ export const state = {
 };
 
 export const actions = {
+  // 前端 登出
+  FedLogOut ({ commit }) {
+    return new Promise(resolve => {
+      commit('SET_TOKEN', '');
+      Common.removeToken();
+      resolve();
+    });
+  },
+
   addView ({ dispatch }, params) {
     dispatch('addVisitedView', params.view);
     dispatch('addCachedView', params);

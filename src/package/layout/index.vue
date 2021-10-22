@@ -126,7 +126,7 @@ import zhCn from 'ant-design-vue/lib/locale-provider/zh_CN';
 import { mapState, mapGetters } from 'vuex';
 import tagViews from './tagViews';
 import { updateTheme, colorList } from '../utils/settingDrawer/settingConfig';
-import { setCacheData } from '@/utils/mixins';
+import { clearCacheData } from '../utils/mixins';
 import { PLAT_FORM } from '@/utils/platform';
 import { communityLogo, propertyLogo, govLogo } from '../images';
 import { handleHttpMethod } from '../utils/common'
@@ -134,7 +134,7 @@ import viewsHead from '@/components/dataviews/viewsHead';
 
 export default {
   name: 'App',
-  mixins: [setCacheData],
+  mixins: [clearCacheData],
   components: { tagViews, ViewsHead: viewsHead },
   data () {
     return {

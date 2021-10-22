@@ -1,35 +1,38 @@
 import router from '@/router';
 import store from '@/store';
 import Common from '@/utils/common';
+import { hasRoute } from '../common';
 import { GetInfo, GenerateRoutes } from './api';
 
 const whiteList = ['/login', '/test', '/forget'];
 
 export function routerBeforeEach (to, from, next) {
   if (Common.getToken()) {
-    if (to.path === '/login') {
-      next();
-    } else {
-      store.commit('setFromRoute', from);
-      let hasView = store.state.visitedViews.some(item => item.name === from.name);
-      let noCache = store.state.cachedViews.every(item => item !== from.name);
-      hasView && noCache && store.commit('ADD_CACHED_VIEW', { view: from });
+    store.commit('setFromRoute', from);
+    let hasView = store.state.visitedViews.some(item => item.name === from.name);
+    let noCache = store.state.cachedViews.every(item => item !== from.name);
+    hasView && noCache && store.commit('ADD_CACHED_VIEW', { view: from });
 
-      if (store.getters.roles.length === 0) { // 判断当前用户是否获取完user_info信息
-        GetInfo().then(res => { // 拉取user_info
-          GenerateRoutes().then(accessRoutes => {
-            router.addRoutes(accessRoutes); // 动态添加可访问路由表
-            if (Common.hasRoute(to.path, accessRoutes)) {
-              next({ ...to, replace: true }); // hack方法 确保addRoutes已完成
-            } else {
-              next({ path: accessRoutes[0].path});
-            }
-          });
-        }).catch(() => {
-          store.dispatch('FedLogOut').then(() => { // todo 该代码执行不到
-            next({ path: '/login' });
-          });
+    if (store.getters.roles.length === 0) { // 判断当前用户是否获取完user_info信息
+      GetInfo().then(res => { // 拉取user_info
+        GenerateRoutes().then(accessRoutes => {
+          router.addRoutes(accessRoutes); // 动态添加可访问路由表
+          if (hasRoute(to.path, accessRoutes)) {
+            next({ ...to, replace: true }); // hack方法 确保addRoutes已完成
+          } else {
+            next({ path: accessRoutes[0].path});
+          }
         });
+      }).catch(() => {
+        store.dispatch('FedLogOut').then(() => { // todo 该代码执行不到
+          next({ path: '/login' });
+        });
+      });
+    } else {
+      console.log('routerBefore to.path: ', to.path.includes('/login'), to.path, store.state.addRoutes);
+      if (to.path.includes('/login')) {
+        let children = store.state.addRoutes[0].children; // 除了几个特殊页面路由都有children
+        children && children.length && next({ path: children[0].path });
       } else {
         next();
       }
