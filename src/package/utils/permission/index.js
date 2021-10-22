@@ -29,8 +29,8 @@ export function routerBeforeEach (to, from, next) {
         });
       });
     } else {
-      console.log('routerBefore to.path: ', to.path.includes('/login'), to.path, store.state.addRoutes);
-      if (to.path.includes('/login')) {
+      console.log('routerBefore to.path: ', to.path, store.state.addRoutes);
+      if (to.path === '/login') {
         let children = store.state.addRoutes[0].children; // 除了几个特殊页面路由都有children
         children && children.length && next({ path: children[0].path });
       } else {

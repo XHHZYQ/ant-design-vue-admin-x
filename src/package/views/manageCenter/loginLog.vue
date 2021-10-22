@@ -1,6 +1,6 @@
 
 <template>
-  <!--登陆日志-->
+  <!--登录日志-->
   <div>
     <x-tabula
       ref="table"
@@ -52,9 +52,9 @@ export default {
       apiOrigin: 'JAVA',
       visible: false,
       searchList: [
-        { props: ['ipaddr'], placeholder: '登入地址', options: [], inputType: 'input' },
+        { props: ['ipaddr'], placeholder: '登录地址', options: [], inputType: 'input' },
         { props: ['userName'], placeholder: '用户名称', options: [], inputType: 'input' },
-        { props: ['status'], placeholder: '登陆状态', options: [], inputType: 'select' },
+        { props: ['status'], placeholder: '登录状态', options: [], inputType: 'select' },
         { props: ['createDate'], placeholder: ['操作时间', '操作时间'], options: [], inputType: 'datePick' }
       ],
       tableOptList: [],
