@@ -207,7 +207,7 @@
             >
               <a-row>
                 <a-col v-for="(el, order) of item.options" :key="order" :span="8">
-                  <a-checkbox :value="el.value">{{ el.label }}</a-checkbox>
+                  <a-checkbox :value="el.value" :disabled="el.disabled">{{ el.label }}</a-checkbox>
                 </a-col>
               </a-row>
             </a-checkbox-group>
@@ -236,11 +236,12 @@
             :wrapperCol="item.wrapperCol"
             :key="index">
             <a-upload
-              :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item.props[0])"
-              :customRequest="e => customRequest(e, item.props && item.props[0], item.uploadParam.url, item.uploadParam.uploadType)"
+              @change="uploadChange"
+              :beforeUpload="(file, fileList) => beforeUpload(file, fileList, item)"
+              :customRequest="e => customRequest(e, item)"
               v-decorator="[item.props[0], Object.assign(item.props[1], uploadGetValue)]"
               :fileList="item.fileList"
-              :remove="(e) => removeFile(item.props && item.props[0], e)"
+              :remove="(e) => removeFile(item, e)"
               v-bind="item.uploadParam"
             > <!--text 、picture、picture-card-->
               <a-button icon="upload" :loading="upLoading.loading">{{ item.btnTxt || '点击上传' }}</a-button>
@@ -639,7 +640,9 @@ export default {
         }
         this.textData = formValues = {...formValues, ...this.handleDate(data)};
         formValues = this.filterParam(formValues);
-        this.form.setFieldsValue(formValues);
+        this.$nextTick(() => {
+          this.form.setFieldsValue(formValues);
+        });
       });
     },
     /* 表单提交 */
@@ -665,7 +668,7 @@ export default {
         //    values[item] = values[item].join(',');
         //  }
         // }
-        Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData});
+        Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData}); // 处理upload数据，上传多个文件还未处理
 
         let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
 

@@ -221,7 +221,7 @@ instance.interceptors.response.use((res) => {
  * @returns {Promise<any>}
  */
 let isShowMsg = false;
-let errMsg;
+// let errMsg = 999; // 999自定义为了与后台返回区分
 const fetch = (options, obj) => {
   let { spinObj } = obj;
   let { btnLoading } = obj;
@@ -263,12 +263,13 @@ const fetch = (options, obj) => {
           empty.$emit('setCacheData');
         })
       } else {
-        if (resData.msg === errMsg) { return; }
+        // if (resData.msg === errMsg) { return; }
         resData.msg && message.error(resData.msg, 5); // 错误提示信息
-        errMsg = resData.msg;
-        setTimeout(() => { // 防止错误信息频繁弹窗
-          errMsg = undefined;
-        }, 1000 * 5);
+        // errMsg = resData.msg;
+        // setTimeout(() => { // 防止错误信息频繁弹窗
+        //   errMsg = 999;
+        // }, 1000 * 5);
+        console.log('http 执行到reject: ');
         reject(res);
       }
     }).catch((err) => {

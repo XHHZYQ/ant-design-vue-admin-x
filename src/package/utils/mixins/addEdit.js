@@ -1,5 +1,6 @@
 import { empty } from '../empty';
 import { handleHttpMethod } from '../common';
+import Moment from 'moment';
 
 export default {
   data () {
@@ -98,7 +99,7 @@ export default {
         if (pick.some((part) => part === el.inputType)) {
           let prop = el.props && el.props[0];
           if (data[prop]) {
-            dateValue = {...dateValue, [prop]: this.Moment(data[prop])};
+            dateValue = {...dateValue, [prop]: Moment(data[prop])};
           }
         }
       });
