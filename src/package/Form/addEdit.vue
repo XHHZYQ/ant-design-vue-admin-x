@@ -338,31 +338,29 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-input @change="(e) => treeSearchChange(e, item.options)" placeholder="搜索" allowClear
+            <a-input @change="(e) => treeSearchChange(e.target.value, item.options)" placeholder="搜索" allowClear
                      v-model="treeSearchContent" v-if="item.isSearch"/>
             <!--:checkedKeys="treeChecked"-->
-            <div class="tree-box">
-              <a-tree
-                :disabled="item.disabled"
-                @check="(e) => treeCheck(e, item.props[0])"
-                @expand="treeExpand"
-                v-decorator="item.props"
-                :expanded-keys="expandedKeys"
-                :auto-expand-parent="autoExpandParent"
-                :tree-data="item.options"
-                v-model="defaultTree"
-                checkable
-              >
-<!--                <template slot="title" slot-scope="{ title }">-->
+            <a-tree
+              :disabled="item.disabled"
+              @check="(e) => treeCheck(e, item.props[0])"
+              @expand="treeExpand"
+              v-decorator="item.props"
+              :expanded-keys="expandedKeys"
+              :auto-expand-parent="autoExpandParent"
+              :tree-data="item.options"
+              v-model="defaultTree"
+              checkable
+            >
+<!--              <template slot="title" slot-scope="{ title }">-->
 <!--                <span v-if="title.indexOf(searchValue) > -1">-->
 <!--                  {{ title.substr(0, title.indexOf(searchValue)) }}-->
 <!--                  <span style="color: #f50">{{ searchValue }}</span>-->
 <!--                  {{ title.substr(title.indexOf(searchValue) + searchValue.length) }}-->
 <!--                </span>-->
-<!--                  <span v-else>{{ title }}</span>-->
-<!--                </template>-->
-              </a-tree>
-            </div>
+<!--                <span v-else>{{ title }}</span>-->
+<!--              </template>-->
+            </a-tree>
           </a-form-item>
         </template>
 
@@ -466,6 +464,7 @@ export default {
   },
   data () {
     return {
+      flattenData: [],
       selectCurrentPage: 1,
       isFetched: false,
       treeSearchContent: '',
@@ -572,8 +571,7 @@ export default {
       this.autoExpandParent = false;
     },
     /** tree change */
-    treeSearchChange (e, options) {
-      const value = e.target.value;
+    treeSearchChange (value, options) {
       const expandedKeys = this.flattenData.map(item => {
         if (item.title.indexOf(value) > -1) {
           return this.getParentKey(item.title, options);
@@ -586,7 +584,7 @@ export default {
         searchValue: value,
         autoExpandParent: true
       });
-      if (!e.target.value) {
+      if (!value) {
         this.expandedKeys = ['all'];
       }
     },
@@ -604,7 +602,7 @@ export default {
       }
       return parentKey;
     },
-    /** 展平 a-tree 列表数据 */
+    /** 用以展平 treeSearch 列表数据 */
     treeflattenData (data) {
       for (let i = 0; i < data.length; i++) {
         const node = data[i];
