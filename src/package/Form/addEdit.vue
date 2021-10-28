@@ -648,6 +648,8 @@ export default {
       this.form.validateFields((err, values) => {
         if (err) { return; }
         values = {...values};
+        Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData}); // 处理upload数据，上传多个文件还未处理
+
         if (this.addParam.reqHandle) {
           let resVals = this.addParam.reqHandle(values);
           if (!resVals) {
@@ -666,7 +668,6 @@ export default {
         //    values[item] = values[item].join(',');
         //  }
         // }
-        Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData}); // 处理upload数据，上传多个文件还未处理
 
         let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
 

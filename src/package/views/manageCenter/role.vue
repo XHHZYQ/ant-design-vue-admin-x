@@ -119,7 +119,9 @@ export default {
           placeholder: '请输入角色顺序',
           props: ['roleSort', {
             rules: [
-              { required: true, message: '请输入角色顺序' }
+              { required: true, message: '请输入角色顺序' },
+              { pattern: /^\d*$/, message: '请输入数字' },
+              { min: 1, max: 4, message: '最多4位数' }
             ]
           }]
         },
