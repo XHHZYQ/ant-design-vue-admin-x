@@ -27,6 +27,16 @@ export function GetInfo () {
         sex: user.sex
       };
       Common.setLocal('userInfo', userInfo);
+
+      let userData = JSON.parse(sessionStorage.getItem('userData')) || {}; // 上一个用户数据
+      console.log('userName: ', userData.userName, user.userName);
+      console.log('mobile: ', userData.mobile,  user.mobile);
+      if (userData.userName === user.userName || userData.mobile === user.mobile) {
+        store.commit('SET_REDIRECT', sessionStorage.getItem('redirect'));
+      } else {
+        store.commit('SET_REDIRECT', undefined);
+      }
+
       if (res.data.roles && res.data.roles.length) {
         store.commit('SET_ROLES', res.data.roles);
         store.commit('SET_PERMISSIONS', res.data.permissions);
@@ -35,7 +45,7 @@ export function GetInfo () {
       }
       localStorage.isManager = user.isManager;
       localStorage.userId = user.userId;
-      resolve(res);
+      resolve(user);
     }).catch(error => {
       reject(error);
     });

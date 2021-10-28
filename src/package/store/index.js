@@ -3,6 +3,7 @@ import { authRoute } from '@/router'; // authRoute 命名在每个端要一致
 import Common from '@/utils/common';
 
 export const state = {
+  redirect: '',
   visitedViews: [], // 展示使用的
   cachedViews: [], // keep-alive 使用
   fromRoute: '',
@@ -103,6 +104,9 @@ export const actions = {
 }
 
 export const mutations = {
+  SET_REDIRECT: (state, val) => {
+    state.redirect = val
+  },
   TOGGLE_COLOR: (state, color) => {
     Cookies.set('themeColor', color);
     sessionStorage.setItem('sessionTheme', color);
