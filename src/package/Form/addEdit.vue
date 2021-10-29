@@ -386,7 +386,7 @@
       <div v-if="isSubmitBtn && formList.length">
       <slot name="submitBtn">
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
-        <a-button type="primary" @click="handleSubmit" size="large" :loading="btnLoading.loading">确定</a-button>
+        <a-button type="primary" @click="handleSubmit" size="large" :disabled="upLoading.loading" :loading="btnLoading.loading">确定</a-button>
       </a-form-item>
       </slot>
       </div>
@@ -398,6 +398,7 @@
 import { addEdit, inputSearch, upload } from '../utils/mixins';
 import { handleHttpMethod } from '../utils/common';
 import { PLAT_FORM } from '@/utils/platform';
+import store from '@/store';
 
 export default {
   mixins: [ addEdit, inputSearch, upload ],
@@ -690,9 +691,7 @@ export default {
             params: values,
             btnLoading: loading
           }).then((res) => {
-            let fromRoute = this.$store.state.fromRoute;
-            let preRouteCached = this.$store.state.cachedViews.some(item => item === fromRoute.name);
-            preRouteCached && this.$store.commit('DEL_CACHED_VIEW', fromRoute);
+            store.dispatch('delCachedRoute');
 
             if (this.addParam.resHandle) {
               this.addParam.resHandle(res);

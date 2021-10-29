@@ -3,6 +3,7 @@ import { authRoute } from '@/router'; // authRoute 命名在每个端要一致
 import Common from '@/utils/common';
 
 export const state = {
+  isOptData: false,
   redirect: '',
   visitedViews: [], // 展示使用的
   cachedViews: [], // keep-alive 使用
@@ -24,7 +25,12 @@ export const actions = {
       resolve();
     });
   },
-
+  /** 删除上个页面的缓存 */
+  delCachedRoute ({ commit, state }) {
+    let fromRoute = state.fromRoute;
+    let preRouteCached = state.cachedViews.some(item => item === fromRoute.name);
+    preRouteCached && commit('DEL_CACHED_VIEW', fromRoute);
+  },
   addView ({ dispatch }, params) {
     dispatch('addVisitedView', params.view);
     dispatch('addCachedView', params);
@@ -104,6 +110,10 @@ export const actions = {
 }
 
 export const mutations = {
+  /* 编辑或新增了数据（操作了数据） */
+  setOptData (state, param) {
+    state.isOptData = param;
+  },
   SET_REDIRECT: (state, val) => {
     state.redirect = val
   },
