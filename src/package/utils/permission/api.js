@@ -24,13 +24,12 @@ export function GetInfo () {
         mobile: user.mobile,
         trueName: user.trueName,
         roleName: user.roleName,
-        sex: user.sex
+        sex: user.sex,
+        isProvince: res.data.isProvince
       };
       Common.setLocal('userInfo', userInfo);
 
       let userData = JSON.parse(sessionStorage.getItem('userData')) || {}; // 上一个用户数据
-      console.log('userName: ', userData.userName, user.userName);
-      console.log('mobile: ', userData.mobile,  user.mobile);
       if (userData.userName === user.userName || userData.mobile === user.mobile) {
         store.commit('SET_REDIRECT', sessionStorage.getItem('redirect'));
       } else {

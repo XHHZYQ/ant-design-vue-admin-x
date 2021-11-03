@@ -11,7 +11,7 @@ export default {
     },
     /* 穿梭框搜索 */
     transferFilter (inputValue, option) {
-      return option.title.toLowerCase().indexOf(inputValue) > -1;
+      return option.title.toLowerCase().indexOf(inputValue.toLowerCase()) > -1;
     },
     /**
      * 选项在两栏之间转移时的回调函数

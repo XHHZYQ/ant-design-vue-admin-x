@@ -489,14 +489,14 @@ export default {
   },
   created () {
     if (this.$route) { // 兼容没配置路由
-      if (this.formType === 'unModal') {
+      if (this.formType === 'unModal') { // 为新开页
         this.routeQuery = this.$route.query.id;
         this.routeQuery && this.initReqHandle && this.getDetail();
       }
     }
   },
   mounted () {
-  if (this.formType !== 'unModal') {
+    if (this.formType !== 'unModal') { // 为弹窗
       this.routeQuery && this.initReqHandle && this.getDetail();
     }
   },
@@ -651,6 +651,14 @@ export default {
         values = {...values};
         Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData}); // 处理upload数据，上传多个文件还未处理
 
+        if (this.apiOrigin === 'PHP') {
+          for (let item in values) {
+            if (Array.isArray(values[item])) {
+              values[item] = values[item].join(',');
+            }
+          }
+        }
+
         if (this.addParam.reqHandle) {
           let resVals = this.addParam.reqHandle(values);
           if (!resVals) {
@@ -664,13 +672,8 @@ export default {
           return;
         }
 
-        // for (let item in values) {
-        //  if (Array.isArray(values[item])) {
-        //    values[item] = values[item].join(',');
-        //  }
-        // }
-
-        let loading = (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
+        let loading = (this.reqLoading && Object.keys(this.reqLoading).length && this.reqLoading) ||
+          this.btnLoading;
 
         if (this.routeQuery) { // 编辑
           this[handleHttpMethod('put', this)]({

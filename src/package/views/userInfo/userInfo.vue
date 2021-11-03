@@ -48,7 +48,10 @@
       :formList="formList"
       :addParam="pwdAddParam"
       :editParam="editParam"
-      :itemLayout="itemLayout">
+      :itemLayout="{
+        labelCol: { span: 3 },
+        wrapperCol: { span: 9 }
+      }">
     </x-addEdit>
   </div>
 </template>
@@ -260,7 +263,7 @@ export default {
       let formdata = new FormData();
       formdata.append('file', this.fileData);
       formdata.append('type', 1);
-      this[handleHttpMethod('put')]({
+      this[handleHttpMethod('post')]({
         url: '/common/upload',
         params: formdata,
         btnLoading: this.upLoading,
@@ -329,7 +332,7 @@ export default {
   }
   .pwd-form {
     padding-top: 40px;
-    width: 60%;
+    width: 90%;
   }
 }
 
