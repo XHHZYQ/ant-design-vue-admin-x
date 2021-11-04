@@ -258,6 +258,13 @@ export default {
             this.searchParams[item] = val[item];
           }
         }
+
+        for (let item in this.searchParams) {
+          if (item.includes(`${this.$route.name}/`)) {
+            let key = item.split('/')[1];
+            key && (this.searchParams[key] = this.searchParams[item]);
+          }
+        }
       }
       this.getTableList();
     },

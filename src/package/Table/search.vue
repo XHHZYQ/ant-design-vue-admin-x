@@ -129,11 +129,11 @@ export default {
   created () {
     this.assignSearchValue();
     empty.$on('resetForm', (key) => {
-      if (key && key.length) {
+      if (key && Array.isArray(key) && key.length) {
         this.form.resetFields(key);
 
         this.searchList.forEach((el) => {
-          Array.isArray(key) && key.forEach((item) => {
+          key.forEach((item) => {
             let props = el.props;
             if (props && props[0] === item) {
               el.options = [];

@@ -73,7 +73,7 @@ export default {
     return {
       apiOrigin: 'JAVA',
       visible: false,
-      itemLayout: {labelCol: { span: 4 }, wrapperCol: { span: 9 }},
+      itemLayout: {labelCol: { span: 4 }, wrapperCol: { span: 19 }},
       searchList: [
         { props: ['title'], placeholder: '系统模块', options: [], inputType: 'input' },
         { props: ['operName'], placeholder: '操作人员', options: [], inputType: 'input' },
@@ -149,6 +149,19 @@ export default {
               }
               if (el.key === 'errorMsg') {
                 data.status === 0 ? el.visible = true : el.visible = false;
+              }
+
+              if (el.key === 'operParam' && data[item]) {
+                let value = '';
+                try {
+                  let parseRes = JSON.parse(data[item]);
+                  parseRes && (value = parseRes);
+                } catch (error) {
+                  console.log('解析报错了', error);
+                  value = data[item].split(',');
+                }
+                console.log('value: ', value);
+                el.value = value;
               }
             }
           }

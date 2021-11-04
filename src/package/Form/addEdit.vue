@@ -386,7 +386,7 @@
       <div v-if="isSubmitBtn && formList.length">
       <slot name="submitBtn">
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
-        <a-button type="primary" @click="handleSubmit" size="large" :disabled="upLoading.loading" :loading="btnLoading.loading">确定</a-button>
+        <a-button type="primary" @click="handleSubmit" size="large" :disabled="upLoading.loading" :loading="submitLoading.loading">确定</a-button>
       </a-form-item>
       </slot>
       </div>
@@ -480,6 +480,9 @@ export default {
     };
   },
   computed: {
+    submitLoading () {
+      return (Object.keys(this.reqLoading).length && this.reqLoading) || this.btnLoading;
+    },
     offset () {
       if (this.itemLayout) {
         return this.itemLayout.labelCol.span;
@@ -672,14 +675,11 @@ export default {
           return;
         }
 
-        let loading = (this.reqLoading && Object.keys(this.reqLoading).length && this.reqLoading) ||
-          this.btnLoading;
-
         if (this.routeQuery) { // 编辑
           this[handleHttpMethod('put', this)]({
             url: `${this.editParam.url}${this.routeQuery}`,
             params: values,
-            btnLoading: loading
+            btnLoading: this.submitLoading
           }).then((res) => {
             this.$store.commit('setOptData', true);
             if (this.editParam.resHandle) {
@@ -692,7 +692,7 @@ export default {
           this[handleHttpMethod('post', this)]({
             url: this.addParam.url,
             params: values,
-            btnLoading: loading
+            btnLoading: this.submitLoading
           }).then((res) => {
             store.dispatch('delCachedRoute');
 
