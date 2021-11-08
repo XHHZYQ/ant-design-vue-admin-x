@@ -257,7 +257,12 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-range-picker v-decorator="item.props" format="YYYY-MM-DD"/>
+            <a-range-picker
+              v-decorator="item.props"
+              format="YYYY-MM-DD"
+              :disabledDate="date => item.disabledDate ? item.disabledDate(date) : false"
+              :disabled="item.disabled"
+            />
           </a-form-item>
         </template>
 
@@ -269,7 +274,12 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-range-picker v-decorator="item.props" showTime format="YYYY-MM-DD HH:mm:ss"/>
+            <a-range-picker
+              v-decorator="item.props"
+              showTime format="YYYY-MM-DD HH:mm:ss"
+              :disabledDate="date => item.disabledDate ? item.disabledDate(date) : false"
+              :disabled="item.disabled"
+            />
           </a-form-item>
         </template>
 
@@ -281,7 +291,12 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-date-picker v-decorator="item.props" format="YYYY-MM-DD" :disabled="item.disabled"/>
+            <a-date-picker
+              v-decorator="item.props"
+              format="YYYY-MM-DD"
+              :disabledDate="date => item.disabledDate ? item.disabledDate(date) : false"
+              :disabled="item.disabled"
+            />
           </a-form-item>
         </template>
 
@@ -293,7 +308,13 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-date-picker v-decorator="item.props" showTime format="YYYY-MM-DD HH:mm:ss"/>
+            <a-date-picker
+              v-decorator="item.props"
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              :disabledDate="date => item.disabledDate ? item.disabledDate(date) : false"
+              :disabled="item.disabled"
+            />
           </a-form-item>
         </template>
 

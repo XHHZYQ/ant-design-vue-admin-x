@@ -25,7 +25,10 @@
         :columns="columns"
         :dataSource="tableData"
         :pagination="paginationParam"
-        :rowSelection="rowSelection ? { selectedRowKeys: selectedRowKeys, onChange: rowSelectChange } : null"
+        :rowSelection="rowSelection ?
+         { selectedRowKeys: selectedRowKeys,
+          onChange: rowSelectChange,
+          getCheckboxProps: checkboxProps } : null"
         :locale="localeText"
       >
         <!--默认slot-->
@@ -77,6 +80,10 @@ export default {
           return 'JAVA';
         }
       }
+    },
+    rowCheckboxAble: {
+      type: Function,
+      default: () => false
     },
     excludeResetKey: {
       type: Array,
@@ -191,6 +198,12 @@ export default {
     this.listApi.url && this.getTableList();
   },
   methods: {
+    /** row checkbox 禁用判断 */
+    checkboxProps (record) {
+      return {
+        props: { disabled: this.rowCheckboxAble(record) } // true or false
+      };
+    },
     /** 处理自定义列 slot */
     handleRowOpt () {
       let slotArr = [];
