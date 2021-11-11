@@ -232,7 +232,8 @@ export default {
         url: this.listApi.url,
         params: this.searchParams,
         localeText: this.localeText,
-        spinObj: this.spinObj
+        spinObj: this.spinObj,
+        config: this.listApi.timeout ? { timeout: this.listApi.timeout } : {}
       }).then(({data}) => {
         (data.list || data.data || (Array.isArray(data) && data) || data.rows || []).forEach((ele, index) => {
           ele.key = `${ele[this.rowKey]}`;

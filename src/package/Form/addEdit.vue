@@ -73,21 +73,21 @@
               :filterOption="typeof item.fetchOptions === 'function' ? () => true : filterOption"
               :placeholder="item.placeholder">
 
-                <template slot="dropdownRender" slot-scope="menu">
-                  <v-nodes :vnodes="menu" />
-                  <div style="padding: 6px 12px 0">
-                     <a-spin v-if="isFetched"/>
-                  </div>
-                  <div v-if="typeof item.fetchOptions === 'function'" style="padding: 4px 8px;" @mousedown="e => e.preventDefault()">
-                      <a-pagination
-                       v-model="selectCurrentPage"
-                       @change="selectPageChange(item, $event)"
-                       :total="item.paginationTotal"
-                       :showTotal="total => total + ' items'"
-                       size="small"
-                       />
-                  </div>
-                </template>
+<!--                <template slot="dropdownRender" slot-scope="menu">-->
+<!--                  <v-nodes :vnodes="menu" />-->
+<!--                  <div style="padding: 6px 12px 0">-->
+<!--                     <a-spin v-if="isFetched"/>-->
+<!--                  </div>-->
+<!--                  <div v-if="typeof item.fetchOptions === 'function'" style="padding: 4px 8px;" @mousedown="e => e.preventDefault()">-->
+<!--                      <a-pagination-->
+<!--                       v-model="selectCurrentPage"-->
+<!--                       @change="selectPageChange(item, $event)"-->
+<!--                       :total="item.paginationTotal"-->
+<!--                       :showTotal="total => total + ' items'"-->
+<!--                       size="small"-->
+<!--                       />-->
+<!--                  </div>-->
+<!--                </template>-->
 
               <a-select-option
                 v-for="(el, order) of item.options"

@@ -410,7 +410,6 @@ export default {
       return res;
     },
     searchHandle (selectData) {
-      console.log('处理搜索数据: ', selectData);
       // return selectData;
     },
     handleSelectBtnType (e) {

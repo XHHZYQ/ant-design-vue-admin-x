@@ -157,10 +157,8 @@ export default {
                   let parseRes = JSON.parse(data[item]);
                   parseRes && (value = parseRes);
                 } catch (error) {
-                  console.log('解析报错了', error);
                   value = data[item].split(',');
                 }
-                console.log('value: ', value);
                 el.value = value;
               }
             }
@@ -170,11 +168,9 @@ export default {
       this.visible = true;
     },
     resHandle (res) {
-      console.log('处理list返回数据: ');
       return res;
     },
     searchHandle (selectData) {
-      console.log('处理搜索数据: ', selectData);
       // return selectData;
     }
   }

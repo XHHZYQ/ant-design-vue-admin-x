@@ -233,7 +233,6 @@ const fetch = (options, obj) => {
 
   return new Promise((resolve, reject) => {
     instance(options).then((res) => {
-      // console.log('http options: ', options.url, options);
       let resData = res.data;
       if (typeof resData === 'string') {
         resData = JSON.parse(resData);
@@ -266,7 +265,6 @@ const fetch = (options, obj) => {
         reject(res);
       }
     }).catch((err) => {
-      // console.log('http error options : ', options.url, options);
       spinObj && setTimeout(() => { spinObj.spinning = false; }, 300); // 关闭loading
       btnLoading && setTimeout(() => { btnLoading.loading = false; }, 300);
       if (localeText) {

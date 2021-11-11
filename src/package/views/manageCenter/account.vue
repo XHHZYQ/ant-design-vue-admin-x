@@ -152,7 +152,8 @@ export default {
           placeholder: '请输入真实姓名',
           props: ['trueName', {
             rules: [
-              { required: true, message: '请输入真实姓名' }
+              { required: true, message: '请输入真实姓名' },
+              {min: 1, max: 10, message: '真实姓名为1-10位'}
             ]
           }]
         },
