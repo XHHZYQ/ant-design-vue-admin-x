@@ -114,10 +114,7 @@ export default {
           placeholder: '请输入手机号码',
           blur: e => this.searchMobileOrAccount(e, 'mobile'),
           props: ['mobile', {
-            rules: [
-              { required: true, message: '请输入手机号码' },
-              { pattern: this.REG.mobile, message: this.MESSAGE.mobile }
-            ]
+            rules: [{ required: true, message: '请输入手机号码' }]
           }]
         },
         {
@@ -442,8 +439,13 @@ export default {
       this.formList[0].extra = undefined;
       this.formList[1].extra = undefined;
       this.visible = true;
-      if (row.userId) {
-        this.editUser(row.userId);
+
+      const userId = row.userId;
+      let mobileRules = this.formList[0].props[1].rules;
+      userId ? (mobileRules.splice(1, 1)) : (mobileRules.push({ pattern: this.REG.mobile, message: this.MESSAGE.mobile }));
+
+      if (userId) {
+        this.editUser(userId);
       } else {
         this.addUser();
       }
