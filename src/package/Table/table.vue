@@ -263,23 +263,24 @@ export default {
     },
     /* 搜索查询 */
     searchHandle (val) {
+      for (let item in val) {
+        if (this.searchParams.hasOwnProperty(item)) {
+          this.searchParams[item] = val[item];
+        }
+      }
+
       if (this.listApi.searchHandle) {
         let resParam = this.listApi.searchHandle(val);
         Object.assign(this.searchParams, resParam || {});
-      } else {
-        for (let item in val) {
-          if (this.searchParams.hasOwnProperty(item)) {
-            this.searchParams[item] = val[item];
-          }
-        }
+      }
 
-        for (let item in this.searchParams) {
-          if (item.includes(`${this.$route.name}/`)) {
-            let key = item.split('/')[1];
-            key && (this.searchParams[key] = this.searchParams[item]);
-          }
+      for (let item in this.searchParams) {
+        if (item.includes(`${this.$route.name}/`)) {
+          let key = item.split('/')[1];
+          key && (this.searchParams[key] = this.searchParams[item]);
         }
       }
+
       this.getTableList();
     },
     /* 清空查询 */
