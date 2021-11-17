@@ -25,9 +25,10 @@ export const actions = {
       resolve();
     });
   },
-  /** 删除上个页面的缓存 */
-  delCachedRoute ({ commit, state }) {
-    let fromRoute = state.fromRoute;
+  /** 删除上个页面或指定页面的缓存 */
+  delCachedRoute ({ commit, state }, view) {
+    view && (view = { name: view });
+    let fromRoute = view || state.fromRoute;
     let preRouteCached = state.cachedViews.some(item => item === fromRoute.name);
     preRouteCached && commit('DEL_CACHED_VIEW', fromRoute);
   },
