@@ -39,6 +39,7 @@
             v-bind="item.itemLayout ? item.itemLayout : formItemLayout"
           >
             <a-cascader
+              @change="e => {item.handle && item.handle(e);}"
               :showSearch="{filter}"
               :loadData="item.loadData"
               v-decorator="item.props"
