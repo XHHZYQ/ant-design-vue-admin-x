@@ -200,7 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['routes', 'cachedViews', 'visitedViews', 'themeColor']),
+    ...mapState(['routes', 'cachedViews', 'visitedViews', 'themeColor', 'dataViewRoutes']),
     ...mapGetters(['permission_routes']),
     activeMenu: {
       get () {
@@ -358,7 +358,14 @@ export default {
         }
       } else {
         if (key === this.$route.path) { return false; }
-        this.$router.push(key);
+
+        console.log('点击导航菜单 key: ', key);
+        if (this.dataViewRoutes.includes(key)) {
+          const url = `${location.protocol}//${location.host}/#${key}`
+          window.open(url);
+        } else {
+          this.$router.push(key);
+        }
       }
     },
     /* 点击菜单项 */

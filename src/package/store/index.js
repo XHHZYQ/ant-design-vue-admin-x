@@ -9,12 +9,14 @@ export const state = {
   cachedViews: [], // keep-alive 使用
   fromRoute: '',
   roles: [],
+  accessRoute: [],
   addRoutes: [],
   routes: [],
   permissions: [],
   existView: undefined,
   tagSpin: false,
-  noCacheWhiteList: [] // 不用keep-alive 的白名单
+  noCacheWhiteList: [], // 不用keep-alive 的白名单
+  dataViewRoutes: ['/allVis', '/communityVis', '/views/over', '/views/monitor', '/views/manage']
 };
 
 export const actions = {
@@ -208,6 +210,9 @@ export const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes;
     state.routes = authRoute.concat(routes);
+  },
+  SET_ACCESSROUTE (state, routes) {
+    state.accessRoute = routes;
   }
 };
 

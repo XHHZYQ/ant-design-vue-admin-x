@@ -25,7 +25,9 @@ export function GetInfo () {
         trueName: user.trueName,
         roleName: user.roleName,
         sex: user.sex,
-        isProvince: res.data.isProvince
+        isProvince: res.data.isProvince,
+        chatAppKey: user.chatAppKey,
+        chatPwd: user.chatPwd
       };
       Common.setLocal('userInfo', userInfo);
 
@@ -56,6 +58,7 @@ export function GenerateRoutes () {
     GET({ // 向后端请求路由数据
       url: baseUrl + '/user/getRouters'
     }).then(({ data }) => {
+      let routes = JSON.parse(JSON.stringify(data));
       data.push({
         path: '/userInfo',
         component: 'Layout',
@@ -90,6 +93,7 @@ export function GenerateRoutes () {
       ];
       accessedRoutes = [...accessedRoutes, ...router, { path: '*', redirect: '/404', hidden: true }];
       store.commit('SET_ROUTES', accessedRoutes);
+      store.commit('SET_ACCESSROUTE', routes);
       resolve(accessedRoutes);
     }).catch(error => {
       reject(error);
