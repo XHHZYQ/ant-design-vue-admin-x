@@ -24,16 +24,13 @@ export function routerBeforeEach (to, from, next) {
           let path;
           full && full.includes('?') ? path = full.split('?')[0] : path = full;
           if (from.path === '/login' && path && hasRoute(path, accessRoutes)) { // 上页面为登录页，角色中包含要跳转的变量 redirect，跳转redirect
-            console.log('跳转redirect', full);
+            console.log('跳转 redirect', full);
             next({ path: full, replace: true });
           } else if (hasRoute(to.path, accessRoutes)) {// 角色中包含要跳转的路由,跳转 to
-            console.log('跳转 to', to.fullPath);
+            console.log('跳转原本的 to', to.fullPath);
             next({ ...to, replace: true }); // hack方法 确保addRoutes已完成
           } else {// 跳转角色中第一个
-            let flatRoutes = flatRoute(store.state.accessRoute);
-            let others = flatRoutes.filter(item => !store.state.dataViewRoutes.includes(item.path));
-            console.log('跳转角色第一个 path: ', others[0].path);
-            next({ path: others[0].path});
+            handleRouteTo(next);
           }
 
           sessionStorage.userData = JSON.stringify({ userName: user.userName, mobile: user.mobile });
@@ -46,10 +43,7 @@ export function routerBeforeEach (to, from, next) {
     } else {
       console.log('有角色: ', to.path);
       if (to.path === '/login') {
-        let flatRoutes = flatRoute(store.state.accessRoute);
-        let others = flatRoutes.filter(item => !store.state.dataViewRoutes.includes(item.path));
-        console.log('others 22: ', others[0].path);
-        others && others.length && next({ path: others[0].path });
+        handleRouteTo(next);
       } else {
         next();
       }
@@ -66,6 +60,18 @@ export function routerBeforeEach (to, from, next) {
       let path = redirect ? `/login?redirect=${redirect}` : '/login';
       next(path); // 否则全部重定向到登录页
     }
+  }
+}
+
+/** 处理路由跳转 */
+function handleRouteTo (next) {
+  let flatRoutes = flatRoute(store.state.accessRoute);
+  let others = flatRoutes.filter(item => !store.state.dataViewRoutes.includes(item.path));
+  console.log('跳转角色第一个 path: ', others.length);
+  if (others.length) {
+    next({ path: others[0].path});
+  } else {
+    next({ path: '/empty'});
   }
 }
 

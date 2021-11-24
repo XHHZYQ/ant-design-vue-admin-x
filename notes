@@ -8,6 +8,5 @@ selectSearch文件中的 handleChange方法 ： 可能没用
 4.upload 上传地址（完成）
 5.判断按钮禁用的字段（完成）
 6.分页参数，pageSize，pageNum（完成）
-7. 28/9提交的还没发版？
-8. 白名单 headers不要加token
+8. 白名单 headers不要加token？
 
