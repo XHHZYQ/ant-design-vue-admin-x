@@ -81,6 +81,10 @@ export default {
         }
       }
     },
+    initReqHandle: {
+      type: Boolean,
+      default: () => true
+    },
     canDelKey: {
       type: Array,
       default: () => []
@@ -198,7 +202,7 @@ export default {
     if (this.dataSource.length) {
       this.tableData = this.dataSource;
     }
-    this.listApi.url && this.getTableList();
+    this.initReqHandle && this.getTableList();
   },
   methods: {
     /** row checkbox 禁用判断 */
