@@ -81,6 +81,10 @@ export default {
         }
       }
     },
+    canDelKey: {
+      type: Array,
+      default: () => []
+    },
     rowCheckboxAble: {
       type: Function,
       default: () => false
@@ -155,7 +159,6 @@ export default {
       expandedRowKeys: [],
       selectedId: [],
       selectedRowKeys: [],
-      delKey: ['canDelete' , 'can_delete', 'isDelete', 'is_delete'],
       paginationParam: {
         current: 1,
         pageSize: 10,
@@ -368,9 +371,13 @@ export default {
       let selectedId = []; // 提交删除的id数组
       if (isBatch) {
         row.forEach((el) => {
+          let delKey = ['canDelete' , 'can_delete', 'isDelete', 'is_delete'];
+          if (this.canDelKey && this.canDelKey.length) {
+            delKey = [...delKey, ...this.canDelKey];
+          }
           // 1.没删除字段：可以；2.有删除字段，为0：不可以；3.有删除字段，为1：可以
-          const canDel = this.delKey.every(item => !el.hasOwnProperty(item)) ||
-            (this.delKey.some(item => el.hasOwnProperty(item)) && this.delKey.some(item => el[item] === 1));
+          const canDel = delKey.every(item => !el.hasOwnProperty(item)) ||
+            (delKey.some(item => el.hasOwnProperty(item)) && delKey.some(item => el[item] === 1));
           if (canDel) { // isDelete 为接口字段判断能否删除
             selectedId.push(el[id]);
           }

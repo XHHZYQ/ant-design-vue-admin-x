@@ -107,6 +107,7 @@ export default {
           options: [],
           placeholder: '请输入排序',
           props: ['dictSort', {
+            normalize: value => value.toString(),
             rules: [
               { required: true, message: '请输入排序' },
               { pattern: /^\d*$/, message: '请输入数字' },

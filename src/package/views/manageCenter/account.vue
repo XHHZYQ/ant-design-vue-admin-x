@@ -337,13 +337,9 @@ export default {
     addReqHandle (res) {
     },
     addResHandle (res) {
-      if (res.code !== 200) {
-        this.$message.error(res.msg);
-      } else {
-        this.$message.success(res.msg);
-        this.$refs.table.getTableList();
-        this.visible = false;
-      }
+      this.$message.success('新增成功');
+      this.$refs.table.getTableList();
+      this.visible = false;
     },
     editResHandle (res) {
       this.visible = false;

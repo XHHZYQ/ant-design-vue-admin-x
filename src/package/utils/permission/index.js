@@ -69,9 +69,9 @@ function handleRouteTo (next) {
   let others = flatRoutes.filter(item => !store.state.dataViewRoutes.includes(item.path));
   console.log('跳转角色第一个 path: ', others.length);
   if (others.length) {
-    next({ path: others[0].path});
+    next({ path: others[0].path });
   } else {
-    next({ path: '/empty'});
+    next({ path: '/empty' });
   }
 }
 

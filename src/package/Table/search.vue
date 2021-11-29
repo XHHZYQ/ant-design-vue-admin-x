@@ -186,7 +186,7 @@ export default {
     },
     /* 查询 */
     handleSearch  (e) {
-      e.preventDefault();
+      e && e.preventDefault();
       this.form.validateFields((error, values) => {
         if (error) { return; }
         let newValue = {...values};
