@@ -28,7 +28,7 @@ export default {
         if (!item.beforeHandle(file, fileList)) { return false; }
       }
 
-      const limit = item.limit || 1; // limit 限制最多上传个数
+      const limit = item.uploadParam.limit || 1; // limit 限制最多上传个数
       if (item.fileList.length < limit) {
         return true;
       } else {
@@ -68,7 +68,7 @@ export default {
         });
 
         let fileObj = { [name]: fileId }; // 3.0表单提交的是file_id，4.0是 url 地址
-        const limit = item.limit || 1;
+        const limit = item.uploadParam.limit || 1;
         if (limit > 1) {
           this.fieldData.push(fileObj);
         } else {

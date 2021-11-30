@@ -185,8 +185,13 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-switch v-decorator="item.props" checkedChildren="开" unCheckedChildren="关" :checked="isChecked"
-                      @change="switchClick($event, item.handle)"/>
+            <a-switch
+              v-decorator="item.props"
+              :checkedChildren="item.checkedChildren || '开'"
+              :unCheckedChildren="item.unCheckedChildren || '关'"
+              :checked="isChecked"
+              @change="switchClick($event, item.handle)"
+            />
           </a-form-item>
         </template>
 

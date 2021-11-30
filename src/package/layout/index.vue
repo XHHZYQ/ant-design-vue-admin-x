@@ -200,7 +200,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['routes', 'cachedViews', 'visitedViews', 'themeColor', 'dataViewRoutes']),
+    ...mapState(['routes', 'cachedViews', 'visitedViews', 'themeColor', 'dataViewRoutes', 'layoutRoute']),
     ...mapGetters(['permission_routes']),
     activeMenu: {
       get () {
@@ -261,6 +261,9 @@ export default {
         'noAuth',
         'noPage'
       ];
+      if (this.layoutRoute && this.layoutRoute.length) {
+        routeArr = [...routeArr, ...this.layoutRoute]
+      }
       const isRoute = routeArr.some(el => this.$route.name === el);
       if (isRoute) {
         return { padding: '0px', backgroundColor: 'transparent' };
