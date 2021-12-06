@@ -6,6 +6,7 @@ import addEdit from './Form/addEdit';
 import { hasPermi } from './utils/hasPermi';
 import Layout from './layout';
 import { account, role, menu, IconSelector, dictionaries, dictionaryData, loginLog, operLog, userInfo, forgetPwd  } from './views';
+import cardHead from './Form/cardHead';
 import { routerBeforeEach } from './utils/permission';
 
 let component = {
@@ -28,7 +29,7 @@ export { addEdit, upload, inputSearch, searchMobileOrAccount, clearCacheData } f
 export { GET, POST, DELETE, PUT } from './utils/http';
 export { routerBeforeEach };
 export { Layout };
-export { account, role, menu, IconSelector, dictionaries, dictionaryData, loginLog, operLog, userInfo, forgetPwd };
+export { account, role, menu, IconSelector, dictionaries, dictionaryData, loginLog, operLog, userInfo, forgetPwd, cardHead };
 export { updateTheme } from  './utils/settingDrawer/settingConfig';
 export default install;
 

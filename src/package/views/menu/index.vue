@@ -131,9 +131,7 @@ export default {
           click: this.handleClick,
           placeholder: '请选择菜单图标',
           props: ['icon', {
-            rules: [
-              { required: true, message: '请选择菜单图标' }
-            ]
+            rules: []
           }]
         },
         {

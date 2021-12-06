@@ -10,3 +10,9 @@ selectSearch文件中的 handleChange方法 ： 可能没用
 6.分页参数，pageSize，pageNum（完成）
 8. 白名单 headers不要加token？
 
+        item.fileList.push({
+          uid: file.uid,
+          name: file.name,
+          url: data.file_url || data.fileUrl // 3.0返回的是 data.file_url，4.0是 data
+        });
+

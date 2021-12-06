@@ -9,6 +9,7 @@
         <!--纯文本-->
         <template v-if="item.inputType==='text'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -21,6 +22,7 @@
 
         <template v-if="item.inputType==='input'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -38,6 +40,7 @@
 
         <div v-if="item.inputType==='textarea'" :key="index">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             class="textarea-icon"
@@ -53,6 +56,7 @@
 
         <div v-if="item.inputType=== 'select'" :key="index">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -101,6 +105,7 @@
 
         <div v-if="item.inputType=== 'treeSelect'" :key="index">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -137,6 +142,7 @@
 
         <template v-if="item.inputType=== 'cascader'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -166,6 +172,7 @@
 
         <template v-if="item.inputType==='inputNumber'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -179,6 +186,7 @@
 
         <template v-if="item.inputType==='switch'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -197,6 +205,7 @@
 
         <template v-if="item.inputType==='checkboxGroup'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             class="checkbox-group"
             v-if="!item.slot && item.isShow"
@@ -221,6 +230,7 @@
 
         <template v-if="item.inputType==='checkbox'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -233,6 +243,7 @@
 
         <template v-if="item.inputType==='upload'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -256,6 +267,7 @@
 
         <template v-if="item.inputType==='rangePick'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -273,6 +285,7 @@
 
         <template v-if="item.inputType==='rangeTimePick'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -290,6 +303,7 @@
 
         <template v-if="item.inputType==='datePick'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -307,6 +321,7 @@
 
         <template v-if="item.inputType==='dateTimePick'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -325,6 +340,7 @@
 
         <div v-if="item.inputType==='transfer'" :key="index">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -358,6 +374,7 @@
         <!--tree 搜索组件-->
         <template v-if="item.inputType=== 'treeSearch'">
           <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-else
             :label="item.label"
@@ -392,6 +409,7 @@
 
         <template v-if="item.inputType==='radioGroup'">
           <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
+          <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -409,7 +427,7 @@
         </template>
       </template>
 
-      <div v-if="isSubmitBtn && formList.length">
+      <div v-if="isSubmitBtn && formList.length" style="padding-bottom: 2px">
       <slot name="submitBtn">
       <a-form-item :wrapper-col="{ span: 8, offset: offset}">
         <a-button type="primary" @click="handleSubmit" size="large" :disabled="upLoading.loading" :loading="submitLoading.loading">确定</a-button>
@@ -425,6 +443,7 @@ import { addEdit, inputSearch, upload } from '../utils/mixins';
 import { handleHttpMethod } from '../utils/common';
 import { PLAT_FORM } from '@/utils/platform';
 import store from '@/store';
+import cardHead from './cardHead';
 
 export default {
   mixins: [ addEdit, inputSearch, upload ],
@@ -433,7 +452,8 @@ export default {
     VNodes: {
       functional: true,
       render: (h, ctx) => ctx.props.vnodes,
-    }
+    },
+    cardHead
   },
   props: {
     apiOrigin: {

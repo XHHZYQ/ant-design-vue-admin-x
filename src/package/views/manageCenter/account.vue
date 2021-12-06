@@ -130,18 +130,18 @@ export default {
             ]
           }]
         },
-        {
-          label: '邮箱',
-          inputType: 'input',
-          options: [],
-          placeholder: '请输入邮箱',
-          props: ['email', {
-            rules: [
-              { required: true, message: '请输入邮箱' },
-              { pattern: this.REG.email, message: this.MESSAGE.email }
-            ]
-          }]
-        },
+        // {
+        //   label: '邮箱',
+        //   inputType: 'input',
+        //   options: [],
+        //   placeholder: '请输入邮箱',
+        //   props: ['email', {
+        //     rules: [
+        //       { required: true, message: '请输入邮箱' },
+        //       { pattern: this.REG.email, message: this.MESSAGE.email }
+        //     ]
+        //   }]
+        // },
         {
           label: '真实姓名',
           inputType: 'input',
