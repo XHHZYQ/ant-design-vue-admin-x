@@ -18,13 +18,13 @@
             <template v-for="item of permission_routes">
               <a-sub-menu :key="item.path" v-if="item.meta && !item.hidden">
                 <span slot="title">
-                  <a-icon :type="item.meta.icon"/>
+                  <a-icon v-if="item.meta.icon" :type="item.meta.icon"/>
                   <span>{{ item.meta.title }}</span>
                 </span>
 
                 <template v-for="el of item.children">
                   <a-menu-item :key="el.path" v-if="!el.hidden">
-                    <a-icon :type="el.meta.icon"/>
+                    <a-icon v-if="el.meta.icon" :type="el.meta.icon"/>
                     <span>{{ el.meta.title }}</span>
                   </a-menu-item>
                 </template>
@@ -444,7 +444,7 @@ export default {
     top: 0;
     left: 0;
     height: 100vh;
-    box-shadow: 2px 0 6px rgba(0,21,41,.35);
+    box-shadow: 2px 0 8px 0 rgba(29,35,41,.05);
     transition: all .2s;
     .logo {
       padding: 16px 0 16px 15px;
@@ -457,6 +457,9 @@ export default {
     .ant-menu {
       padding: 16px 0;
       width: 100%;
+    }
+    .ant-menu-inline {
+      border-right: none;
     }
   }
 

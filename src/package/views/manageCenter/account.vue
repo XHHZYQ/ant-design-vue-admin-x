@@ -271,7 +271,8 @@ export default {
           obj.value = item.roleId;
           arr.push(obj);
         });
-        this.formList[6].options = arr;
+        let role = this.formList.find(item => item.props && item.props[0] === 'roleIds');
+        role.options = arr;
       });
     },
     /** 进入分管小区 */
