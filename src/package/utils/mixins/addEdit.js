@@ -84,9 +84,14 @@ export default {
         if (el.inputType === 'upload') {
           let prop = el.props && el.props[0];
           let fileUrl = data[el.uploadParam.iconUrl] || data[prop]; // 返回的url
-          if (fileUrl && typeof fileUrl === 'string' && (fileUrl.includes('http') || fileUrl.includes('https'))) {
+
+          if (Array.isArray(fileUrl)) { // 多张图片
+            fileUrl.forEach(item => {
+              el.fileList.push({ uid: item.picId, name: item.picUrl, url: item.picUrl }); // picId和picUrl为与后台约定的固定字段
+            });
+          } else if (fileUrl && typeof fileUrl === 'string' && (fileUrl.includes('http') || fileUrl.includes('https'))) { // 单张图片
             let fileName = data[el.uploadParam.iconName] || data[el.uploadParam.iconUrl] || data[prop]; // 返回的文件名
-            el.fileList = [{uid: index, name: fileName, url: fileUrl}]; // 目前只处理一个 upload 组件返回单张图片
+            el.fileList = [{uid: index, name: fileName, url: fileUrl}];
           }
         }
       });

@@ -698,7 +698,15 @@ export default {
       this.form.validateFields((err, values) => {
         if (err) { return; }
         values = {...values};
-        Object.keys(this.fieldData).length && (values = {...values, ...this.fieldData}); // 处理upload数据，上传多个文件还未处理
+
+        this.formList.forEach(item => {// 处理 upload 数据
+          if (item.inputType === 'upload' && item.fileList && item.fileList.length) {
+            let fileId = item.fileList.map(item => item.uid);
+            const limit = item.uploadParam.limit || 1;
+            fileId = limit > 1 ? fileId : fileId[0]; // 处理单张或多张
+            values[item.props[0]] = fileId;
+          }
+        })
 
         if (this.apiOrigin === 'PHP') {
           for (let item in values) {
