@@ -18,13 +18,19 @@
             <template v-for="item of permission_routes">
               <a-sub-menu :key="item.path" v-if="item.meta && !item.hidden">
                 <span slot="title">
-                  <a-icon v-if="item.meta.icon" :type="item.meta.icon"/>
+                  <template v-if="item.meta.icon">
+                    <icon-font v-if="item.meta.icon.includes('icon-')" :type="item.meta.icon"/>
+                    <a-icon v-else :type="item.meta.icon"/>
+                  </template>
                   <span>{{ item.meta.title }}</span>
                 </span>
 
                 <template v-for="el of item.children">
                   <a-menu-item :key="el.path" v-if="!el.hidden">
-                    <a-icon v-if="el.meta.icon" :type="el.meta.icon"/>
+                    <template v-if="el.meta.icon">
+                      <icon-font v-if="el.meta.icon.includes('icon-')" :type="el.meta.icon"/>
+                      <a-icon v-else :type="el.meta.icon"/>
+                    </template>
                     <span>{{ el.meta.title }}</span>
                   </a-menu-item>
                 </template>
@@ -131,11 +137,12 @@ import { PLAT_FORM } from '@/utils/platform';
 import { communityLogo, propertyLogo, govLogo } from '../images';
 import { handleHttpMethod } from '../utils/common'
 import viewsHead from '@/components/dataviews/viewsHead';
+import { MenuIconFont as IconFont } from '../views/IconSelector/icons';
 
 export default {
   name: 'App',
   mixins: [clearCacheData],
-  components: { tagViews, ViewsHead: viewsHead },
+  components: { tagViews, ViewsHead: viewsHead, IconFont },
   data () {
     return {
       apiOrigin: 'JAVA',

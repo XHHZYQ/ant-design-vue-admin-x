@@ -23,8 +23,7 @@
 </template>
 
 <script>
-import icons from './icons';
-import { IconFont } from '@/utils/icon';
+import icons, { MenuIconFont as IconFont } from './icons';
 
 export default {
   name: 'IconSelect',
