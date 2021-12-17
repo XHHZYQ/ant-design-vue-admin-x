@@ -74,7 +74,8 @@ export default {
       let uidIndex = item.fileList.findIndex(el => el.uid === e.uid);
       item.fileList.splice(uidIndex, 1);
       const prop = item.props && item.props[0];
-      this.form.setFieldsValue({ [prop]: item.fileList });
+      const files = item.fileList.length ? item.fileList : '';
+      this.form.setFieldsValue({ [prop]: files });
 
       return true;
     },
