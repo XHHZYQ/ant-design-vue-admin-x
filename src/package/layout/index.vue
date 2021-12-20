@@ -369,7 +369,6 @@ export default {
       } else {
         if (key === this.$route.path) { return false; }
 
-        console.log('点击导航菜单 key: ', key);
         if (this.dataViewRoutes.includes(key)) {
           const url = `${location.protocol}//${location.host}/#${key}`
           window.open(url);
