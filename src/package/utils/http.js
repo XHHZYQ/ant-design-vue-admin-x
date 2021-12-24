@@ -172,7 +172,12 @@ instance.interceptors.request.use(config => {
 let isRefreshing = false
 let requestList = []
 instance.interceptors.response.use((res) => {
-  if (res.data.code === 401) {
+  let resData = res.data;
+  if (typeof resData === 'string') {
+    resData = JSON.parse(resData);
+  }
+  console.log('interceptors res: ', resData);
+  if (resData.code === 401) {
     if (!isRefreshing) {
       isRefreshing = true
       return refreshToken({
@@ -186,7 +191,7 @@ instance.interceptors.response.use((res) => {
           data = JSON.parse(data);
         }
         const newToken = data.access_token
-        setToken(newToken);
+        Common.setToken(newToken);
         localStorage.refresh_token = data.refresh_token;
         res.config.headers.Authorization = 'Bearer ' + newToken;
         requestList.forEach(callback => callback(newToken))
@@ -245,6 +250,7 @@ const fetch = (options, obj) => {
           localeText.emptyText = '暂无数据';
         }
       }
+      console.log('resData.code: ', resData.code);
       if (resData.code === 1 || resData.code === 2 || resData.code === 200) { // 1：成功，2：单独处理导入房间部分成功
         resolve(resData); // 注意：resolve只接收一个参数
       } else if (resData.code === 9002) { // accessToken失效
@@ -254,6 +260,9 @@ const fetch = (options, obj) => {
           empty.$emit('setCacheData');
         });
       } else if (resData.code === 401) { // 令牌失效
+        message.error('登录已失效', 1).then((res) => {
+          empty.$emit('setCacheData');
+        });
       } else if (resData.code === 403) { // 无权限
         resData.msg && message.error(resData.msg, 5);
       } else if (resData.code === 9003 || resData.code === 40000) {
