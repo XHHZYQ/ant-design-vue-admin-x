@@ -25,7 +25,7 @@ const instance = axios.create({
   maxContentLength: 2000,
   maxRedirects: 5,
   validateStatus: function (status) {
-    return status === 200; // 状态码为200时，为成功，否则失败
+    return status === 200 || status === 401; // 状态码为200时，为成功，否则失败
   }
 });
 
@@ -149,8 +149,15 @@ function sortObjArr (arr) {
 }
 
 function refreshToken (config) {
+  let baseUrl;
+  if (PLAT_FORM === 'property' || PLAT_FORM === 'government') {
+    baseUrl = process.env.VUE_APP_BASE_API_JAVA;
+  } else {
+    baseUrl = process.env.VUE_APP_BASE_API;
+  }
+
   return POST({
-    url: '/userLogin/refresh',
+    url: baseUrl + '/userLogin/refresh',
     params: {
       refreshToken: config.params.refreshToken,
       userId: config.params.userId,
@@ -176,7 +183,6 @@ instance.interceptors.response.use((res) => {
   if (typeof resData === 'string') {
     resData = JSON.parse(resData);
   }
-  console.log('interceptors res: ', resData);
   if (resData.code === 401) {
     if (!isRefreshing) {
       isRefreshing = true
@@ -250,7 +256,6 @@ const fetch = (options, obj) => {
           localeText.emptyText = '暂无数据';
         }
       }
-      console.log('resData.code: ', resData.code);
       if (resData.code === 1 || resData.code === 2 || resData.code === 200) { // 1：成功，2：单独处理导入房间部分成功
         resolve(resData); // 注意：resolve只接收一个参数
       } else if (resData.code === 9002) { // accessToken失效
@@ -280,6 +285,10 @@ const fetch = (options, obj) => {
         localeText.emptyText = '暂无数据';
       }
       let errData = (err.response || {}).data;
+      console.log('err errData: ', errData);
+      if (typeof errData === 'string') {
+        errData = JSON.parse(errData);
+      }
       reject(errData);
 
       if (isShowMsg) { return; }
