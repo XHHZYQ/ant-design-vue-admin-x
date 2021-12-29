@@ -196,13 +196,20 @@ instance.interceptors.response.use((res) => {
         if (typeof data === 'string') {
           data = JSON.parse(data);
         }
-        const newToken = data.access_token
-        Common.setToken(newToken);
-        localStorage.refresh_token = data.refresh_token;
-        res.config.headers.Authorization = 'Bearer ' + newToken;
-        requestList.forEach(callback => callback(newToken))
-        requestList = []
-        return instance(res.config)
+        console.log('newRes.code: ', newRes.code);
+        if (newRes.code === 200) {
+          const newToken = data.access_token
+          Common.setToken(newToken);
+          localStorage.refresh_token = data.refresh_token;
+          res.config.headers.Authorization = 'Bearer ' + newToken;
+          requestList.forEach(callback => callback(newToken))
+          requestList = []
+          return instance(res.config)
+        } else {
+          message.error('登录已失效', 1).then((res) => {
+            empty.$emit('setCacheData');
+          });
+        }
       }).catch(err => {
         message.error('登录已失效', 1).then((res) => {
           empty.$emit('setCacheData');
