@@ -347,26 +347,28 @@ export function POST (obj) {
 }
 
 export function DELETE (obj) {
-  let { url, params, config } = obj;
+  let { url, params, query, config } = obj;
   config = config || {};
   config = {...config, ...this};
 
   return fetch({
     method: 'delete',
     url,
-    params, // DELTE 参数放在路由 query
+    params: query, // DELTE 参数放在路由 query
+    data: params,
     ...config
   }, obj);
 }
 
 export function PUT (obj) {
-  let { url, params, config } = obj;
+  let { url, params, query, config } = obj;
   config = config || {};
   config = {...config, ...this};
 
   return fetch({
     method: 'put',
     url,
+    params: query,
     data: params, // data 只适用于这些请求方法 'PUT', 'POST', 和 'PATCH'
     ...config
   }, obj);

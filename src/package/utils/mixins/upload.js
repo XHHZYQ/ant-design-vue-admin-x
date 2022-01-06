@@ -61,7 +61,7 @@ export default {
         config: { timeout: 200000 }
       }).then(({data}) => {
         let file = e.file;
-        const fileId = data.file_id || data.fileId; // 接口返回的文件 id
+        const fileId = data.file_id || data.fileId || data.fileUrl; // 接口返回的文件 id
         item.fileList.push({
           uid: fileId,
           name: file.name,

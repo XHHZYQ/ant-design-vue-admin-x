@@ -42,10 +42,7 @@
 </template>
 
 <script>
-import { fetchSelect } from '@/utils/mixins';
-import { handleHttpMethod } from '../../utils/common'
 export default {
-  mixins: [fetchSelect],
   name: 'loginLog',
   data () {
     return {
@@ -86,19 +83,9 @@ export default {
     };
   },
   mounted () {
-    // this.getSelect();
     this.searchList[2].options = [{label: '成功', value: 1}, {label: '失败', value: 0}];
   },
   methods: {
-    getSelect () {
-      this[handleHttpMethod('get', this)]({
-        url: '/select_list/admin_manage_list',
-        params: {}
-      }).then(({data}) => {
-        this.searchList[1].options = data.roles_list;
-        this.searchList[2].options = [{label: '成功', value: 1}, {label: '失败', value: 0}];
-      });
-    },
     /* 查看账号详情 */
     showAccountInfo (row) {
       this.accountInfo.forEach((el) => {

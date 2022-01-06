@@ -2,13 +2,13 @@
   <a-config-provider :locale="locale">
     <div id="app" v-if="hasLayout">
       <div id="components-layout">
-        <aside class="layout-aside" :style="{backgroundColor: platFormDiffer[platform].asideColor, ...siderWidth}">
+        <aside class="layout-aside" :style="{backgroundColor: (platFormDiffer[platform] || platFormDiffer.community).asideColor, ...siderWidth}">
           <div class="logo" :class="{center: isCollapse}">
-            <img v-if="!isCollapse" :src="platFormDiffer[platform].menuLogo" alt="">
+            <img v-if="!isCollapse" :src="(platFormDiffer[platform] || platFormDiffer.community).menuLogo" alt="">
             <img v-else src="../images/logo.png" alt="">
           </div>
           <a-menu
-            :theme="platFormDiffer[platform].menuTheme"
+            :theme="(platFormDiffer[platform] || platFormDiffer.community).menuTheme"
             mode="inline"
             @click="({ item, key, keyPath }) => handleClick(key)"
             @openChange="onOpenChange"
@@ -177,6 +177,12 @@ export default {
           asideColor: '#001529',
           backgroundLogo: undefined
         },
+        userCenter: {
+          menuLogo: communityLogo,
+          menuTheme: 'dark',
+          asideColor: '#001529',
+          backgroundLogo: undefined
+        }
       }
     };
   },
