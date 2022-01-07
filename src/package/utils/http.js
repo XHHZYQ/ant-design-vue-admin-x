@@ -183,7 +183,10 @@ instance.interceptors.response.use((res) => {
   if (typeof resData === 'string') {
     resData = JSON.parse(resData);
   }
+  console.log('拦截器 code: ', resData.code);
+  console.log('拦截器 url: ', res.config.url);
   if (resData.code === 401) {
+    console.log('isRefreshing: ', isRefreshing);
     if (!isRefreshing) {
       isRefreshing = true
       return refreshToken({
@@ -196,7 +199,7 @@ instance.interceptors.response.use((res) => {
         if (typeof data === 'string') {
           data = JSON.parse(data);
         }
-        console.log('newRes.code: ', newRes.code);
+        console.log('refresh code: ', newRes.code);
         if (newRes.code === 200) {
           const newToken = data.access_token
           Common.setToken(newToken);
@@ -205,10 +208,6 @@ instance.interceptors.response.use((res) => {
           requestList.forEach(callback => callback(newToken))
           requestList = []
           return instance(res.config)
-        } else {
-          message.error('登录已失效', 1).then((res) => {
-            empty.$emit('setCacheData');
-          });
         }
       }).catch(err => {
         message.error('登录已失效', 1).then((res) => {
@@ -225,6 +224,10 @@ instance.interceptors.response.use((res) => {
         })
       })
     }
+  } else if (resData.code === 500 && res.config.url.includes('/userLogin/refresh') ) { // refresh刷新失败
+    message.error('登录已失效', 1).then((res) => {
+      empty.$emit('setCacheData');
+    });
   } else {
     return res;
   }
@@ -272,9 +275,6 @@ const fetch = (options, obj) => {
           empty.$emit('setCacheData');
         });
       } else if (resData.code === 401) { // 令牌失效
-        message.error('登录已失效', 1).then((res) => {
-          empty.$emit('setCacheData');
-        });
       } else if (resData.code === 403) { // 无权限
         resData.msg && message.error(resData.msg, 5);
       } else if (resData.code === 9003 || resData.code === 40000) {
@@ -292,10 +292,11 @@ const fetch = (options, obj) => {
         localeText.emptyText = '暂无数据';
       }
       let errData = (err.response || {}).data;
-      console.log('err errData: ', errData);
       if (typeof errData === 'string') {
         errData = JSON.parse(errData);
       }
+      console.log('instance err data: ', errData);
+
       reject(errData);
 
       if (isShowMsg) { return; }
