@@ -471,6 +471,9 @@ export default {
     .ant-menu {
       padding: 16px 0;
       width: 100%;
+      .anticon {
+        font-size: 16px !important;
+      }
     }
     .ant-menu-inline {
       border-right: none;
