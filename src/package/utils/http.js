@@ -14,9 +14,6 @@ const instance = axios.create({
   headers: {
     'Content-Type': 'application/json'
   },
-  transformResponse: [function (data) {
-    return data;
-  }],
   paramsSerializer: function (params) {
     return Qs.stringify(params, {arrayFormat: 'brackets'});
   },
@@ -180,9 +177,7 @@ let isRefreshing = false
 let requestList = []
 instance.interceptors.response.use((res) => {
   let resData = res.data;
-  if (typeof resData === 'string') {
-    resData = JSON.parse(resData);
-  }
+  console.log('resData: ', resData);
   console.log('拦截器 code: ', resData.code);
   console.log('拦截器 url: ', res.config.url);
   if (resData.code === 401) {
@@ -196,9 +191,6 @@ instance.interceptors.response.use((res) => {
         }
       }).then(newRes => {
         let data = newRes.data;
-        if (typeof data === 'string') {
-          data = JSON.parse(data);
-        }
         console.log('refresh code: ', newRes.code);
         if (newRes.code === 200) {
           const newToken = data.access_token
@@ -255,9 +247,6 @@ const fetch = (options, obj) => {
   return new Promise((resolve, reject) => {
     instance(options).then((res) => {
       let resData = res.data;
-      if (typeof resData === 'string') {
-        resData = JSON.parse(resData);
-      }
       spinObj && setTimeout(() => { spinObj.spinning = false; }, 300); // 关闭loading
       btnLoading && setTimeout(() => { btnLoading.loading = false; }, 300);
       if (localeText && resData.data) {
@@ -292,9 +281,6 @@ const fetch = (options, obj) => {
         localeText.emptyText = '暂无数据';
       }
       let errData = (err.response || {}).data;
-      if (typeof errData === 'string') {
-        errData = JSON.parse(errData);
-      }
       console.log('instance err data: ', errData);
 
       reject(errData);
@@ -323,7 +309,10 @@ const fetch = (options, obj) => {
 export function GET (obj) {
   let { url, params, config } = obj;
   config = config || {};
-  config = {...config, ...this};
+  console.log('this: ', this);
+  if (this && Object.keys(this).length) {
+    config = {...config, ...this};
+  }
 
   return fetch({
     method: 'get',
@@ -336,7 +325,9 @@ export function GET (obj) {
 export function POST (obj) {
   let { url, params, config, query } = obj;
   config = config || {};
-  config = {...config, ...this};
+  if (this && Object.keys(this).length) {
+    config = {...config, ...this};
+  }
 
   return fetch({
     method: 'post',
@@ -350,7 +341,9 @@ export function POST (obj) {
 export function DELETE (obj) {
   let { url, params, query, config } = obj;
   config = config || {};
-  config = {...config, ...this};
+  if (this && Object.keys(this).length) {
+    config = {...config, ...this};
+  }
 
   return fetch({
     method: 'delete',
@@ -365,6 +358,9 @@ export function PUT (obj) {
   let { url, params, query, config } = obj;
   config = config || {};
   config = {...config, ...this};
+  if (this && Object.keys(this).length) {
+    config = {...config, ...this};
+  }
 
   return fetch({
     method: 'put',

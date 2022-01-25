@@ -375,8 +375,10 @@ export default {
       } else {
         if (key === this.$route.path) { return false; }
 
+        console.log('handleClick ViewRoutes: ', key, this.dataViewRoutes);
         if (this.dataViewRoutes.includes(key)) {
-          const url = `${location.protocol}//${location.host}/#${key}`
+          const url = `${location.origin}${location.pathname}#${key}`
+          console.log('url: ', url);
           window.open(url);
         } else {
           this.$router.push(key);
