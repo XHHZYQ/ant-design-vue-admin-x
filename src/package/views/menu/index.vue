@@ -16,7 +16,8 @@
       :rowSelection="false"
     >
       <template slot="opt_t" slot-scope="{row}">
-        <a-icon :type="row.icon" />
+        <icon-font v-if="row.icon.includes('icon-')" :type="row.icon" />
+        <a-icon v-else :type="row.icon" />
       </template>
     </x-tabula>
 
@@ -60,11 +61,13 @@
 
 <script>
 import IconSelector from '../IconSelector';
+import { MenuIconFont as IconFont } from '../IconSelector/icons';
 
 export default {
   name: 'manageMenu',
   components: {
-    IconSelector
+    IconSelector,
+    IconFont
   },
   props: {
     listsApi: { default: () => 'menu/list' },

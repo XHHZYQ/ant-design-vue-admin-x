@@ -30,6 +30,7 @@ export { GET, POST, DELETE, PUT } from './utils/http';
 export { routerBeforeEach };
 export { Layout };
 export { account, role, menu, IconSelector, dictionaries, dictionaryData, loginLog, operLog, userInfo, forgetPwd, cardHead };
+export { MenuIconFont } from './views/IconSelector/icons';
 export { updateTheme } from  './utils/settingDrawer/settingConfig';
 export default install;
 
