@@ -177,11 +177,11 @@ let isRefreshing = false
 let requestList = []
 instance.interceptors.response.use((res) => {
   let resData = res.data;
-  console.log('resData: ', resData);
-  console.log('拦截器 code: ', resData.code);
-  console.log('拦截器 url: ', res.config.url);
+  // console.log('resData: ', resData);
+  // console.log('拦截器 code: ', resData.code);
+  // console.log('拦截器 url: ', res.config.url);
   if (resData.code === 401) {
-    console.log('isRefreshing: ', isRefreshing);
+    // console.log('isRefreshing: ', isRefreshing);
     if (!isRefreshing) {
       isRefreshing = true
       return refreshToken({
@@ -191,7 +191,7 @@ instance.interceptors.response.use((res) => {
         }
       }).then(newRes => {
         let data = newRes.data;
-        console.log('refresh code: ', newRes.code);
+        // console.log('refresh code: ', newRes.code);
         if (newRes.code === 200) {
           const newToken = data.access_token
           Common.setToken(newToken);
@@ -281,7 +281,7 @@ const fetch = (options, obj) => {
         localeText.emptyText = '暂无数据';
       }
       let errData = (err.response || {}).data;
-      console.log('instance err data: ', errData);
+      // console.log('instance err data: ', errData);
 
       reject(errData);
 
@@ -309,7 +309,7 @@ const fetch = (options, obj) => {
 export function GET (obj) {
   let { url, params, config } = obj;
   config = config || {};
-  console.log('this: ', this);
+  // console.log('this: ', this);
   if (this && Object.keys(this).length) {
     config = {...config, ...this};
   }
@@ -357,7 +357,6 @@ export function DELETE (obj) {
 export function PUT (obj) {
   let { url, params, query, config } = obj;
   config = config || {};
-  config = {...config, ...this};
   if (this && Object.keys(this).length) {
     config = {...config, ...this};
   }

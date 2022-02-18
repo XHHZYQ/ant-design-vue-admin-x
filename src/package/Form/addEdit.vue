@@ -8,8 +8,8 @@
       <template v-for="(item, index) of formList">
         <!--纯文本-->
         <template v-if="item.inputType==='text'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -21,8 +21,8 @@
         </template>
 
         <template v-if="item.inputType==='input'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -39,8 +39,8 @@
         </template>
 
         <div v-if="item.inputType==='textarea'" :key="index">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             class="textarea-icon"
@@ -55,8 +55,8 @@
         </div>
 
         <div v-if="item.inputType=== 'select'" :key="index">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -104,8 +104,8 @@
         </div>
 
         <div v-if="item.inputType=== 'treeSelect'" :key="index">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -141,8 +141,8 @@
         </div>
 
         <template v-if="item.inputType=== 'cascader'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -171,8 +171,8 @@
         </template>
 
         <template v-if="item.inputType==='inputNumber'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -185,8 +185,8 @@
         </template>
 
         <template v-if="item.inputType==='switch'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -204,8 +204,8 @@
         </template>
 
         <template v-if="item.inputType==='checkboxGroup'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             class="checkbox-group"
             v-if="!item.slot && item.isShow"
@@ -229,8 +229,8 @@
         </template>
 
         <template v-if="item.inputType==='checkbox'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -242,8 +242,8 @@
         </template>
 
         <template v-if="item.inputType==='upload'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -266,8 +266,8 @@
         </template>
 
         <template v-if="item.inputType==='rangePick'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -284,8 +284,8 @@
         </template>
 
         <template v-if="item.inputType==='rangeTimePick'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -302,8 +302,8 @@
         </template>
 
         <template v-if="item.inputType==='datePick'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -320,8 +320,8 @@
         </template>
 
         <template v-if="item.inputType==='dateTimePick'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -339,8 +339,8 @@
         </template>
 
         <div v-if="item.inputType==='transfer'" :key="index">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -373,8 +373,8 @@
 
         <!--tree 搜索组件-->
         <template v-if="item.inputType=== 'treeSearch'">
-          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-else
             :label="item.label"
@@ -408,8 +408,8 @@
         </template>
 
         <template v-if="item.inputType==='radioGroup'">
-          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <cardHead v-if="item.cardHead" :formItem="item" :formIndex="index"/>
+          <slot v-if="item.slot && item.isShow" :name="item.slot" :formItem="item"></slot>
           <a-form-item
             v-if="!item.slot && item.isShow"
             :label="item.label"
@@ -669,7 +669,6 @@ export default {
         url: url || `${this.detailParam.url}${this.routeQuery}`,
         params: {}
       }).then(({data}) => {
-        this.handleFileList(data);
         let formValues = {};
         for (let item in data) {
           if (this.formKey.hasOwnProperty(item)) {
@@ -686,7 +685,8 @@ export default {
             return;
           }
         }
-        this.textData = formValues = {...formValues, ...this.handleDate(data)};
+        this.handleFileList(formValues);
+        this.textData = formValues = {...formValues, ...this.handleDate(formValues)};
         formValues = this.filterParam(formValues);
         this.$nextTick(() => {
           this.form.setFieldsValue(formValues);

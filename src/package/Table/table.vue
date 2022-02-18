@@ -81,6 +81,19 @@ export default {
         }
       }
     },
+    paginationParam: {
+      default: () => ({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '30', '40'],
+        showTotal: total => {
+          return `共 ${total} 条`;
+        }
+      })
+    },
     initReqHandle: {
       type: Boolean,
       default: () => true
@@ -163,17 +176,6 @@ export default {
       expandedRowKeys: [],
       selectedId: [],
       selectedRowKeys: [],
-      paginationParam: {
-        current: 1,
-        pageSize: 10,
-        total: 0,
-        showQuickJumper: true,
-        showSizeChanger: true,
-        pageSizeOptions: ['10', '20', '30', '40'],
-        showTotal: total => {
-          return `共 ${total} 条`;
-        }
-      },
       tableData: []
     };
   },

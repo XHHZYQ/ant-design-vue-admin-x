@@ -98,13 +98,20 @@ export default {
     },
     /* 处理时间格式 */
     handleDate (data) {
-      let pick = ['rangePick', 'rangeTimePick', 'datePick', 'dateTimePick'];
+      let rangePick = ['rangePick', 'rangeTimePick'];
+      let pick = ['datePick', 'dateTimePick'];
       let dateValue = {};
       this.formList.forEach((el) => {
         if (pick.some((part) => part === el.inputType)) {
           let prop = el.props && el.props[0];
           if (data[prop]) {
-            dateValue = {...dateValue, [prop]: Moment(data[prop])};
+            dateValue = { ...dateValue, [prop]: Moment(data[prop]) };
+          }
+        } else if (rangePick.some((part) => part === el.inputType)) {
+          let prop = el.props && el.props[0];
+          if (data[prop]) {
+            const dateArr = [ Moment(data[prop][0]), Moment(data[prop][1]) ];
+            dateValue = { ...dateValue, [prop]: dateArr };
           }
         }
       });
