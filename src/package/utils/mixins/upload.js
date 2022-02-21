@@ -58,7 +58,7 @@ export default {
         url: reqUrl,
         params: formdata,
         btnLoading: this.upLoading,
-        config: { timeout: 200000 }
+        config: { timeout: 10 * 60 * 1000 }
       }).then(({data}) => {
         let file = e.file;
         const fileId = data.file_id || data.fileId || data.fileUrl; // 接口返回的文件 id
