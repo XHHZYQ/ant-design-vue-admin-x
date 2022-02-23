@@ -32,9 +32,15 @@
             :labelCol="item.labelCol"
             :wrapperCol="item.wrapperCol"
             :key="index">
-            <a-input @blur="(e) => {item.blur && item.blur(e)}" @click="(e) => item.click && item.click(e)"
-                     @change="(e) => {item.handle && item.handle(e)}" v-decorator="item.props" :type="item.type"
-                     :disabled="item.disabled" :placeholder="item.placeholder"/>
+            <a-input
+              @blur="(e) => {item.blur && item.blur(e)}"
+             @click="(e) => item.click && item.click(e)"
+             @change="(e) => {item.handle && item.handle(e)}"
+             v-decorator="handleInputProps(item)"
+             :type="item.type"
+             :disabled="item.disabled"
+             :placeholder="item.placeholder"
+            />
           </a-form-item>
         </template>
 
@@ -559,6 +565,26 @@ export default {
     // }
   },
   methods: {
+    /** 处理 input props */
+    handleInputProps (item) {
+      const normalize = item.normalize || true;
+      let prop;
+      if (item.props && item.props.length && normalize) {
+        prop = [item.props[0]];
+        if (item.props[1]) {
+          prop[1] = {
+            ...item.props[1],
+            normalize (value, prevValue, allValues) { // input的输入值 number 转换为 string
+              typeof value === 'number' && (value = String(value))
+              return value;
+          }
+        };
+        }
+        return prop;
+      } else {
+        return item.props;
+      }
+    },
     /** 处理 a-select 滚动加载下一页 */
     selectScroll (item, e) {
       if (!item.fetchOptions) { return; }
@@ -685,7 +711,7 @@ export default {
             return;
           }
         }
-        this.handleFileList(formValues);
+        this.handleFileList({ ...data, ...formValues });
         this.textData = formValues = {...formValues, ...this.handleDate(formValues)};
         formValues = this.filterParam(formValues);
         this.$nextTick(() => {
