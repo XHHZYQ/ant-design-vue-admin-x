@@ -708,6 +708,7 @@ export default {
           if (resHandleVal) {
             formValues = {...formValues, ...resHandleVal};
           } else {
+            this.handleFileList({ ...data, ...formValues });
             return;
           }
         }

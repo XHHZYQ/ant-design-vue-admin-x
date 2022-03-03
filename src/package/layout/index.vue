@@ -177,7 +177,7 @@ export default {
           asideColor: '#001529',
           backgroundLogo: undefined
         },
-        userCenter: {
+        AC_ADMIN: {
           menuLogo: communityLogo,
           menuTheme: 'dark',
           asideColor: '#001529',

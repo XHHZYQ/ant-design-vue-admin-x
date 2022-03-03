@@ -80,7 +80,6 @@ export default {
      * param data 详情返回的整个data
      * */
     handleFileList (data) {
-      console.log('handleFileList data: ', data);
       this.formList.forEach((el, index) => {
         if (el.inputType === 'upload') {
           let prop = el.props && el.props[0];

@@ -170,7 +170,7 @@ export default {
           placeholder: '请输入',
           props: ['status', {
             rules: [
-              { required: true, message: '请输入权限字符' }
+              { required: true, message: '请选择状态' }
             ],
             initialValue: 1
           }]
@@ -249,13 +249,7 @@ export default {
     };
   },
   created () {
-    if (this['PLAT_FORM'] === 'property') {
-      this.rowOptList.push({
-        text: '分管小区', handle: (row) => this.toAllocCommunity(row), permi: ['property:user:alloc']
-      });
-    } else {
-      this.rowOptList.splice(2, 1);
-    }
+    this.init();
     this.getRoleList();
   },
   methods: {
@@ -274,6 +268,31 @@ export default {
         let role = this.formList.find(item => item.props && item.props[0] === 'roleIds');
         role.options = arr;
       });
+    },
+    init () {
+      if (this['PLAT_FORM'] === 'property') {
+        this.rowOptList.push({
+          text: '分管小区', handle: (row) => this.toAllocCommunity(row), permi: ['property:user:alloc']
+        });
+      } else {
+        this.rowOptList.splice(2, 1);
+      }
+
+      if (this['PLAT_FORM'] === 'AC_ADMIN') { // acadmin 端去掉真实姓名、mobile 改为 phonenumber 字段
+        const trueNameIndex = this.columns.findIndex(item => item.dataIndex === 'trueName');
+        const mobile = this.columns.find(item => item.dataIndex === 'mobile');
+        this.columns.splice(trueNameIndex, 1);
+        mobile.dataIndex = 'phonenumber';
+
+        const mobileItem = this.formList.find(item => item.props && item.props[0] === 'mobile');
+        mobileItem.props[0] = 'phonenumber';
+        const nameIndex = this.formList.findIndex(item => item.props && item.props[0] === 'trueName');
+        this.formList.splice(nameIndex, 1);
+
+
+        let phone = this.searchList.find(item => item.props[0] === 'mobile');
+        phone.props[0] = 'phonenumber';
+      }
     },
     /** 进入分管小区 */
     toAllocCommunity (row) {
@@ -451,7 +470,7 @@ export default {
     addUser () {
       this.modalTitle = '新增账号';
       this.formList.forEach(item => {
-        if (item.props[0] === 'userName' || item.props[0] === 'mobile') {
+        if (item.props[0] === 'userName' || item.props[0] === 'mobile' || item.props[0] === 'phonenumber') {
           item.disabled = false;
         }
       });
@@ -461,7 +480,7 @@ export default {
     editUser (userId) {
       this.modalTitle = '修改账号';
       this.formList.forEach(item => {
-        if (item.props[0] === 'userName' || item.props[0] === 'mobile') {
+        if (item.props[0] === 'userName' || item.props[0] === 'mobile' || item.props[0] === 'phonenumber') {
           item.disabled = true;
         }
       });
